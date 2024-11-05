@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_style.css') }}">
+    <title>Admin Profili</title>
+</head>
+<body>
+    <div class="info-container">
+        <header>
+            <h1>Kullanıcı Profili</h1>
+            <button class="edit-button">Edit</button> <!-- Edit butonu -->
+        </header>
+        <section class="user-info">
+            <h2>Kullanıcı Bilgileri</h2>
+            <button class="indentity-correct-button">Kimliğinizi Doğrulayın</button>
+            <div class="user-details">
+                <span class="highlight">
+                    <img src="/static/images/profile.png" alt="Profil Fotoğrafı" style="width: 100px; height: 100px; border-radius: 50%;">
+                </span>
+                <div>
+                    <p>Ad: <span class="highlight">John</span></p>
+                    <p>Soyad: <span class="highlight">Doe</span></p>
+                    <p>Email: <span class="highlight">user@example.com</span></p>
+                    <p>Kullanıcı Adı: <span class="highlight">JohnDoe</span></p>
+                    <p>Şifre: <span class="highlight">12345</span></p>
+                    <p>Konum: <span class="highlight">İstanbul, Türkiye</span></p>
+                    <p>İlgi Alanları: <span class="highlight">Yazılım, Teknoloji, Seyahat</span></p>
+                    <p>Doğum Tarihi: <span class="highlight">01 Ocak 1990</span></p>
+                    <p>Cinsiyet: <span class="highlight">Erkek</span></p>
+                    <p>Telefon Numarası: <span class="highlight">+90 123 456 7890</span></p>
+                </div>
+            </div>
+        </section>
+    </div>
+        <div class ="event-container">
+        <h2>İlgi Alanlarınız</h2>
+        <h2>Katıldığınız Etkinlikler</h2>
+        <h2>Şifre Yenileme</h2>
+
+            <div class="password-reset">
+            <div>
+                <label for="old-password">Eski Şifre:</label>
+                <input type="password" id="old-password" name="old-password">
+            </div>
+            <div>
+                <label for="new-password">Yeni Şifre:</label>
+                <input type="password" id="new-password" name="new-password">
+            </div>
+            <div>
+                <label for="confirm-new-password">Yeni Şifre Onaylama:</label>
+                <input type="password" id="confirm-new-password" name="confirm-new-password">
+            </div>
+            <div>
+                <button class="reset-password-btn">Onayla</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

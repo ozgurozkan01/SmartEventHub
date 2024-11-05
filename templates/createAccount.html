@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hesap Oluşturma</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/createAccount_style.css') }}">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Hesap Oluştur</h2>
+        <form action="/register" method="GET" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="username">Kullanıcı Adı:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Şifre:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="firstName">Ad:</label>
+                <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Soyad:</label>
+                <input type="text" id="lastName" name="lastName" required>
+            </div>
+            <div class="form-group">
+                <label for="birthDate">Doğum Tarihi:</label>
+                <input type="date" id="birthDate" name="birthDate" required>
+            </div>
+            <div class="form-group">
+                <label for="gender">Cinsiyet:</label>
+                <select id="gender" name="gender" required>
+                    <option value="" disabled selected>Seçiniz</option>
+                    <option value="Erkek">Erkek</option>
+                    <option value="Kadın">Kadın</option>
+                    <option value="Diğer">Diğer</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="email">E-posta Adresi:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Telefon Numarası:</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group interests-section">
+                <label for="interests">İlgi Alanları:</label>
+                <div class="selected-interests" id="selected-interests"></div>
+                <button type="button" class="manage-interests-btn" onclick="toggleInterests()">İlgi Alanlarını Yönetin</button>
+                <div class="interests-options" id="interests-options" style="display:none;">
+                    <label><input type="checkbox" onchange="saveInterests()" value="Spor (Futbol, Basketbol, Koşu)"> Spor (Futbol, Basketbol, Koşu)</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Sanat (Resim, Heykel, Fotoğrafçılık)"> Sanat (Resim, Heykel, Fotoğrafçılık)</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Müzik (Konserler, Enstrüman Çalma, Müzik Prodüksiyonu)"> Müzik (Konserler, Enstrüman Çalma, Müzik Prodüksiyonu)</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Tiyatro ve Performans Sanatları"> Tiyatro ve Performans Sanatları</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Kitap Kulüpleri ve Edebiyat"> Kitap Kulüpleri ve Edebiyat</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Yemek ve Gastronomi (Gurme Turlar, Yemek Yapma Atölyeleri)"> Yemek ve Gastronomi (Gurme Turlar, Yemek Yapma Atölyeleri)</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Moda ve Tasarım"> Moda ve Tasarım</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Doğa ve Macera Sporları (Trekking, Dağcılık, Kampçılık)"> Doğa ve Macera Sporları (Trekking, Dağcılık, Kampçılık)</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Sağlık ve Wellness (Yoga, Meditasyon, Spa)"> Sağlık ve Wellness (Yoga, Meditasyon, Spa)</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Teknoloji ve Bilim (Hackathonlar, Yapay Zeka Etkinlikleri)"> Teknoloji ve Bilim (Hackathonlar, Yapay Zeka Etkinlikleri)</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Fotoğrafçılık ve Videografi"> Fotoğrafçılık ve Videografi</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="El Sanatları (Seramik, Ahşap İşleri, El Yapımı Takılar)"> El Sanatları (Seramik, Ahşap İşleri, El Yapımı Takılar)</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Film ve Sinema"> Film ve Sinema</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Otomobil ve Motosiklet (Araç Tuning, Klasik Araba Toplantıları)"> Otomobil ve Motosiklet (Araç Tuning, Klasik Araba Toplantıları)</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Bahçe ve Çiçek Yetiştiriciliği"> Bahçe ve Çiçek Yetiştiriciliği</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Hayvan Bakımı ve Doğa Gönüllülüğü"> Hayvan Bakımı ve Doğa Gönüllülüğü</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Gönüllülük ve Sosyal Sorumluluk Projeleri"> Gönüllülük ve Sosyal Sorumluluk Projeleri</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Seyahat ve Keşif"> Seyahat ve Keşif</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="Dans (Salsa, Hip-Hop, Klasik Dans)"> Dans (Salsa, Hip-Hop, Klasik Dans)</label>
+                    <label><input type="checkbox" onchange="saveInterests()" value="E-Spor ve Video Oyunları"> E-Spor ve Video Oyunları</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="submit-btn" value="Kayıt Ol">
+            </div>
+        </form>
+    </div>
+
+    <script src="interests_script.js"></script>
+    <script>
+        function toggleInterests() {
+            const interestsOptions = document.getElementById("interests-options");
+            interestsOptions.style.display = interestsOptions.style.display === "block" ? "none" : "block";
+        }
+
+        function saveInterests() {
+            const selectedInterestsContainer = document.getElementById("selected-interests");
+            selectedInterestsContainer.innerHTML = ""; // Önceki seçimleri temizle
+
+            const checkboxes = document.querySelectorAll(".interests-options input:checked");
+            checkboxes.forEach(checkbox => {
+                const interest = document.createElement("span");
+                interest.textContent = checkbox.value;
+                interest.classList.add("interest-tag");
+                selectedInterestsContainer.appendChild(interest);
+            });
+        }
+    </script>
+</body>
+</html>

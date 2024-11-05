@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Giriş Ekranı - Akıllı Etkinlik Planlama Platformu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/css/login_style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="info-section">
+            <h1>Smart Event Hub'a Hoşgeldiniz !</h1>
+            <p>Platformumuz, benzer düşünen bireylerle bağlantı kurarken zahmetsizce etkinlik oluşturmanızı ve etkinliklere katılmanızı sağlar. Kişiselleştirilmiş önerileri deneyimleyin ve gerçek zamanlı etkinlik takibi ile güncel kalın.</p>
+            <p>Etkinlik planlamanızı daha akıllı ve daha etkileşimli hale getirmek için bugün başlayın!</p>
+            <p class="highlighted-text">Sende eğlencene eğlence katmak istiyorsan aramıza katıl !!</p>
+        </div>
+        <div class="login-section">
+            <div class="login-container">
+                <h2>Giriş Yap</h2>
+                <form action="/login" method="post">
+                    <input type="text" name="username" placeholder="Kullanıcı Adı" required>
+                    <input type="password" name="password" placeholder="Şifre" required>
+                    <button type="submit">Giriş Yap</button>
+                </form>
+                <div class="links">
+                    <p><a href="/createAccount">Yeni Hesap Oluştur</a></p>
+                    <p><a href="/forgetPassword">Şifremi Unuttum</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,179 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    display: flex;
+    align-items: center; /* Dikey hizalamak için */
+    justify-content: space-between; /* Alanı eşit dağıtmak için */
+    background: linear-gradient(to right, #0036b3, #00Abff); /* Koyu mavi (#0056b3) dan açık mavi (#007bff) ye geçiş */
+    color: black;
+    padding: 15px 20px; /* Üst ve alt boşluk ile yan boşluk */
+}
+
+h1 {
+    font-size: 48px; /* Yazı boyutunu artır */
+    color: white; /* Yazı rengini beyaz yap */
+    text-align: center; /* Metni ortala */
+    margin: 20px 0; /* Üstte ve altta boşluk bırak */
+    font-weight: bold; /* Yazıyı kalın yap */
+}
+
+.header-title {
+    font-size: 36px; /* Başlık boyutu */
+    margin: 0; /* Kenar boşluklarını sıfırlamak için */
+}
+
+nav {
+    margin: 0 auto; /* Yatayda ortalama */
+    padding: 20px; /* Üstten ve alttan boşluk */
+    width: fit-content; /* İçeriğe göre genişlik ayarla */
+}
+
+.nav-links {
+    list-style: none; /* Noktalı liste stilini kaldır */
+    display: flex; /* Flexbox ile yan yana dizme */
+    margin: 0; /* Kenar boşluklarını sıfırla */
+    font-size: 1.25em; /* Bağlantı metin boyutunu artır */
+    padding-bottom: 50px; /* İçerik boşluğunu sıfırla */
+    padding-top: 0; /* İçerik boşluğunu sıfırla */
+    padding-left: 0; /* İçerik boşluğunu sıfırla */
+    padding-right: 300px; /* İçerik boşluğunu sıfırla */
+}
+
+.nav-links li {
+    margin-left: 50px; /* Her bir bağlantı arasında boşluk */
+}
+
+.nav-links a {
+    color: white; /* Yazı rengi beyaz */
+    text-decoration: none; /* Alt çizgiyi kaldır */
+    font-weight: bold; /* Yazıyı kalın yap */
+    transition: color 0.3s; /* Hover efekti için geçiş */
+}
+
+.nav-links a:hover {
+    color: #e7f3fe; /* Hover rengi */
+}
+
+h2 {
+    text-align: center;
+}
+
+.hero {
+    background-color: #e7f3fe;
+    padding: 20px;
+    text-align: center;
+}
+
+.upcoming-events {
+    padding: 20px;
+}
+
+.event-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.event-card {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    padding: 15px;
+    width: calc(32% - 20px);
+    box-sizing: border-box;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.event-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/static/images/events.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.4;
+    z-index: 0;
+}
+
+.event-card > * {
+    position: relative;
+    z-index: 1;
+    color: black;
+}
+
+.event-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.event-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.about {
+    padding: 20px;
+    background-color: #e7f3fe;
+    text-align: center;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.add-event-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+}
+
+.add-event-button:hover {
+    background-color: #0056b3; /* Hover rengi ayarlandı */
+}
+
+.event-title {
+    font-size: 2em; /* İstediğiniz boyuta göre ayarlayın */
+    font-weight: bold; /* Kalın yapmak için */
+    margin-bottom: 15px; /* Alt boşluk ekleyebilirsiniz */
+}
+
+.event-action {
+    display: flex;
+    flex-direction: column; /* Buton ve metni dikey hizalamak için */
+    align-items: center; /* Ortalamak için */
+    margin-bottom: 20px; /* Diğer içeriklerden uzaklık için */
+}
+
+.event-info {
+    font-size: 1.2em; /* Metin boyutunu ayarlayabilirsiniz */
+    color: #333; /* Metin rengi */
+    margin-top: 10px; /* Butondan uzaklık */
+    text-align: center; /* Metni ortalayabilirsiniz */
+}

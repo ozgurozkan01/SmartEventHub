@@ -1,0 +1,115 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #e9ecef; /* Açık gri arka plan */
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #ffffff; /* Beyaz arka plan */
+    border-radius: 15px; /* Daha yuvarlak köşeler */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Daha belirgin gölge */
+}
+
+header {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+h1 {
+    color: #007bff; /* Mavi başlık */
+    font-size: 2.5em; /* Daha büyük başlık */
+}
+
+.admin-info {
+    margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 10px; /* Kenar yuvarlama */
+    background-color: #f8f9fa; /* Açık gri arka plan */
+    border: 1px solid #dee2e6; /* Açık gri sınır */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+}
+
+.admin-info h2 {
+    color: #343a40; /* Koyu başlık rengi */
+    font-size: 1.8em; /* Başlık boyutu */
+    border-bottom: 2px solid #007bff; /* Altı çizili efekt */
+    padding-bottom: 10px; /* Başlık ve içerik arasında boşluk */
+    margin-bottom: 20px; /* Başlık ile üstteki içerik arasında boşluk */
+}
+
+.admin-info p {
+    display: flex;
+    justify-content: space-between; /* Sağ ve sol alanları birbirinden ayır */
+    align-items: center; /* Dikey hizalama */
+    margin: 10px 0; /* Üst ve alt boşluk */
+    padding: 10px; /* İçerik için boşluk */
+    background: #ffffff; /* Beyaz arka plan */
+    border-radius: 5px; /* Kenar yuvarlama */
+    transition: background-color 0.3s; /* Geçiş efekti */
+}
+
+.admin-info p:hover {
+    background-color: #e9ecef; /* Hoverda açık gri arka plan */
+}
+
+.highlight {
+    font-weight: bold; /* Kalın yazı */
+    color: #dc3545; /* Kırmızı vurgulama */
+}
+
+.user-management {
+    margin-bottom: 30px;
+    padding: 20px;
+    border-radius: 10px; /* Kenar yuvarlama */
+    background-color: #f8f9fa; /* Açık gri arka plan */
+    border: 1px solid #dee2e6; /* Açık gri sınır */
+}
+
+h2 {
+    color: #343a40; /* Koyu başlık */
+    font-size: 1.8em; /* Başlık boyutu */
+    border-bottom: 2px solid #007bff; /* Altı çizili efekt */
+    padding-bottom: 10px; /* Başlık ile içerik arasında boşluk */
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column; /* Dikey hizalama */
+    gap: 15px; /* Butonlar arasında boşluk */
+}
+
+.button-group .btn {
+    width: 100%; /* Butonların tam genişlikte olmasını sağlar */
+    padding: 12px 25px; /* Buton içindeki boşluk */
+    background-color: #007bff; /* Mavi buton rengi */
+    color: white; /* Beyaz yazı rengi */
+    border: none; /* Kenar yok */
+    border-radius: 5px; /* Kenar yuvarlama */
+    cursor: pointer; /* İmleç değişimi */
+    font-size: 1em; /* Buton yazı boyutu */
+    transition: background-color 0.3s, transform 0.2s; /* Geçiş efektleri */
+}
+
+.button-group .btn:hover {
+    background-color: #0056b3; /* Hoverda daha koyu mavi */
+    transform: scale(1.05); /* Hoverda büyütme efekti */
+}
+
+footer {
+    text-align: center;
+    padding: 15px 0;
+    color: #666; /* Gri yazı rengi */
+    font-size: 0.9em; /* Daha küçük yazı boyutu */
+}
+
+.update-input {
+    display: none; /* Varsayılan olarak gizli */
+    margin-left: 10px; /* Sol boşluk */
+    padding: 5px; /* İç boşluk */
+    border: 1px solid #ccc; /* Açık gri kenar */
+    border-radius: 4px; /* Kenar yuvarlama */
+}

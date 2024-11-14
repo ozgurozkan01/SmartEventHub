@@ -3,50 +3,57 @@ html, body {
     height: 100%; /* Tüm yüksekliği kaplar */
     margin: 0; /* Varsayılan marginleri sıfırlar */
     padding: 0; /* Varsayılan paddingleri sıfırlar */
+    box-sizing: border-box; /* Tüm öğelerde kutu modeli uygulanır */
 }
 
 body {
     font-family: Arial, sans-serif;
     background-color: #f2f2f2;
-    position: relative; /* İçerik için konum ayarı */
+    background-attachment: fixed; /* Arka plan resmi sabit kalsın */
+    overflow-x: hidden; /* Yatay kaydırmayı önler */
+    position: relative;
 }
 
 body::before {
     content: '';
-    background-image: url('../images/events.jpg');
-    background-size: cover; /* Arka plan resmini kaplar */
+    background-image: url('../images/events.jpg'); /* Arka plan resmi */
+    background-size: cover; /* Resim tüm ekrana tam oturur */
     background-position: center; /* Resmi ortalar */
-    opacity: 0.5; /* Opaklık ayarı */
-    position: absolute; /* Konum ayarı */
-    top: 0; /* Üstten sıfırdan başlar */
-    left: 0; /* Soldan sıfırdan başlar */
-    width: 100%; /* Tam genişlikte */
-    height: 100%; /* Tam yükseklikte */
-    z-index: -1; /* Diğer içeriklerin arkasında */
+    opacity: 0.6; /* Opaklık ayarı */
+    position: fixed; /* Arka plan sabit kalır */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* İçerik arka planda */
 }
 
 .form-container {
     max-width: 600px;
-    margin: 0 auto;
+    margin: 50px auto; /* Dikey boşluk ekler */
     background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Gölge efekti */
+    padding: 30px;
+    backdrop-filter: blur(10px); /* Arka plan bulanıklığı efekti */
 }
 
 h2 {
     text-align: center;
     color: #333;
+    font-weight: 700;
+    margin-bottom: 20px;
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
     color: #555;
+    font-weight: 600;
 }
 
 input[type="text"],
@@ -56,30 +63,44 @@ input[type="tel"],
 input[type="date"],
 select {
     width: 100%;
-    padding: 10px;
+    height: 30px; /* Yüksekliği ayarlayın */
+    padding: 5px; /* İçerik ile kenarlar arasındaki boşluk */
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
+    transition: border-color 0.3s;
+    font-size: 14px; /* Yazı tipi boyutu */
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+select:focus {
+    border-color: #007bff;
+    outline: none;
 }
 
 input[type="submit"] {
     background-color: #007bff;
     color: #fff;
     border: none;
-    padding: 10px;
+    padding: 12px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
     width: 100%;
+    transition: background-color 0.3s;
 }
 
 input[type="submit"]:hover {
-    background-color: #007bff;
+    background-color: #0056b3;
 }
 
 /* İlgi Alanları Bölümü Stilleri */
 .interests-section {
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 .interests-options {
@@ -88,38 +109,41 @@ input[type="submit"]:hover {
     background-color: #f9f9f9;
     border: 1px solid #ccc;
     border-radius: 5px;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
 .interests-options label {
-    display: block; /* Her bir etiketi yeni satıra al */
-    margin-bottom: 5px;
+    display: block;
+    margin-bottom: 8px;
 }
 
 .selected-interests {
     margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .interest-tag {
     display: inline-block;
     background-color: #e7f0ff;
     color: #007bff;
-    padding: 5px 10px;
-    border-radius: 5px;
-    margin-right: 5px;
-    margin-bottom: 5px;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 14px;
 }
 
-/* İlgi Alanları Yönetim Butonu Stili */
 .manage-interests-btn {
     background-color: #007bff;
     color: #fff;
     border: none;
-    padding: 8px 12px;
+    padding: 10px 15px;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 5px;
+    margin-top: 10px;
+    font-size: 14px;
+    transition: background-color 0.3s;
 }
 
 .manage-interests-btn:hover {

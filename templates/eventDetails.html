@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etkinlik Detayları</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/eventDetails_style.css') }}">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <main>
+        <section class="event-details">
+            <h2 class="event-title"> {{ event['event_name'] }} <span class="event-category">{{ event['category'] }}</span></h2>
+
+            <div class="event-info">
+                <div class="event-date">
+                    <p><strong>Başlangıç:</strong> {{ event['startDate'] }} / {{ event['startTime'] }}</p>
+                    <p><strong>Bitiş:</strong> {{ event['finishDate'] }} / {{ event['finishTime'] }}</p>
+                    <p><strong>Süre:</strong> 7 saat</p>
+                </div>
+
+                <div class="event-location">
+                    <p><strong>Konum:</strong> {{ event['city'] }} - {{ event['address'] }} </p>
+                </div>
+            </div>
+
+            <div class="event-description">
+                <h3>Açıklama:</h3>
+                    <p>{{ event['description'] }}</p>
+            </div>
+
+            <div class="event-creator">
+                <p><strong>Oluşturan:</strong> {{ event['creator_username'] }} </p>
+            </div>
+            <div class="event-actions">
+                <a href="/events" class="back-button">Geri Dön</a>
+                <a href="/join_event/1" class="join-button">Etkinliğe Katıl</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2024 Etkinlik Planlama Platformu. Tüm Hakları Saklıdır.</p>
+    </footer>
+</body>
+</html>

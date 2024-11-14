@@ -1,0 +1,81 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%; /* Tam genişlik */
+    height: 100%; /* Yüksekliği de tam yap */
+}
+
+header {
+    display: flex;
+    align-items: center; /* Dikey hizalamak için */
+    justify-content: space-between; /* Alanı eşit dağıtmak için */
+    background: linear-gradient(to right, #0036b3, #00Abff); /* Koyu mavi (#0056b3) dan açık mavi (#007bff) ye geçiş */
+    color: black;
+    padding: 15px 20px;
+    width: 100%; /* Header'ın genişliğini %100 yap */
+}
+
+h1 {
+    font-size: 48px;
+    color: white;
+    text-align: left;
+    padding-left: 20px; /* Sol boşluk ekleyin */
+    margin: 5px 0;
+    font-weight: bold;
+    flex-grow: 1;
+}
+
+nav {
+    margin: 0 auto;
+    padding: 20px;
+    width: fit-content;
+}
+
+.nav-links {
+    list-style: none; /* Madde işaretlerini kaldırır */
+    display: flex; /* Yatay düzenleme için */
+    gap: 20px; /* Linkler arası boşluk */
+    margin: 0; /* Dış boşluğu sıfırlar */
+    padding: 0; /* İç boşluğu sıfırlar */
+    position: absolute; /* Konumlandırmayı sağlar */
+    top: 50px; /* Sayfanın üst kısmına doğru hareket ettirir */
+    left: 500px; /* Sayfanın soluna doğru hareket ettirir */
+}
+
+.nav-links li a {
+    text-decoration: none; /* Alt çizgiyi kaldırır */
+    color: white; /* Yazı rengi */
+    font-weight: bold;
+}
+
+.event-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-left: 150px;
+    position: relative;
+    left: -150px;
+}
+
+.event-info {
+    font-size: 1em;
+    color: #333;
+    margin-top: 10px;
+    text-align: left; /* Yazıyı sola hizalar */
+}
+
+.add-event-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+}
+
+.add-event-button:hover {
+    background-color: #0056b3;
+}

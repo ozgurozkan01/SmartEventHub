@@ -1,211 +1,423 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #e9ecef; /* Açık gri arka plan */
+    background-color: #e9ecef;
     margin: 0;
+    padding: 15px;
+}
+
+.info-container, .event-container {
+    width: 600px;
+    margin: 30px auto;
     padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+    position: absolute;
 }
 
 .info-container {
-    width: 800px; /* Sabit genişlik ayarlama */
-    margin: 50px auto; /* Ortalanma */
-    padding: 30px;
-    background-color: #ffffff; /* Beyaz arka plan */
-    border-radius: 15px; /* Daha yuvarlak köşeler */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Daha belirgin gölge */
-    position: absolute; /* Pozisyonu mutlak olarak ayarlama */
-    top: 100px; /* Üstten 100 piksel */
-    left: 300px; /* Soldan 50 piksel */
+    top: 200px;
+    left: 300px;
 }
 
 .event-container {
-    width: 800px; /* Sabit genişlik ayarlama */
-    margin: 50px auto; /* Ortalanma */
-    padding: 30px;
-    background-color: #ffffff; /* Beyaz arka plan */
-    border-radius: 15px; /* Daha yuvarlak köşeler */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Daha belirgin gölge */
-    position: absolute; /* Pozisyonu mutlak olarak ayarlama */
-    top: 100px; /* Üstten 100 piksel */
-    left: 1250px; /* info-container'ın sağında (800px + 300px + bir miktar boşluk) */
+    top: 200px;
+    left: 1000px;
 }
 
 header {
     text-align: center;
-    padding-bottom: 20px;
+    padding-bottom: 15px;
 }
 
 h1 {
-    color: #007bff; /* Mavi başlık */
-    font-size: 2.5em; /* Daha büyük başlık */
+    color: #007bff;
+    font-size: 2em;
 }
 
 .user-info {
-    margin-bottom: 30px;
-    padding: 20px;
-    border-radius: 10px; /* Kenar yuvarlama */
-    background-color: #f8f9fa; /* Açık gri arka plan */
-    border: 1px solid #dee2e6; /* Açık gri sınır */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .user-info h2 {
-    color: #343a40; /* Koyu başlık rengi */
-    font-size: 1.8em; /* Başlık boyutu */
-    border-bottom: 2px solid #007bff; /* Altı çizili efekt */
-    padding-bottom: 10px; /* Başlık ve içerik arasında boşluk */
-    margin-bottom: 20px; /* Başlık ile üstteki içerik arasında boşluk */
+    color: #343a40;
+    font-size: 1.5em;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
 }
 
 .user-info p {
     display: flex;
-    justify-content: space-between; /* Sağ ve sol alanları birbirinden ayır */
-    align-items: center; /* Dikey hizalama */
-    margin: 10px 0; /* Üst ve alt boşluk */
-    padding: 10px; /* İçerik için boşluk */
-    background: #ffffff; /* Beyaz arka plan */
-    border-radius: 5px; /* Kenar yuvarlama */
-    transition: background-color 0.3s; /* Geçiş efekti */
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 0;
+    padding: 8px;
+    background: #ffffff;
+    border-radius: 4px;
+    transition: background-color 0.3s;
 }
 
 .user-info p:hover {
-    background-color: #e9ecef; /* Hoverda açık gri arka plan */
+    background-color: #e9ecef;
 }
 
 .highlight {
-    font-weight: bold; /* Kalın yazı */
-    color: #dc3545; /* Kırmızı vurgulama */
+    font-weight: bold;
+    color: #dc3545;
 }
 
 .user-management {
-    margin-bottom: 30px;
-    padding: 20px;
-    border-radius: 10px; /* Kenar yuvarlama */
-    background-color: #f8f9fa; /* Açık gri arka plan */
-    border: 1px solid #dee2e6; /* Açık gri sınır */
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
 }
 
 h2 {
-    color: #343a40; /* Koyu başlık */
-    font-size: 1.8em; /* Başlık boyutu */
-    border-bottom: 2px solid #007bff; /* Altı çizili efekt */
-    padding-bottom: 10px; /* Başlık ile içerik arasında boşluk */
+    color: #343a40;
+    font-size: 1.5em;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 8px;
 }
 
 .button-group {
     display: flex;
-    flex-direction: column; /* Dikey hizalama */
-    gap: 15px; /* Butonlar arasında boşluk */
+    flex-direction: column;
+    gap: 10px;
 }
 
 .button-group .btn {
-    width: 100%; /* Butonların tam genişlikte olmasını sağlar */
-    padding: 12px 25px; /* Buton içindeki boşluk */
-    background-color: #007bff; /* Mavi buton rengi */
-    color: white; /* Beyaz yazı rengi */
-    border: none; /* Kenar yok */
-    border-radius: 5px; /* Kenar yuvarlama */
-    cursor: pointer; /* İmleç değişimi */
-    font-size: 1em; /* Buton yazı boyutu */
-    transition: background-color 0.3s, transform 0.2s; /* Geçiş efektleri */
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .button-group .btn:hover {
-    background-color: #0056b3; /* Hoverda daha koyu mavi */
-    transform: scale(1.05); /* Hoverda büyütme efekti */
+    background-color: #0056b3;
+    transform: scale(1.05);
 }
 
 footer {
     text-align: center;
-    padding: 15px 0;
-    color: #666; /* Gri yazı rengi */
-    font-size: 0.9em; /* Daha küçük yazı boyutu */
+    padding: 10px 0;
+    color: #666;
+    font-size: 0.8em;
 }
 
 .update-input {
-    display: none; /* Varsayılan olarak gizli */
-    margin-left: 10px; /* Sol boşluk */
-    padding: 5px; /* İç boşluk */
-    border: 1px solid #ccc; /* Açık gri kenar */
-    border-radius: 4px; /* Kenar yuvarlama */
+    display: none;
+    margin-left: 8px;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
 }
 
 .edit-button {
-    position: absolute; /* Mutlak konumlandırma */
-    top: 300px; /* Yukarıdan 30px aşağıda (değeri değiştirerek ayarlayabilirsiniz) */
-    right: 50px; /* Sağdan 10px */
-    padding: 8px 12px; /* İçerik için boşluk */
-    background-color: #007bff; /* Mavi arka plan */
-    color: white; /* Beyaz yazı rengi */
-    border: none; /* Kenar yok */
-    border-radius: 5px; /* Kenar yuvarlama */
-    cursor: pointer; /* İmleç değişimi */
-    font-size: 1em; /* Yazı boyutu */
-    transition: background-color 0.3s; /* Hover geçişi */
+    position: absolute;
+    top: 220px;
+    right: 30px;
+    padding: 6px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s;
 }
 
 .edit-button:hover {
-    background-color: #0056b3; /* Hoverda daha koyu mavi */
+    background-color: #0056b3;
 }
 
-.indentity-correct-button
-{
-    position: absolute; /* Mutlak konumlandırma */
-    top: 195px; /* Yukarıdan 30px aşağıda (değeri değiştirerek ayarlayabilirsiniz) */
-    right: 50px; /* Sağdan 10px */
-    padding: 8px 12px; /* İçerik için boşluk */
-    background-color: #007bff; /* Mavi arka plan */
-    color: white; /* Beyaz yazı rengi */
-    border: none; /* Kenar yok */
-    border-radius: 5px; /* Kenar yuvarlama */
-    cursor: pointer; /* İmleç değişimi */
-    font-size: 1em; /* Yazı boyutu */
-    transition: background-color 0.3s; /* Hover geçişi */
+.indentity-correct-button {
+    position: absolute;
+    top: 150px;
+    right: 30px;
+    padding: 6px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s;
 }
 
 .password-reset {
-    background-color: #f8f9fa; /* Açık gri arka plan */
-    border-radius: 10px; /* Kenar yuvarlama */
-    padding: 20px; /* İçerik için boşluk */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Hafif gölge */
-    margin-top: 20px; /* Üstten boşluk */
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 15px;
 }
 
 .password-reset div {
-    margin-bottom: 15px; /* Alanlar arasında boşluk */
+    margin-bottom: 10px;
 }
 
 .password-reset label {
-    display: block; /* Etiketleri blok eleman yaparak alt alta sıralama */
-    margin-bottom: 5px; /* Altında boşluk */
-    font-weight: bold; /* Kalın yazı */
-    color: #343a40; /* Koyu renk yazı */
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+    color: #343a40;
 }
 
 .password-reset input[type="password"] {
-    width: 100%; /* Tam genişlikte olmasını sağla */
-    padding: 10px; /* İçerik için boşluk */
-    border: 1px solid #ccc; /* Açık gri kenar */
-    border-radius: 5px; /* Kenar yuvarlama */
-    font-size: 1em; /* Yazı boyutu */
-    transition: border-color 0.3s; /* Kenar rengi geçişi */
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9em;
+    transition: border-color 0.3s;
 }
 
 .password-reset input[type="password"]:focus {
-    border-color: #007bff; /* Fokusta mavi kenar */
-    outline: none; /* Varsayılan odak stilini kaldır */
+    border-color: #007bff;
+    outline: none;
 }
 
 .reset-password-btn {
-    background-color: #007bff; /* Mavi arka plan */
-    color: white; /* Beyaz yazı rengi */
-    border: none; /* Kenar yok */
-    border-radius: 5px; /* Kenar yuvarlama */
-    cursor: pointer; /* İmleç değişimi */
-    padding: 10px 15px; /* İçerik için boşluk */
-    font-size: 1em; /* Yazı boyutu */
-    transition: background-color 0.3s; /* Hover geçişi */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 8px 12px;
+    font-size: 0.9em;
+    transition: background-color 0.3s;
 }
 
 .reset-password-btn:hover {
-    background-color: #0056b3; /* Hoverda daha koyu mavi */
+    background-color: #0056b3;
+}
+
+.profile-picture-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-picture {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.update-picture-btn {
+    padding: 6px 12px;
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s;
+
+    position: relative;
+    top: -45px;
+    right: 20px;
+}
+
+.update-picture-btn:hover {
+    background-color: #0056b3;
+}
+
+.user-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.user-info-item p {
+    margin: 0;
+    flex-grow: 1;
+    padding-right: 10px;
+}
+
+.edit-btn {
+    background-color: #007bff00;
+    color: white;
+    border: none;
+    padding: 5px 5px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+    min-width: 40px;
+}
+
+.edit-btn:hover {
+    background-color: #0056b3;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Sayfa arka planı */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Diğer içeriklerin önünde görünmesi için */
+}
+
+/* Modal içeriği */
+.modal h2 {
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.interests-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.interest-option label {
+    font-size: 1em;
+    cursor: pointer;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+.user-info-item p {
+    margin: 0;              /* Paragrafın etrafındaki boşlukları kaldır */
+}
+
+.user-info-item ul {
+    list-style-type: none;  /* Liste işaretlerini kaldır */
+    padding: 0;             /* İçerideki boşlukları kaldır */
+    margin: 0;              /* Liste dışındaki boşlukları kaldır */
+}
+
+.user-info-item ul li {
+    padding-left: 0;
+    margin-bottom: 5px;     /* Liste öğeleri arasına boşluk bırak */
+}
+
+.event-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Daha küçük kolonlar */
+    gap: 15px;
+    margin-top: 20px;
+    padding: 0 15px;
+}
+
+.event-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.event-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+.event-title {
+    font-size: 1.1em;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.event-dates {
+    font-size: 0.85em;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.event-location {
+    font-size: 0.85em;
+    color: #777;
+}
+
+.no-events-message {
+    font-size: 0.95em;
+    color: #888;
+    text-align: center;
+    padding: 12px;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.event-list {
+    display: flex;
+    overflow-x: auto; /* Yatay kaydırma ekler */
+    gap: 15px;
+    padding: 10px;
+    margin-top: 20px;
+    scroll-snap-type: x mandatory; /* Kaydırma sırasında kartların sıralı olmasını sağlar */
+}
+
+.event-card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    flex-shrink: 0;
+    width: 450px;
+    scroll-snap-align: start; /* Kartlar kaydırılırken hizalanır */
+}
+
+.event-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+.event-title {
+    font-size: 1.1em;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.event-dates {
+    font-size: 0.85em;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.event-location {
+    font-size: 0.85em;
+    color: #777;
 }

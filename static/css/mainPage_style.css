@@ -5,60 +5,6 @@ body {
     background-color: #f4f4f4;
 }
 
-header {
-    display: flex;
-    align-items: center; /* Dikey hizalamak için */
-    justify-content: space-between; /* Alanı eşit dağıtmak için */
-    background: linear-gradient(to right, #0036b3, #00Abff); /* Koyu mavi (#0056b3) dan açık mavi (#007bff) ye geçiş */
-    color: black;
-    padding: 15px 20px; /* Üst ve alt boşluk ile yan boşluk */
-}
-
-h1 {
-    font-size: 48px; /* Yazı boyutunu artır */
-    color: white; /* Yazı rengini beyaz yap */
-    text-align: center; /* Metni ortala */
-    margin: 20px 0; /* Üstte ve altta boşluk bırak */
-    font-weight: bold; /* Yazıyı kalın yap */
-}
-
-.header-title {
-    font-size: 36px; /* Başlık boyutu */
-    margin: 0; /* Kenar boşluklarını sıfırlamak için */
-}
-
-nav {
-    margin: 0 auto; /* Yatayda ortalama */
-    padding: 20px; /* Üstten ve alttan boşluk */
-    width: fit-content; /* İçeriğe göre genişlik ayarla */
-}
-
-.nav-links {
-    list-style: none; /* Noktalı liste stilini kaldır */
-    display: flex; /* Flexbox ile yan yana dizme */
-    margin: 0; /* Kenar boşluklarını sıfırla */
-    font-size: 1.25em; /* Bağlantı metin boyutunu artır */
-    padding-bottom: 50px; /* İçerik boşluğunu sıfırla */
-    padding-top: 0; /* İçerik boşluğunu sıfırla */
-    padding-left: 0; /* İçerik boşluğunu sıfırla */
-    padding-right: 300px; /* İçerik boşluğunu sıfırla */
-}
-
-.nav-links li {
-    margin-left: 50px; /* Her bir bağlantı arasında boşluk */
-}
-
-.nav-links a {
-    color: white; /* Yazı rengi beyaz */
-    text-decoration: none; /* Alt çizgiyi kaldır */
-    font-weight: bold; /* Yazıyı kalın yap */
-    transition: color 0.3s; /* Hover efekti için geçiş */
-}
-
-.nav-links a:hover {
-    color: #e7f3fe; /* Hover rengi */
-}
-
 h2 {
     text-align: center;
 }
@@ -75,23 +21,50 @@ h2 {
 
 .event-grid {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
+    flex-wrap: wrap;  /* Allows items to wrap into new rows */
+    justify-content: space-between;
+    gap: 20px;  /* Space between the cards */
     padding: 20px;
+}
+
+.link {
+    text-decoration: none;
 }
 
 .event-card {
     position: relative;
+    display: flex;
+    flex-direction: column;
     border: 1px solid #ddd;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin: 10px;
     padding: 15px;
-    width: calc(32% - 20px);
+    width: 100%;
     box-sizing: border-box;
     text-align: center;
     transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    min-width: 575px;
+    overflow: hidden;
+}
+
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/static/images/default_pp.png'); /* Resim yolu */
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    filter: brightness(0.6);
+}
+
+.event-content {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
 }
 
 .event-card::before {
@@ -101,11 +74,16 @@ h2 {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('/static/images/events.jpg');
     background-size: cover;
     background-position: center;
     opacity: 0.4;
-    z-index: 0;
+    z-index: -1;
+    border-radius: 5px;
+}
+
+.event-card h3, .event-card p {
+    position: relative;
+    z-index: 1;
 }
 
 .event-card > * {
@@ -143,37 +121,179 @@ footer {
     width: 100%;
 }
 
-.add-event-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-top: 15px;
-    transition: background-color 0.3s;
-}
-
-.add-event-button:hover {
-    background-color: #0056b3; /* Hover rengi ayarlandı */
-}
-
 .event-title {
-    font-size: 2em; /* İstediğiniz boyuta göre ayarlayın */
-    font-weight: bold; /* Kalın yapmak için */
-    margin-bottom: 15px; /* Alt boşluk ekleyebilirsiniz */
+    font-size: 2rem; /* Başlık boyutunu büyüt */
+    font-weight: 700; /* Kalın yazı */
+    color: #2c3e50; /* Başlık rengi */
 }
 
 .event-action {
     display: flex;
-    flex-direction: column; /* Buton ve metni dikey hizalamak için */
-    align-items: center; /* Ortalamak için */
+    flex-direction: column;
+    align-items: center;
     margin-bottom: 20px; /* Diğer içeriklerden uzaklık için */
 }
 
 .event-info {
-    font-size: 1.2em; /* Metin boyutunu ayarlayabilirsiniz */
-    color: #333; /* Metin rengi */
-    margin-top: 10px; /* Butondan uzaklık */
-    text-align: center; /* Metni ortalayabilirsiniz */
+    font-size: 1.2em;
+    color: #333;
+    margin-top: 10px;
+    text-align: center;
+}
+
+    .event-dates p {
+        margin: 5px 0;
+        font-weight: normal;
+    }
+
+    .event-dates p strong {
+        font-weight: bold;
+    }
+
+    .event-dates {
+        background-color: #f4f4f4;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+
+    /* Önerilen Etkinlikler Bölümü */
+.recommended-events-section {
+    margin: 20px 0;
+    text-align: center;
+    padding: 0 20px; /* Sağ ve sol taraflara padding ekledim */
+}
+
+.events-carousel {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.events-list {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+}
+
+.event-card-item {
+    min-width: 180px; /* Kart genişliği */
+    margin: 0 10px;
+    padding: 12px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    font-size: 12px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.event-card-item h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.event-card-item p {
+    margin-bottom: 6px;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+    font-size: 18px;
+    padding: 8px;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 50%;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.carousel-btn:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.prev-btn {
+    left: 10px; /* Sol tarafta daha fazla padding */
+}
+
+.next-btn {
+    right: 10px; /* Sağ tarafta daha fazla padding */
+}
+
+.event-card-item:hover {
+    transform: scale(1.05);
+}
+
+/* Başlık Tasarımı */
+.recommended-events-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2c3e50;
+    text-transform: uppercase;
+    letter-spacing: 2px; /* Harf aralıklarını açtık */
+    margin-bottom: 30px;
+    position: relative;
+    display: inline-block;
+    padding: 10px;
+}
+
+.recommended-events-title:before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+}
+
+.recommended-events-title:after {
+    content: "✨";
+    position: absolute;
+    top: -12px;
+    right: -20px;
+    font-size: 18px;
+}
+
+@media (max-width: 768px) {
+    .event-card-item {
+        min-width: 150px;
+        padding: 8px;
+    }
+
+    .event-card-item h3 {
+        font-size: 14px;
+    }
+
+    .event-card-item p {
+        font-size: 10px;
+    }
+
+    .recommended-events-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .recommended-events-section {
+        padding: 0 10px;
+    }
+}
+
+.no-events-message {
+    text-align: center;
+    width: 100%;
+    font-size: 1.2em;
+    margin-top: 20px;
+}
+
+.section-divider {
+    border-top: 3px solid blue;
+    margin: 20px 0;
+}
+
+.event-card[data-opacity="0"] {
+    opacity: 0;
 }

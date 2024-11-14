@@ -1,0 +1,284 @@
+/* Genel Stil Ayarları */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+    padding: 20px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body::before {
+    content: '';
+    background-image: url('../images/events.jpg'); /* Arka plan resmi */
+    background-size: cover; /* Resim tüm ekrana tam oturur */
+    background-position: center; /* Resmi ortalar */
+    opacity: 0.6; /* Opaklık ayarı */
+    position: fixed; /* Arka plan sabit kalır */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* İçerik arka planda */
+}
+
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 1.5rem;
+    color: #444;
+}
+
+/* Etkinlik Formu */
+.event-form {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.event-form label {
+    font-size: 16px;
+    color: #444;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.event-form input, .event-form textarea, .event-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.event-form input[type="date"], .event-form input[type="time"] {
+    padding: 8px;
+}
+
+.event-form textarea {
+    resize: vertical;
+    height: 120px;
+}
+
+.event-form button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+.event-form button:hover {
+    background-color: #0056b3;
+}
+
+/* İlgi Alanları Bölümü */
+.interests-section {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.interests-section label {
+    font-size: 16px;
+    color: #444;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.selected-interests {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.selected-interests .interest-tag {
+    background-color: #e7f0ff;
+    color: #007bff;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.selected-interests .interest-tag:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* İlgi Alanları Seçenekleri */
+.interests-options {
+    display: block;
+    margin-top: 15px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Radyo butonları ve etiketlerinin stilini ayarla */
+.interests-options label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    margin-bottom: 12px;
+    color: #444;
+    cursor: pointer;
+    font-weight: 500;
+    padding-left: 25px;
+    position: relative;
+}
+
+/* Radyo butonlarının stilini düzenle */
+.interests-options input[type="radio"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    cursor: pointer;
+    accent-color: #007bff;
+}
+
+/* Radyo butonları hover efekti */
+.interests-options label:hover {
+    color: #007bff;
+}
+
+/* İlgi Alanları Butonunun ve Seçeneklerinin Duyarlılığı */
+@media screen and (max-width: 768px) {
+    .event-form {
+        padding: 15px;
+    }
+
+    .selected-interests .interest-tag {
+        font-size: 13px;
+        padding: 6px 12px;
+    }
+
+    .event-form button {
+        font-size: 14px;
+    }
+}
+
+select {
+    width: 100%;
+    padding: 12px 20px;
+    margin-bottom: 18px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    font-size: 14px;
+    color: #333;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none; /* Tarayıcıdan gelen ok işaretini gizler */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+}
+
+/* Focus durumunda select kutusu */
+select:focus {
+    border-color: #4A90E2;
+    box-shadow: 0 0 8px rgba(74, 144, 226, 0.5);
+}
+
+/* Select kutusunun içindeki ok işareti */
+select::-ms-expand {
+    display: none;
+}
+
+/* Arka planda bir ok simgesi ekleyelim */
+select::after {
+    content: " ▼";
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+    pointer-events: none;
+}
+
+/* Select kutusunun etrafında gölge */
+select {
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover durumu */
+select:hover {
+    border-color: #4A90E2;
+}
+
+/* Mobil uyumlu select kutusu (özellikle iOS'ta düzgün gözükmesi için) */
+@media screen and (max-width: 768px) {
+    select {
+        font-size: 16px;
+        padding: 10px 18px;
+    }
+}
+
+/* Genel form stil düzenlemeleri */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.file-input-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.file-input-label {
+    display: inline-block;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;  /* Yazıyı beyaz yapma */
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.file-input-label:hover {
+    background-color: #0056b3;
+}
+

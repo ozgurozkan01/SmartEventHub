@@ -4,42 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user_style.css') }}">
-    <title>Admin Profili</title>
+    <title>Kullanıcı Profili</title>
 </head>
 <body>
-    <div class="info-container">
-        <header>
-            <h1>Kullanıcı Profili</h1>
-            <button class="edit-button">Edit</button> <!-- Edit butonu -->
-        </header>
+        {% include 'header.html' %}
+
+        <div class="info-container">
         <section class="user-info">
             <h2>Kullanıcı Bilgileri</h2>
             <button class="indentity-correct-button">Kimliğinizi Doğrulayın</button>
             <div class="user-details">
-                <span class="highlight">
-                    <img src="/static/images/profile.png" alt="Profil Fotoğrafı" style="width: 100px; height: 100px; border-radius: 50%;">
-                </span>
-                <div>
-                    <p>Ad: <span class="highlight">John</span></p>
-                    <p>Soyad: <span class="highlight">Doe</span></p>
-                    <p>Email: <span class="highlight">user@example.com</span></p>
-                    <p>Kullanıcı Adı: <span class="highlight">JohnDoe</span></p>
-                    <p>Şifre: <span class="highlight">12345</span></p>
-                    <p>Konum: <span class="highlight">İstanbul, Türkiye</span></p>
-                    <p>İlgi Alanları: <span class="highlight">Yazılım, Teknoloji, Seyahat</span></p>
-                    <p>Doğum Tarihi: <span class="highlight">01 Ocak 1990</span></p>
-                    <p>Cinsiyet: <span class="highlight">Erkek</span></p>
-                    <p>Telefon Numarası: <span class="highlight">+90 123 456 7890</span></p>
+                <div class="profile-picture-container">
+                    <img src="{{ url_for('static', filename=user.profile_photo) }}" alt="Profil Fotoğrafı" class="profile-picture">
+                    <input type="file" id="profile-picture" name="profile-picture" accept="image/*" style="display:none;" onchange="updateProfilePicture()">
+                    <button class="update-picture-btn" onclick="triggerFileInput()">📥</button>
+                </div>
+                <div class="user-details">
+                    <div class="user-info-item">
+                        <p>Ad: <span class="highlight" id="first-name">{{ user.first_name }}</span></p>
+                        <button class="edit-btn" onclick="editField('first-name')">✏️</button>
+                    </div>
+                    <div class="user-info-item">
+                        <p>Soyad: <span class="highlight" id="last-name">{{ user.last_name }}</span></p>
+                        <button class="edit-btn" onclick="editField('last-name')">✏️</button>
+                    </div>
+                    <div class="user-info-item">
+                        <p>Email: <span class="highlight " id="email">{{ user.email }}</span></p>
+                        <button class="edit-btn" onclick="editField('email')">✏️</button>
+                    </div>
+                    <div class="user-info-item">
+                        <p>Kullanıcı Adı: <span class="highlight" id="username">{{ user.username }}</span></p>
+                        <button class="edit-btn" onclick="editField('username')">✏️</button>
+                    </div>
+                    <div class="user-info-item">
+                        <p>Konum: <span class="highlight" id="location">{{ user.location }}</span></p>
+                        <button class="edit-btn" onclick="editField('location')">✏️</button>
+                    </div>
+                    <div class="user-info-item">
+                    <p>İlgi Alanları:
+                    <span class="highlight" id="interests-display">
+                        {% for interest in interests %}
+                            {{ interest }}<br>
+                        {% endfor %}
+                    </span>
+                </p>
+                                        <button class="edit-btn" onclick="editField('interests')">✏️</button>
+                    </div>
+                    <div class="user-info-item">
+                        <p>Doğum Tarihi: <span class="highlight" id="birth-date">{{ user.birthday }}</span></p>
+                        <button class="edit-btn" onclick="editField('birth-date')">✏️</button>
+                    </div>
+                    <div class="user-info-item">
+                        <p>Cinsiyet: <span class="highlight" id="gender">{{ user.gender }}</span></p>
+                        <button class="edit-btn" onclick="editField('gender')">✏️</button>
+                    </div>
+                    <div class="user-info-item">
+                        <p>Telefon Numarası: <span class="highlight" id="phone-number">{{ user.phone_number }}</span></p>
+                        <button class="edit-btn" onclick="editField('phone-number')">✏️</button>
+                    </div>
                 </div>
             </div>
         </section>
     </div>
-        <div class ="event-container">
-        <h2>İlgi Alanlarınız</h2>
-        <h2>Katıldığınız Etkinlikler</h2>
-        <h2>Şifre Yenileme</h2>
 
-            <div class="password-reset">
+    <div class="event-container">
+        <h2>Oluşturduğunuz Etkinlikler</h2>
+            <div class="event-list">
+                {% for event in user_events %}
+                    <div class="event-card">
+                        <h3 class="event-title">{{ event['event_name'] }}</h3>
+                        <p class="event-dates">
+                            <strong>Başlangıç:</strong> {{ event['startDate'] }} / {{ event['startTime'] }} <br>
+                            <strong>Bitiş:</strong> {{ event['finishDate'] }} / {{ event['finishTime'] }}
+                        </p>
+                        <p class="event-location"><strong>Konum:</strong> {{ event['location'] }}</p>
+                    </div>
+                {% else %}
+                    <p>Oluşturduğunuz bir etkinlik bulunmamaktadır.</p>
+                {% endfor %}
+            </div>
+        <h2>Katıldığınız Etkinlikler</h2>
+                <div class="event-list">
+                {% for event in user_events %}
+                    <div class="event-card">
+                        <h3 class="event-title">{{ event['event_name'] }}</h3>
+                        <p class="event-dates">
+                            <strong>Başlangıç:</strong> {{ event['startDate'] }} / {{ event['startTime'] }} <br>
+                            <strong>Bitiş:</strong> {{ event['finishDate'] }} / {{ event['finishTime'] }}
+                        </p>
+                        <p class="event-location"><strong>Konum:</strong> {{ event['location'] }}</p>
+                    </div>
+                {% else %}
+                    <p>Katıldığınız bir etkinlik bulunmamaktadır.</p>
+                {% endfor %}
+            </div>
+        <h2>Şifre Yenileme</h2>
+        <div class="password-reset">
             <div>
                 <label for="old-password">Eski Şifre:</label>
                 <input type="password" id="old-password" name="old-password">
@@ -53,9 +113,157 @@
                 <input type="password" id="confirm-new-password" name="confirm-new-password">
             </div>
             <div>
-                <button class="reset-password-btn">Onayla</button>
+                <button class="resetPassword" onclick="resetPassword()">Onayla</button>
             </div>
         </div>
     </div>
+
+    <script>
+        function toggleEditField() {
+            var interestsOptions = document.getElementById('interests-options');
+            interestsOptions.style.display = interestsOptions.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function triggerFileInput() {
+            document.getElementById('profile-picture').click();
+        }
+
+        function resetPassword() {
+            const oldPassword = document.getElementById('old-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmNewPassword = document.getElementById('confirm-new-password').value;
+
+            if (newPassword !== confirmNewPassword) {
+                alert('Yeni şifreler eşleşmiyor!');
+                return;
+            }
+
+            fetch('/resetPassword', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    oldPassword: oldPassword,
+                    newPassword: newPassword
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Şifre başarıyla güncellendi!');
+                } else {
+                    alert('Eski şifre hatalı. Lütfen tekrar deneyin.');
+                }
+            })
+            .catch(error => console.error('Hata:', error));
+        }
+
+        function updateProfilePicture() {
+            const fileInput = document.getElementById('profile-picture');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Lütfen bir profil resmi seçin!');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('profile-picture', file);
+
+            fetch('/updateProfilePicture', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Profil resmi başarıyla güncellendi!');
+
+                    const imgElement = document.querySelector('.profile-picture');
+                    imgElement.src = data.newProfilePictureUrl;
+
+                    window.location.reload();
+                } else {
+                    alert('Profil resmi güncellenirken bir hata oluştu.');
+                }
+            })
+            .catch(error => {
+                console.error('Hata:', error);
+                alert('Bir hata oluştu.');
+            });
+        }
+
+        let editMode = {};
+
+        function editField(field) {
+            const displayField = document.getElementById(`${field}-display`);
+            const editField = document.getElementById(`${field}-edit`);
+
+            displayField.style.display = 'none';
+            editField.style.display = 'block';
+        }
+
+        function toggleInterests() {
+            const interestsOptions = document.getElementById("interests-options");
+            interestsOptions.style.display = interestsOptions.style.display === "block" ? "none" : "block";
+        }
+
+        function saveInterests() {
+            const selectedInterestsContainer = document.getElementById("selected-interests");
+            selectedInterestsContainer.innerHTML = "";
+
+            const checkboxes = document.querySelectorAll(".interests-options input:checked");
+            checkboxes.forEach(checkbox => {
+                const interest = document.createElement("span");
+                interest.textContent = checkbox.value;
+                interest.classList.add("interest-tag");
+                selectedInterestsContainer.appendChild(interest);
+            });
+
+            const displayField = document.getElementById("interests-display");
+            const editField = document.getElementById("interests-edit");
+
+            const newInterests = [];
+            checkboxes.forEach(checkbox => {
+                newInterests.push(checkbox.value);
+            });
+
+            let interestList = '<ul>';
+            newInterests.forEach(interest => {
+                interestList += `<li>${interest}</li>`;
+            });
+            interestList += '</ul>';
+
+            displayField.innerHTML = interestList;
+
+            displayField.style.display = 'block';
+            editField.style.display = 'none';
+        }
+
+        function updateUserField(fieldId, updatedValue) {
+            console.log(`Güncellenen alan: ${fieldId}, Yeni Değer: ${updatedValue}`);
+
+            fetch(`/updateUserField`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    fieldId: fieldId,
+                    value: updatedValue
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Veri başarıyla güncellendi');
+                } else {
+                    alert('Veri güncellenirken bir hata oluştu.');
+                }
+            })
+            .catch(error => console.error('Hata:', error));
+        }
+    </script>
 </body>
 </html>

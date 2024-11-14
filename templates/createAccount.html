@@ -9,7 +9,7 @@
 <body>
     <div class="form-container">
         <h2>Hesap Oluştur</h2>
-        <form action="/register" method="GET" enctype="multipart/form-data">
+            <form action="/register" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="username">Kullanıcı Adı:</label>
                 <input type="text" id="username" name="username" required>
@@ -47,31 +47,98 @@
                 <label for="phone">Telefon Numarası:</label>
                 <input type="tel" id="phone" name="phone" required>
             </div>
+                            <div class="form-group">
+                <label for="location">Şehir:</label>
+                <select id="location" name="location" required>
+                    <option value="" disabled selected>Seçiniz</option>
+                    <option value="Adana">Adana</option>
+                    <option value="Adıyaman">Adıyaman</option>
+                    <option value="Afyonkarahisar">Afyonkarahisar</option>
+                    <option value="Ağrı">Ağrı</option>
+                    <option value="Amasya">Amasya</option>
+                    <option value="Ankara">Ankara</option>
+                    <option value="Antalya">Antalya</option>
+                    <option value="Artvin">Artvin</option>
+                    <option value="Aydın">Aydın</option>
+                    <option value="Balıkesir">Balıkesir</option>
+                    <option value="Bilecik">Bilecik</option>
+                    <option value="Bingöl">Bingöl</option>
+                    <option value="Bitlis">Bitlis</option>
+                    <option value="Bolu">Bolu</option>
+                    <option value="Burdur">Burdur</option>
+                    <option value="Bursa">Bursa</option>
+                    <option value="Çanakkale">Çanakkale</option>
+                    <option value="Çankırı">Çankırı</option>
+                    <option value="Denizli">Denizli</option>
+                    <option value="Diyarbakır">Diyarbakır</option>
+                    <option value="Edirne">Edirne</option>
+                    <option value="Elazığ">Elazığ</option>
+                    <option value="Erzincan">Erzincan</option>
+                    <option value="Erzurum">Erzurum</option>
+                    <option value="Eskişehir">Eskişehir</option>
+                    <option value="Gaziantep">Gaziantep</option>
+                    <option value="Giresun">Giresun</option>
+                    <option value="Gümüşhane">Gümüşhane</option>
+                    <option value="Hakkari">Hakkari</option>
+                    <option value="Hatay">Hatay</option>
+                    <option value="Iğdır">Iğdır</option>
+                    <option value="Isparta">Isparta</option>
+                    <option value="İstanbul">İstanbul</option>
+                    <option value="İzmir">İzmir</option>
+                    <option value="Kars">Kars</option>
+                    <option value="Kastamonu">Kastamonu</option>
+                    <option value="Kayseri">Kayseri</option>
+                    <option value="Kırklareli">Kırklareli</option>
+                    <option value="Kırşehir">Kırşehir</option>
+                    <option value="Kocaeli">Kocaeli</option>
+                    <option value="Konya">Konya</option>
+                    <option value="Kütahya">Kütahya</option>
+                    <option value="Malatya">Malatya</option>
+                    <option value="Manisa">Manisa</option>
+                    <option value="Mardin">Mardin</option>
+                    <option value="Muğla">Muğla</option>
+                    <option value="Muş">Muş</option>
+                    <option value="Nevşehir">Nevşehir</option>
+                    <option value="Niğde">Niğde</option>
+                    <option value="Ordu">Ordu</option>
+                    <option value="Osmaniye">Osmaniye</option>
+                    <option value="Rize">Rize</option>
+                    <option value="Sakarya">Sakarya</option>
+                    <option value="Samsun">Samsun</option>
+                    <option value="Siirt">Siirt</option>
+                    <option value="Sinop">Sinop</option>
+                    <option value="Sivas">Sivas</option>
+                    <option value="Tekirdağ">Tekirdağ</option>
+                    <option value="Tokat">Tokat</option>
+                    <option value="Trabzon">Trabzon</option>
+                    <option value="Tunceli">Tunceli</option>
+                    <option value="Şanlıurfa">Şanlıurfa</option>
+                    <option value="Uşak">Uşak</option>
+                    <option value="Van">Van</option>
+                    <option value="Yalova">Yalova</option>
+                    <option value="Yozgat">Yozgat</option>
+                    <option value="Zonguldak">Zonguldak</option>
+                </select>
+            </div>
             <div class="form-group interests-section">
                 <label for="interests">İlgi Alanları:</label>
                 <div class="selected-interests" id="selected-interests"></div>
-                <button type="button" class="manage-interests-btn" onclick="toggleInterests()">İlgi Alanlarını Yönetin</button>
+                <button type="button" class="manage-interests-btn" onclick="toggleInterests()">İlgi Alanı Ekleyiniz</button>
                 <div class="interests-options" id="interests-options" style="display:none;">
-                    <label><input type="checkbox" onchange="saveInterests()" value="Spor (Futbol, Basketbol, Koşu)"> Spor (Futbol, Basketbol, Koşu)</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Sanat (Resim, Heykel, Fotoğrafçılık)"> Sanat (Resim, Heykel, Fotoğrafçılık)</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Müzik (Konserler, Enstrüman Çalma, Müzik Prodüksiyonu)"> Müzik (Konserler, Enstrüman Çalma, Müzik Prodüksiyonu)</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Tiyatro ve Performans Sanatları"> Tiyatro ve Performans Sanatları</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Kitap Kulüpleri ve Edebiyat"> Kitap Kulüpleri ve Edebiyat</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Yemek ve Gastronomi (Gurme Turlar, Yemek Yapma Atölyeleri)"> Yemek ve Gastronomi (Gurme Turlar, Yemek Yapma Atölyeleri)</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Moda ve Tasarım"> Moda ve Tasarım</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Doğa ve Macera Sporları (Trekking, Dağcılık, Kampçılık)"> Doğa ve Macera Sporları (Trekking, Dağcılık, Kampçılık)</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Sağlık ve Wellness (Yoga, Meditasyon, Spa)"> Sağlık ve Wellness (Yoga, Meditasyon, Spa)</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Teknoloji ve Bilim (Hackathonlar, Yapay Zeka Etkinlikleri)"> Teknoloji ve Bilim (Hackathonlar, Yapay Zeka Etkinlikleri)</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Fotoğrafçılık ve Videografi"> Fotoğrafçılık ve Videografi</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="El Sanatları (Seramik, Ahşap İşleri, El Yapımı Takılar)"> El Sanatları (Seramik, Ahşap İşleri, El Yapımı Takılar)</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Film ve Sinema"> Film ve Sinema</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Otomobil ve Motosiklet (Araç Tuning, Klasik Araba Toplantıları)"> Otomobil ve Motosiklet (Araç Tuning, Klasik Araba Toplantıları)</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Bahçe ve Çiçek Yetiştiriciliği"> Bahçe ve Çiçek Yetiştiriciliği</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Hayvan Bakımı ve Doğa Gönüllülüğü"> Hayvan Bakımı ve Doğa Gönüllülüğü</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Gönüllülük ve Sosyal Sorumluluk Projeleri"> Gönüllülük ve Sosyal Sorumluluk Projeleri</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Seyahat ve Keşif"> Seyahat ve Keşif</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="Dans (Salsa, Hip-Hop, Klasik Dans)"> Dans (Salsa, Hip-Hop, Klasik Dans)</label>
-                    <label><input type="checkbox" onchange="saveInterests()" value="E-Spor ve Video Oyunları"> E-Spor ve Video Oyunları</label>
+                    <label><input type="checkbox" name="interests" onchange="saveInterests()" value="Spor"> Spor </label>
+                    <label><input type="checkbox" name="interests" onchange="saveInterests()" value="Sanat"> Sanat </label>
+                    <label><input type="checkbox" name="interests" onchange="saveInterests()" value="Müzik"> Müzik </label>
+                    <label><input type="checkbox" name="interests" onchange="saveInterests()" value="Tiyatro"> Tiyatro </label>
+                    <label><input type="checkbox" name="interests" onchange="saveInterests()" value="Edebiyat"> Edebiyat </label>
+                    <label><input type="checkbox" name="interests" onchange="saveInterests()" value="Yemek"> Yemek </label>
+                    <label><input type="checkbox" name="interests" onchange="saveInterests()" value="Moda-Tasarım"> Moda-Tasarım </label>
+                    <label><input type="checkbox" name="interests" onchange="saveInterests()" value="Doğa-Macera"> Doğa-Macera </label>
+                    <label><input type="checkbox" name="interests" onchange="saveInterests()" value="Teknoloji"> Teknoloji </label>
+                    <label><input type="checkbox" name="interests" onchange="saveInterests()" value="Fotoğrafçılık"> Fotoğrafçılık</label>
+                    <label><input type="checkbox" name="interests" onchange="saveInterests()" value="Film-Sinema"> Film-Sinema</label>
+                    <label><input type="checkbox" name="interests" onchange="saveInterests()" value="Seyahat-Keşif"> Seyahat-Keşif </label>
+                    <label><input type="checkbox" name="interests" onchange="saveInterests()" value="Dans"> Dans </label>
+                    <label><input type="checkbox" name="interests" onchange="saveInterests()" value="E-Spor"> E-Spor </label>
                 </div>
             </div>
             <div class="form-group">
@@ -82,17 +149,20 @@
 
     <script src="interests_script.js"></script>
     <script>
-        function toggleInterests() {
+        function toggleInterests()
+        {
             const interestsOptions = document.getElementById("interests-options");
             interestsOptions.style.display = interestsOptions.style.display === "block" ? "none" : "block";
         }
 
-        function saveInterests() {
+        function saveInterests()
+        {
             const selectedInterestsContainer = document.getElementById("selected-interests");
-            selectedInterestsContainer.innerHTML = ""; // Önceki seçimleri temizle
+            selectedInterestsContainer.innerHTML = "";
 
             const checkboxes = document.querySelectorAll(".interests-options input:checked");
-            checkboxes.forEach(checkbox => {
+            checkboxes.forEach(checkbox =>
+            {
                 const interest = document.createElement("span");
                 interest.textContent = checkbox.value;
                 interest.classList.add("interest-tag");

@@ -12,33 +12,33 @@
         <div class="info-container">
         <section class="user-info">
             <h2>Kullanıcı Bilgileri</h2>
-            <button class="indentity-correct-button">Kimliğinizi Doğrulayın</button>
+            <button class="edit" onclick="redirectToEditProfile()">Edit</button>
             <div class="user-details">
                 <div class="profile-picture-container">
                     <img src="{{ url_for('static', filename=user.profile_photo) }}" alt="Profil Fotoğrafı" class="profile-picture">
                     <input type="file" id="profile-picture" name="profile-picture" accept="image/*" style="display:none;" onchange="updateProfilePicture()">
                     <button class="update-picture-btn" onclick="triggerFileInput()">📥</button>
+
+                    <div class="rating-circle">
+                        <span class="rating-text"> {{ score }} </span>
+                    </div>
+
                 </div>
                 <div class="user-details">
                     <div class="user-info-item">
                         <p>Ad: <span class="highlight" id="first-name">{{ user.first_name }}</span></p>
-                        <button class="edit-btn" onclick="editField('first-name')">✏️</button>
                     </div>
                     <div class="user-info-item">
                         <p>Soyad: <span class="highlight" id="last-name">{{ user.last_name }}</span></p>
-                        <button class="edit-btn" onclick="editField('last-name')">✏️</button>
                     </div>
                     <div class="user-info-item">
                         <p>Email: <span class="highlight " id="email">{{ user.email }}</span></p>
-                        <button class="edit-btn" onclick="editField('email')">✏️</button>
                     </div>
                     <div class="user-info-item">
                         <p>Kullanıcı Adı: <span class="highlight" id="username">{{ user.username }}</span></p>
-                        <button class="edit-btn" onclick="editField('username')">✏️</button>
                     </div>
                     <div class="user-info-item">
                         <p>Konum: <span class="highlight" id="location">{{ user.location }}</span></p>
-                        <button class="edit-btn" onclick="editField('location')">✏️</button>
                     </div>
                     <div class="user-info-item">
                     <p>İlgi Alanları:
@@ -48,19 +48,15 @@
                         {% endfor %}
                     </span>
                 </p>
-                                        <button class="edit-btn" onclick="editField('interests')">✏️</button>
                     </div>
                     <div class="user-info-item">
                         <p>Doğum Tarihi: <span class="highlight" id="birth-date">{{ user.birthday }}</span></p>
-                        <button class="edit-btn" onclick="editField('birth-date')">✏️</button>
                     </div>
                     <div class="user-info-item">
                         <p>Cinsiyet: <span class="highlight" id="gender">{{ user.gender }}</span></p>
-                        <button class="edit-btn" onclick="editField('gender')">✏️</button>
                     </div>
                     <div class="user-info-item">
                         <p>Telefon Numarası: <span class="highlight" id="phone-number">{{ user.phone_number }}</span></p>
-                        <button class="edit-btn" onclick="editField('phone-number')">✏️</button>
                     </div>
                 </div>
             </div>
@@ -71,29 +67,33 @@
         <h2>Oluşturduğunuz Etkinlikler</h2>
             <div class="event-list">
                 {% for event in user_events %}
-                    <div class="event-card">
-                        <h3 class="event-title">{{ event['event_name'] }}</h3>
-                        <p class="event-dates">
-                            <strong>Başlangıç:</strong> {{ event['startDate'] }} / {{ event['startTime'] }} <br>
-                            <strong>Bitiş:</strong> {{ event['finishDate'] }} / {{ event['finishTime'] }}
-                        </p>
-                        <p class="event-location"><strong>Konum:</strong> {{ event['location'] }}</p>
-                    </div>
+                    <a href="{{ url_for('event_detail', event_id=event.id) }}" class="link">
+                        <div class="event-card">
+                                <h3 class="event-title">{{ event['event_name'] }}</h3>
+                            <!---<p class="event-dates">
+                                <strong>Başlangıç:</strong> {{ event['startDate'] }} / {{ event['startTime'] }} <br>
+                                <strong>Bitiş:</strong> {{ event['finishDate'] }} / {{ event['finishTime'] }}
+                            </p>
+                            <p class="event-location"><strong>Konum:</strong> {{ event['location'] }}</p>--->
+                        </div>
+                    </a>
                 {% else %}
                     <p>Oluşturduğunuz bir etkinlik bulunmamaktadır.</p>
                 {% endfor %}
             </div>
         <h2>Katıldığınız Etkinlikler</h2>
                 <div class="event-list">
-                {% for event in user_events %}
-                    <div class="event-card">
-                        <h3 class="event-title">{{ event['event_name'] }}</h3>
-                        <p class="event-dates">
-                            <strong>Başlangıç:</strong> {{ event['startDate'] }} / {{ event['startTime'] }} <br>
-                            <strong>Bitiş:</strong> {{ event['finishDate'] }} / {{ event['finishTime'] }}
-                        </p>
-                        <p class="event-location"><strong>Konum:</strong> {{ event['location'] }}</p>
-                    </div>
+                {% for event in attended_events %}
+                    <a href="{{ url_for('event_detail', event_id=event.id) }}" class="link">
+                        <div class="event-card">
+                                <h3 class="event-title">{{ event['event_name'] }}</h3>
+                            <!---<p class="event-dates">
+                                <strong>Başlangıç:</strong> {{ event['startDate'] }} / {{ event['startTime'] }} <br>
+                                <strong>Bitiş:</strong> {{ event['finishDate'] }} / {{ event['finishTime'] }}
+                            </p>
+                            <p class="event-location"><strong>Konum:</strong> {{ event['location'] }}</p>--->
+                        </div>
+                    </a>
                 {% else %}
                     <p>Katıldığınız bir etkinlik bulunmamaktadır.</p>
                 {% endfor %}
@@ -264,6 +264,10 @@
             })
             .catch(error => console.error('Hata:', error));
         }
+
+        function redirectToEditProfile() {
+    window.location.href = "/editProfile";
+}
     </script>
 </body>
 </html>

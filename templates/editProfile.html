@@ -1,10 +1,193 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilgi Güncelle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/createAccount_style.css') }}">
 </head>
 <body>
 
+    {% include 'header.html' %}
+
+    <div class="form-container">
+        {% if user['interests'] is string %}
+            {% set user_interests = user['interests'].split(', ') %}
+        {% else %}
+            {% set user_interests = user['interests'] %}
+        {% endif %}
+
+        <h2>Bilgilerinizi Güncelleyin</h2>
+        <form action="/updateProfile" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="username">Kullanıcı Adı:</label>
+                <input type="text" id="username" name="username" value="{{ user['username'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="firstName">Ad:</label>
+                <input type="text" id="firstName" name="firstName" value="{{ user['first_name'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Soyad:</label>
+                <input type="text" id="lastName" name="lastName" value="{{ user['last_name'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="birthDate">Doğum Tarihi:</label>
+                <input type="date" id="birthDate" name="birthDate" value="{{ user['birthday'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="gender">Cinsiyet:</label>
+                <select id="gender" name="gender" required>
+                    <option value="" disabled>Seçiniz</option>
+                    <option value="Erkek" {% if user['gender'] == 'Erkek' %}selected{% endif %}>Erkek</option>
+                    <option value="Kadın" {% if user['gender'] == 'Kadın' %}selected{% endif %}>Kadın</option>
+                    <option value="Diğer" {% if user['gender'] == 'Diğer' %}selected{% endif %}>Diğer</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="email">E-posta Adresi:</label>
+                <input type="email" id="email" name="email" value="{{ user['email'] }}" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Telefon Numarası:</label>
+                <input type="tel" id="phone" name="phone" value="{{ user['phone_number'] }}" required>
+            </div>
+        <div class="form-group">
+        <label for="location">Şehir:</label>
+        <select id="location" name="location" required>
+            <option value="" disabled>Seçiniz</option>
+            <option value="Adana" {% if user['location'] == 'Adana' %}selected{% endif %}>Adana</option>
+            <option value="Adıyaman" {% if user['location'] == 'Adıyaman' %}selected{% endif %}>Adıyaman</option>
+            <option value="Afyonkarahisar" {% if user['location'] == 'Afyonkarahisar' %}selected{% endif %}>Afyonkarahisar</option>
+            <option value="Ağrı" {% if user['location'] == 'Ağrı' %}selected{% endif %}>Ağrı</option>
+            <option value="Amasya" {% if user['location'] == 'Amasya' %}selected{% endif %}>Amasya</option>
+            <option value="Ankara" {% if user['location'] == 'Ankara' %}selected{% endif %}>Ankara</option>
+            <option value="Antalya" {% if user['location'] == 'Antalya' %}selected{% endif %}>Antalya</option>
+            <option value="Artvin" {% if user['location'] == 'Artvin' %}selected{% endif %}>Artvin</option>
+            <option value="Aydın" {% if user['location'] == 'Aydın' %}selected{% endif %}>Aydın</option>
+            <option value="Balıkesir" {% if user['location'] == 'Balıkesir' %}selected{% endif %}>Balıkesir</option>
+            <option value="Bilecik" {% if user['location'] == 'Bilecik' %}selected{% endif %}>Bilecik</option>
+            <option value="Bingöl" {% if user['location'] == 'Bingöl' %}selected{% endif %}>Bingöl</option>
+            <option value="Bitlis" {% if user['location'] == 'Bitlis' %}selected{% endif %}>Bitlis</option>
+            <option value="Bolu" {% if user['location'] == 'Bolu' %}selected{% endif %}>Bolu</option>
+            <option value="Burdur" {% if user['location'] == 'Burdur' %}selected{% endif %}>Burdur</option>
+            <option value="Bursa" {% if user['location'] == 'Bursa' %}selected{% endif %}>Bursa</option>
+            <option value="Çanakkale" {% if user['location'] == 'Çanakkale' %}selected{% endif %}>Çanakkale</option>
+            <option value="Çankırı" {% if user['location'] == 'Çankırı' %}selected{% endif %}>Çankırı</option>
+            <option value="Çorum" {% if user['location'] == 'Çorum' %}selected{% endif %}>Çorum</option>
+            <option value="Denizli" {% if user['location'] == 'Denizli' %}selected{% endif %}>Denizli</option>
+            <option value="Diyarbakır" {% if user['location'] == 'Diyarbakır' %}selected{% endif %}>Diyarbakır</option>
+            <option value="Edirne" {% if user['location'] == 'Edirne' %}selected{% endif %}>Edirne</option>
+            <option value="Elazığ" {% if user['location'] == 'Elazığ' %}selected{% endif %}>Elazığ</option>
+            <option value="Erzincan" {% if user['location'] == 'Erzincan' %}selected{% endif %}>Erzincan</option>
+            <option value="Erzurum" {% if user['location'] == 'Erzurum' %}selected{% endif %}>Erzurum</option>
+            <option value="Eskişehir" {% if user['location'] == 'Eskişehir' %}selected{% endif %}>Eskişehir</option>
+            <option value="Gaziantep" {% if user['location'] == 'Gaziantep' %}selected{% endif %}>Gaziantep</option>
+            <option value="Giresun" {% if user['location'] == 'Giresun' %}selected{% endif %}>Giresun</option>
+            <option value="Gümüşhane" {% if user['location'] == 'Gümüşhane' %}selected{% endif %}>Gümüşhane</option>
+            <option value="Hakkari" {% if user['location'] == 'Hakkari' %}selected{% endif %}>Hakkari</option>
+            <option value="Hatay" {% if user['location'] == 'Hatay' %}selected{% endif %}>Hatay</option>
+            <option value="Iğdır" {% if user['location'] == 'Iğdır' %}selected{% endif %}>Iğdır</option>
+            <option value="Isparta" {% if user['location'] == 'Isparta' %}selected{% endif %}>Isparta</option>
+            <option value="İstanbul" {% if user['location'] == 'İstanbul' %}selected{% endif %}>İstanbul</option>
+            <option value="İzmir" {% if user['location'] == 'İzmir' %}selected{% endif %}>İzmir</option>
+            <option value="Kars" {% if user['location'] == 'Kars' %}selected{% endif %}>Kars</option>
+            <option value="Kastamonu" {% if user['location'] == 'Kastamonu' %}selected{% endif %}>Kastamonu</option>
+            <option value="Kayseri" {% if user['location'] == 'Kayseri' %}selected{% endif %}>Kayseri</option>
+            <option value="Kırklareli" {% if user['location'] == 'Kırklareli' %}selected{% endif %}>Kırklareli</option>
+            <option value="Kırşehir" {% if user['location'] == 'Kırşehir' %}selected{% endif %}>Kırşehir</option>
+            <option value="Kocaeli" {% if user['location'] == 'Kocaeli' %}selected{% endif %}>Kocaeli</option>
+            <option value="Konya" {% if user['location'] == 'Konya' %}selected{% endif %}>Konya</option>
+            <option value="Kütahya" {% if user['location'] == 'Kütahya' %}selected{% endif %}>Kütahya</option>
+            <option value="Malatya" {% if user['location'] == 'Malatya' %}selected{% endif %}>Malatya</option>
+            <option value="Manisa" {% if user['location'] == 'Manisa' %}selected{% endif %}>Manisa</option>
+            <option value="Mardin" {% if user['location'] == 'Mardin' %}selected{% endif %}>Mardin</option>
+            <option value="Muğla" {% if user['location'] == 'Muğla' %}selected{% endif %}>Muğla</option>
+            <option value="Muş" {% if user['location'] == 'Muş' %}selected{% endif %}>Muş</option>
+            <option value="Nevşehir" {% if user['location'] == 'Nevşehir' %}selected{% endif %}>Nevşehir</option>
+            <option value="Niğde" {% if user['location'] == 'Niğde' %}selected{% endif %}>Niğde</option>
+            <option value="Ordu" {% if user['location'] == 'Ordu' %}selected{% endif %}>Ordu</option>
+            <option value="Osmaniye" {% if user['location'] == 'Osmaniye' %}selected{% endif %}>Osmaniye</option>
+            <option value="Rize" {% if user['location'] == 'Rize' %}selected{% endif %}>Rize</option>
+            <option value="Sakarya" {% if user['location'] == 'Sakarya' %}selected{% endif %}>Sakarya</option>
+            <option value="Samsun" {% if user['location'] == 'Samsun' %}selected{% endif %}>Samsun</option>
+            <option value="Siirt" {% if user['location'] == 'Siirt' %}selected{% endif %}>Siirt</option>
+            <option value="Sinop" {% if user['location'] == 'Sinop' %}selected{% endif %}>Sinop</option>
+            <option value="Sivas" {% if user['location'] == 'Sivas' %}selected{% endif %}>Sivas</option>
+            <option value="Şanlıurfa" {% if user['location'] == 'Şanlıurfa' %}selected{% endif %}>Şanlıurfa</option>
+            <option value="Şırnak" {% if user['location'] == 'Şırnak' %}selected{% endif %}>Şırnak</option>
+            <option value="Tekirdağ" {% if user['location'] == 'Tekirdağ' %}selected{% endif %}>Tekirdağ</option>
+            <option value="Tokat" {% if user['location'] == 'Tokat' %}selected{% endif %}>Tokat</option>
+            <option value="Trabzon" {% if user['location'] == 'Trabzon' %}selected{% endif %}>Trabzon</option>
+            <option value="Tunceli" {% if user['location'] == 'Tunceli' %}selected{% endif %}>Tunceli</option>
+            <option value="Uşak" {% if user['location'] == 'Uşak' %}selected{% endif %}>Uşak</option>
+            <option value="Van" {% if user['location'] == 'Van' %}selected{% endif %}>Van</option>
+            <option value="Yalova" {% if user['location'] == 'Yalova' %}selected{% endif %}>Yalova</option>
+            <option value="Yozgat" {% if user['location'] == 'Yozgat' %}selected{% endif %}>Yozgat</option>
+            <option value="Zonguldak" {% if user['location'] == 'Zonguldak' %}selected{% endif %}>Zonguldak</option>
+        </select>
+    </div>
+    <div class="form-group interests-section">
+        <label for="interests">İlgi Alanları:</label>
+        <div class="selected-interests" id="selected-interests"></div>
+        <button type="button" class="manage-interests-btn" onclick="toggleInterests()">İlgi Alanı Ekleyiniz</button>
+        <div class="interests-options" id="interests-options" style="display:none;">
+            {% set user_interests = interests if interests else [] %}
+            <label>
+                <input type="checkbox" name="interests" value="Spor" {% if 'Spor' in user_interests %}checked{% endif %}> Spor
+            </label>
+            <label>
+                <input type="checkbox" name="interests" value="Sanat" {% if 'Sanat' in user_interests %}checked{% endif %}> Sanat
+            </label>
+            <label>
+                <input type="checkbox" name="interests" value="Müzik" {% if 'Müzik' in user_interests %}checked{% endif %}> Müzik
+            </label>
+            <label>
+                <input type="checkbox" name="interests" value="Tiyatro" {% if 'Tiyatro' in user_interests %}checked{% endif %}> Tiyatro
+            </label>
+            <label>
+                <input type="checkbox" name="interests" value="Edebiyat" {% if 'Edebiyat' in user_interests %}checked{% endif %}> Edebiyat
+            </label>
+            <label>
+                <input type="checkbox" name="interests" value="Yemek" {% if 'Yemek' in user_interests %}checked{% endif %}> Yemek
+            </label>
+            <label>
+                <input type="checkbox" name="interests" value="Moda-Tasarım" {% if 'Moda-Tasarım' in user_interests %}checked{% endif %}> Moda-Tasarım
+            </label>
+            <label>
+                <input type="checkbox" name="interests" value="Doğa-Macera" {% if 'Doğa-Macera' in user_interests %}checked{% endif %}> Doğa-Macera
+            </label>
+            <label>
+                <input type="checkbox" name="interests" value="Teknoloji" {% if 'Teknoloji' in user_interests %}checked{% endif %}> Teknoloji
+            </label>
+            <label>
+                <input type="checkbox" name="interests" value="Fotoğrafçılık" {% if 'Fotoğrafçılık' in user_interests %}checked{% endif %}> Fotoğrafçılık
+            </label>
+            <label>
+                <input type="checkbox" name="interests" value="Film-Sinema" {% if 'Film-Sinema' in user_interests %}checked{% endif %}> Film-Sinema
+            </label>
+            <label>
+                <input type="checkbox" name="interests" value="Seyahat-Keşif" {% if 'Seyahat-Keşif' in user_interests %}checked{% endif %}> Seyahat-Keşif
+            </label>
+            <label>
+                <input type="checkbox" name="interests" value="Dans" {% if 'Dans' in user_interests %}checked{% endif %}> Dans
+            </label>
+            <label>
+                <input type="checkbox" name="interests" value="E-Spor" {% if 'E-Spor' in user_interests %}checked{% endif %}> E-Spor
+            </label>
+        </div>
+    </div>
+            <div class="form-group">
+                <input type="submit" class="submit-btn" value="Değişiklikleri Kaydet">
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function toggleInterests() {
+            const interestsOptions = document.getElementById("interests-options");
+            interestsOptions.style.display = interestsOptions.style.display === "block" ? "none" : "block";
+        }
+    </script>
 </body>
 </html>

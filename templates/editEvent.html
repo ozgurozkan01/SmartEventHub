@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/createEvent_style.css') }}">
+    <title>Etkinlik Güncelleme</title>
+</head>
+<body>
+    {% include 'header.html' %}
+
+    <section class="event-form">
+        <h2>Etkinlik Detaylarını Girin</h2>
+            <form method="POST" id="event-form" action="{{ url_for('update_event', event_id=event['ID']) }}" enctype="multipart/form-data">
+            <div class="form-group interests-section">
+                <label for="event-name">Etkinlik İsmi:</label>
+                <input type="text" id="event-name" name="event-name" placeholder="Etkinlik ismini girin" value="{{ event['event_name'] }}" required>
+            </div>
+            <div class="form-group interests-section">
+                <label for="event-start-date">Başlangıç Tarihi:</label>
+                <input type="date" id="event-start-date" name="event-start-date" value="{{ event['startDate'] }}" required>
+
+                <label for="event-finish-date">Bitiş Tarihi:</label>
+                <input type="date" id="event-finish-date" name="event-finish-date" value="{{ event['finishDate'] }}" required>
+
+                <label for="event-start-time">Başlama Saati:</label>
+                <input type="time" id="event-start-time" name="event-start-time" value="{{ event['startTime'] }}" required>
+
+                <label for="event-finish-time">Bitiş Saati:</label>
+                <input type="time" id="event-finish-time" name="event-finish-time" value="{{ event['finishTime'] }}" required>
+            </div>
+
+            <div class="form-group interests-section">
+                <label for="event-description">Açıklama:</label>
+                <textarea id="event-description" name="event-description" placeholder="Etkinlik açıklamasını girin" required> {{ event['description'] }} </textarea>
+            </div>
+
+            <div class="form-group interests-section">
+                <label for="event-city">Konum:</label>
+        <select id="location" name="location" required>
+            <option value="" disabled>Seçiniz</option>
+            <option value="Adana" {% if event['city'] == 'Adana' %}selected{% endif %}>Adana</option>
+            <option value="Adıyaman" {% if event['city'] == 'Adıyaman' %}selected{% endif %}>Adıyaman</option>
+            <option value="Afyonkarahisar" {% if event['city'] == 'Afyonkarahisar' %}selected{% endif %}>Afyonkarahisar</option>
+            <option value="Ağrı" {% if event['city'] == 'Ağrı' %}selected{% endif %}>Ağrı</option>
+            <option value="Amasya" {% if event['city'] == 'Amasya' %}selected{% endif %}>Amasya</option>
+            <option value="Ankara" {% if event['city'] == 'Ankara' %}selected{% endif %}>Ankara</option>
+            <option value="Antalya" {% if event['city'] == 'Antalya' %}selected{% endif %}>Antalya</option>
+            <option value="Artvin" {% if event['city'] == 'Artvin' %}selected{% endif %}>Artvin</option>
+            <option value="Aydın" {% if event['city'] == 'Aydın' %}selected{% endif %}>Aydın</option>
+            <option value="Balıkesir" {% if event['city'] == 'Balıkesir' %}selected{% endif %}>Balıkesir</option>
+            <option value="Bilecik" {% if event['city'] == 'Bilecik' %}selected{% endif %}>Bilecik</option>
+            <option value="Bingöl" {% if event['city'] == 'Bingöl' %}selected{% endif %}>Bingöl</option>
+            <option value="Bitlis" {% if event['city'] == 'Bitlis' %}selected{% endif %}>Bitlis</option>
+            <option value="Bolu" {% if event['city'] == 'Bolu' %}selected{% endif %}>Bolu</option>
+            <option value="Burdur" {% if event['city'] == 'Burdur' %}selected{% endif %}>Burdur</option>
+            <option value="Bursa" {% if event['city'] == 'Bursa' %}selected{% endif %}>Bursa</option>
+            <option value="Çanakkale" {% if event['city'] == 'Çanakkale' %}selected{% endif %}>Çanakkale</option>
+            <option value="Çankırı" {% if event['city'] == 'Çankırı' %}selected{% endif %}>Çankırı</option>
+            <option value="Çorum" {% if event['city'] == 'Çorum' %}selected{% endif %}>Çorum</option>
+            <option value="Denizli" {% if event['city'] == 'Denizli' %}selected{% endif %}>Denizli</option>
+            <option value="Diyarbakır" {% if event['city'] == 'Diyarbakır' %}selected{% endif %}>Diyarbakır</option>
+            <option value="Edirne" {% if event['city'] == 'Edirne' %}selected{% endif %}>Edirne</option>
+            <option value="Elazığ" {% if event['city'] == 'Elazığ' %}selected{% endif %}>Elazığ</option>
+            <option value="Erzincan" {% if event['city'] == 'Erzincan' %}selected{% endif %}>Erzincan</option>
+            <option value="Erzurum" {% if event['city'] == 'Erzurum' %}selected{% endif %}>Erzurum</option>
+            <option value="Eskişehir" {% if event['city'] == 'Eskişehir' %}selected{% endif %}>Eskişehir</option>
+            <option value="Gaziantep" {% if event['city'] == 'Gaziantep' %}selected{% endif %}>Gaziantep</option>
+            <option value="Giresun" {% if event['city'] == 'Giresun' %}selected{% endif %}>Giresun</option>
+            <option value="Gümüşhane" {% if event['city'] == 'Gümüşhane' %}selected{% endif %}>Gümüşhane</option>
+            <option value="Hakkari" {% if event['city'] == 'Hakkari' %}selected{% endif %}>Hakkari</option>
+            <option value="Hatay" {% if event['city'] == 'Hatay' %}selected{% endif %}>Hatay</option>
+            <option value="Iğdır" {% if event['city'] == 'Iğdır' %}selected{% endif %}>Iğdır</option>
+            <option value="Isparta" {% if event['city'] == 'Isparta' %}selected{% endif %}>Isparta</option>
+            <option value="İstanbul" {% if event['city'] == 'İstanbul' %}selected{% endif %}>İstanbul</option>
+            <option value="İzmir" {% if event['city'] == 'İzmir' %}selected{% endif %}>İzmir</option>
+            <option value="Kars" {% if event['city'] == 'Kars' %}selected{% endif %}>Kars</option>
+            <option value="Kastamonu" {% if event['city'] == 'Kastamonu' %}selected{% endif %}>Kastamonu</option>
+            <option value="Kayseri" {% if event['city'] == 'Kayseri' %}selected{% endif %}>Kayseri</option>
+            <option value="Kırklareli" {% if event['city'] == 'Kırklareli' %}selected{% endif %}>Kırklareli</option>
+            <option value="Kırşehir" {% if event['city'] == 'Kırşehir' %}selected{% endif %}>Kırşehir</option>
+            <option value="Kocaeli" {% if event['city'] == 'Kocaeli' %}selected{% endif %}>Kocaeli</option>
+            <option value="Konya" {% if event['city'] == 'Konya' %}selected{% endif %}>Konya</option>
+            <option value="Kütahya" {% if event['city'] == 'Kütahya' %}selected{% endif %}>Kütahya</option>
+            <option value="Malatya" {% if event['city'] == 'Malatya' %}selected{% endif %}>Malatya</option>
+            <option value="Manisa" {% if event['city'] == 'Manisa' %}selected{% endif %}>Manisa</option>
+            <option value="Mardin" {% if event['city'] == 'Mardin' %}selected{% endif %}>Mardin</option>
+            <option value="Muğla" {% if event['city'] == 'Muğla' %}selected{% endif %}>Muğla</option>
+            <option value="Muş" {% if event['city'] == 'Muş' %}selected{% endif %}>Muş</option>
+            <option value="Nevşehir" {% if event['city'] == 'Nevşehir' %}selected{% endif %}>Nevşehir</option>
+            <option value="Niğde" {% if event['city'] == 'Niğde' %}selected{% endif %}>Niğde</option>
+            <option value="Ordu" {% if event['city'] == 'Ordu' %}selected{% endif %}>Ordu</option>
+            <option value="Osmaniye" {% if event['city'] == 'Osmaniye' %}selected{% endif %}>Osmaniye</option>
+            <option value="Rize" {% if event['city'] == 'Rize' %}selected{% endif %}>Rize</option>
+            <option value="Sakarya" {% if event['city'] == 'Sakarya' %}selected{% endif %}>Sakarya</option>
+            <option value="Samsun" {% if event['city'] == 'Samsun' %}selected{% endif %}>Samsun</option>
+            <option value="Siirt" {% if event['city'] == 'Siirt' %}selected{% endif %}>Siirt</option>
+            <option value="Sinop" {% if event['city'] == 'Sinop' %}selected{% endif %}>Sinop</option>
+            <option value="Sivas" {% if event['city'] == 'Sivas' %}selected{% endif %}>Sivas</option>
+            <option value="Şanlıurfa" {% if event['city'] == 'Şanlıurfa' %}selected{% endif %}>Şanlıurfa</option>
+            <option value="Şırnak" {% if event['city'] == 'Şırnak' %}selected{% endif %}>Şırnak</option>
+            <option value="Tekirdağ" {% if event['city'] == 'Tekirdağ' %}selected{% endif %}>Tekirdağ</option>
+            <option value="Tokat" {% if event['city'] == 'Tokat' %}selected{% endif %}>Tokat</option>
+            <option value="Trabzon" {% if event['city'] == 'Trabzon' %}selected{% endif %}>Trabzon</option>
+            <option value="Tunceli" {% if event['city'] == 'Tunceli' %}selected{% endif %}>Tunceli</option>
+            <option value="Uşak" {% if event['city'] == 'Uşak' %}selected{% endif %}>Uşak</option>
+            <option value="Van" {% if event['city'] == 'Van' %}selected{% endif %}>Van</option>
+            <option value="Yalova" {% if event['city'] == 'Yalova' %}selected{% endif %}>Yalova</option>
+            <option value="Yozgat" {% if event['city'] == 'Yozgat' %}selected{% endif %}>Yozgat</option>
+            <option value="Zonguldak" {% if event['city'] == 'Zonguldak' %}selected{% endif %}>Zonguldak</option>
+        </select>
+
+                <label for="event-address">Adres:</label>
+                <input type="text" id="event-address" name="event-address" placeholder="Örn: Mahalle, Cadde, Sokak" value="{{ event['address'] }}" required>
+            </div>
+
+            <div class="form-group interests-section">
+                <label for="interests">Kategoriler:</label>
+                <div class="selected-interests" id="selected-interests"></div>
+                <button type="button" class="manage-interests-btn" onclick="toggleInterests()">Kategori Ekleyiniz</button>
+        <div class="interests-options" id="interests-options" style="display:none;">
+            <label>
+                <input type="radio" name="category" value="Spor" {% if event['category'] == 'Spor' %}checked{% endif %}> Spor
+            </label>
+            <label>
+                <input type="radio" name="category" value="Sanat" {% if event['category'] == 'Sanat' %}checked{% endif %}> Sanat
+            </label>
+            <label>
+                <input type="radio" name="category" value="Müzik" {% if event['category'] == 'Müzik' %}checked{% endif %}> Müzik
+            </label>
+            <label>
+                <input type="radio" name="category" value="Tiyatro" {% if event['category'] == 'Tiyatro' %}checked{% endif %}> Tiyatro
+            </label>
+            <label>
+                <input type="radio" name="category" value="Edebiyat" {% if event['category'] == 'Edebiyat' %}checked{% endif %}> Edebiyat
+            </label>
+            <label>
+                <input type="radio" name="category" value="Yemek" {% if event['category'] == 'Yemek' %}checked{% endif %}> Yemek
+            </label>
+            <label>
+                <input type="radio" name="category" value="Moda-Tasarım" {% if event['category'] == 'Moda-Tasarım' %}checked{% endif %}> Moda-Tasarım
+            </label>
+            <label>
+                <input type="radio" name="category" value="Doğa-Macera" {% if event['category'] == 'Doğa-Macera' %}checked{% endif %}> Doğa-Macera
+            </label>
+            <label>
+                <input type="radio" name="category" value="Teknoloji" {% if event['category'] == 'Teknoloji' %}checked{% endif %}> Teknoloji
+            </label>
+            <label>
+                <input type="radio" name="category" value="Fotoğrafçılık" {% if event['category'] == 'Fotoğrafçılık' %}checked{% endif %}> Fotoğrafçılık
+            </label>
+            <label>
+                <input type="radio" name="category" value="Film-Sinema" {% if event['category'] == 'Film-Sinema' %}checked{% endif %}> Film-Sinema
+            </label>
+            <label>
+                <input type="radio" name="category" value="Seyahat-Keşif" {% if event['category'] == 'Seyahat-Keşif' %}checked{% endif %}> Seyahat-Keşif
+            </label>
+            <label>
+                <input type="radio" name="category" value="Dans" {% if event['category'] == 'Dans' %}checked{% endif %}> Dans
+            </label>
+            <label>
+                <input type="radio" name="category" value="E-Spor" {% if event['category'] == 'E-Spor' %}checked{% endif %}> E-Spor
+            </label>
+        </div>
+            </div>
+            <button type="submit">Güncellemeleri Kaydet</button>
+        </form>
+    </section>
+
+    <script>
+        function toggleInterests() {
+            var interestsOptions = document.getElementById("interests-options");
+            if (interestsOptions.style.display === "none") {
+                interestsOptions.style.display = "block";
+            } else {
+                interestsOptions.style.display = "none";
+            }
+        }
+
+        document.getElementById('event-form').addEventListener('submit', function(event) {
+            const startDate = new Date(document.getElementById('event-start-date').value);
+            const finishDate = new Date(document.getElementById('event-finish-date').value);
+
+            if (startDate >= finishDate) {
+                alert('Başlangıç tarihi, bitiş tarihinden önce olmalıdır.');
+                event.preventDefault();
+            }
+        });
+
+        document.getElementById('event-image').addEventListener('change', function(e) {
+            var fileName = e.target.files[0].name;
+            document.getElementById('file-name').textContent = "Seçilen dosya: " + fileName;
+        });
+    </script>
+</body>
+</html>

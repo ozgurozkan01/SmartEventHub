@@ -1,6 +1,7 @@
 import sqlite3
 from werkzeug.security import generate_password_hash, check_password_hash
 from user import *
+from datetime import datetime
 
 DATABASE = 'event.db'
 
@@ -37,6 +38,25 @@ def insert_user(username, password, email, location, interests, first_name, last
         print("Kullanıcı adı, e-posta veya telefon numarası zaten mevcut.")
     except Exception as e:
         print(f"Bir hata oluştu: {e}")
+
+def insert_score(user_id, points=0):
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('''
+            INSERT INTO scores (user_ID, points, earned_date)
+            VALUES (?, ?, DATE('now'))
+        ''', (user_id, points))
+
+        conn.commit()
+        print(f"Kullanıcı ID: {user_id} için skor kaydedildi.")
+    except sqlite3.IntegrityError:
+        print("Bu kullanıcı için skor zaten mevcut.")
+    except Exception as e:
+        print(f"Bir hata oluştu: {e}")
+    finally:
+        conn.close()
 
 def delete_all_users():
     conn = sqlite3.connect(DATABASE)
@@ -147,16 +167,200 @@ def update_profile_picture_in_db(username, new_profile_picture_url):
     conn.close()
 
 
-def insert_event(event_name, description, start_date, finish_date, start_time, finish_time, duration, city, address, category, created_by, image_path):
+def update_user(user_id, data):
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM users WHERE ID = ?", (user_id,))
+    user = cursor.fetchone()
+
+    if not user:
+        print("Kullanıcı bulunamadı.")
+        conn.close()
+        return
+
+    updated_data = {
+        'username': data.get('username', user[1]),  # user[1] -> eski username
+        'password': data.get('password', user[2]),  # user[2] -> eski password
+        'email': data.get('email', user[3]),  # user[3] -> eski email
+        'location': data.get('location', user[4]),  # user[4] -> eski location
+        'interests': data.get('interests', user[5]),  # user[5] -> eski interests
+        'first_name': data.get('first_name', user[6]),  # user[6] -> eski first_name
+        'last_name': data.get('last_name', user[7]),  # user[7] -> eski last_name
+        'birth_date': data.get('birth_date', user[8]),  # user[8] -> eski birth_date
+        'gender': data.get('gender', user[9]),  # user[9] -> eski gender
+        'phone_number': data.get('phone', user[10]),  # user[10] -> eski phone_number
+        'profile_photo': user[11],  # Fotoğrafı değiştirmiyoruz, eski veriyi kullanıyoruz
+        'status': user[12]  # Status değerini değiştirmiyoruz
+    }
+
+    query = '''
+    UPDATE users
+    SET username = ?, password = ?, email = ?, location = ?, interests = ?, 
+        first_name = ?, last_name = ?, birth_date = ?, gender = ?, phone_number = ?, 
+        profile_photo = ?, status = ?
+    WHERE ID = ?
+    '''
+
+    cursor.execute(query, (
+        updated_data['username'],
+        updated_data['password'],
+        updated_data['email'],
+        updated_data['location'],
+        ', '.join(updated_data['interests']),
+        updated_data['first_name'],
+        updated_data['last_name'],
+        updated_data['birth_date'],
+        updated_data['gender'],
+        updated_data['phone_number'],
+        updated_data['profile_photo'],
+        updated_data['status'],
+        user_id
+    ))
+
+    conn.commit()
+
+    cursor.execute("SELECT * FROM users WHERE ID = ?", (user_id,))
+    updated_user = cursor.fetchone()
+
+    print(f"Güncellenmiş kullanıcı verisi: {updated_user}")
+
+    conn.close()
+
+def update_event_in_db(event_id, data):
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM events WHERE ID = ?", (event_id,))
+    event = cursor.fetchone()
+
+    if not event:
+        print("Event not found.")
+        conn.close()
+        return
+
+    updated_data = {
+        'event_name': data.get('event-name', event[1]),  # event[1] -> old event_name
+        'description': data.get('event-description', event[2]),  # event[2] -> old description
+        'start_date': data.get('event-start-date', event[3]),  # event[3] -> old startDate
+        'finish_date': data.get('event-finish-date', event[4]),  # event[4] -> old finishDate
+        'start_time': data.get('event-start-time', event[5]),  # event[5] -> old startTime
+        'finish_time': data.get('event-finish-time', event[6]),  # event[6] -> old finishTime
+        'duration': data.get('duration', event[7]),  # event[7] -> old duration
+        'city': data.get('location', event[8]),  # event[8] -> old city
+        'address': data.get('event-address', event[9]),  # event[9] -> old address
+        'category': data.get('category', event[10]),  # event[10] -> old category
+        'creator_username': data.get('creator_username', event[11]),  # event[11] -> old creator_username
+        'is_approved': data.get('isApproved', event[12])  # event[12] -> old isApproved
+    }
+
+    query = '''
+    UPDATE events
+    SET event_name = ?, description = ?, startDate = ?, finishDate = ?, startTime = ?, finishTime = ?, 
+        duration = ?, city = ?, address = ?, category = ?, creator_username = ?, isApproved = ?
+    WHERE ID = ?
+    '''
+
+    cursor.execute(query, (
+        updated_data['event_name'],
+        updated_data['description'],
+        updated_data['start_date'],
+        updated_data['finish_date'],
+        updated_data['start_time'],
+        updated_data['finish_time'],
+        updated_data['duration'],
+        updated_data['city'],
+        updated_data['address'],
+        updated_data['category'],
+        updated_data['creator_username'],
+        updated_data['is_approved'],
+        event_id
+    ))
+
+    conn.commit()
+
+    # Fetch the updated event details to confirm
+    cursor.execute("SELECT * FROM events WHERE ID = ?", (event_id,))
+    updated_event = cursor.fetchone()
+
+    print(f"Updated event data: {updated_event}")
+
+    conn.close()
+
+def insert_event(event_name, description, start_date, finish_date, start_time, finish_time, duration, city, address, category, created_by):
     conn = get_db_connection()
     cursor = conn.cursor()
 
     cursor.execute('''
-        INSERT INTO events (event_name, description, startDate, finishDate, startTime, finishTime, duration, city, address, category, creator_username, event_image_path)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (event_name, description, start_date, finish_date, start_time, finish_time, str(duration), city, address, category, created_by, image_path))
+        INSERT INTO events (event_name, description, startDate, finishDate, startTime, finishTime, duration, city, address, category, creator_username)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', (event_name, description, start_date, finish_date, start_time, finish_time, str(duration), city, address, category, created_by))
 
     conn.commit()
+    conn.close()
+
+
+def get_user_score(user_id):
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('''
+            SELECT points FROM scores 
+            WHERE user_ID = ?
+        ''', (user_id,))
+
+        result = cursor.fetchone()
+
+        if result:
+            return result[0]
+        else:
+            return 0
+
+    except Exception as e:
+        print(f"Bir hata oluştu: {e}")
+        return None
+    finally:
+        conn.close()
+
+def update_user_score(user_id, points_to_add):
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    earned_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    try:
+        cursor.execute('''SELECT points FROM scores WHERE user_ID = ?''', (user_id,))
+        result = cursor.fetchone()
+
+        if result:
+            current_score = result[0]
+            new_total = current_score + points_to_add
+            cursor.execute('''UPDATE scores SET points = ?, earned_date = ? WHERE user_ID = ?''',
+                           (new_total, earned_date, user_id))
+        else:
+            cursor.execute('''INSERT INTO scores (user_ID, points, earned_date) VALUES (?, ?, ?)''',
+                           (user_id, points_to_add, earned_date))
+
+        conn.commit()
+    except Exception as e:
+        print(f"Bir hata oluştu: {e}")
+    finally:
+        conn.close()
+
+
+def get_user_id_by_username(username):
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT ID FROM users WHERE username = ?", (username,))
+    user = cursor.fetchone()
+
+    if user:
+        return user[0]
+    else:
+        return None
+
     conn.close()
 
 def get_all_approved_events():
@@ -169,12 +373,16 @@ def get_all_approved_events():
     conn.close()
     return events
 
+def is_username_available(new_username):
+    conn = get_db_connection()
+    user = conn.execute('SELECT * FROM users WHERE username = ?', (new_username,)).fetchone()
+    conn.close()
+    return user is None
 
 def get_all_approved_events_for_user(username):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Kullanıcının ilgi alanlarını almak
     cursor.execute("SELECT interests FROM users WHERE username = ?", (username,))
     interests = cursor.fetchone()
 
@@ -225,7 +433,7 @@ def get_event_by_id(event_id):
     cursor.execute('''
         SELECT * FROM events WHERE ID = ?
     ''', (event_id,))
-    event = cursor.fetchone()  # Tek bir etkinlik döndürülür
+    event = cursor.fetchone()
     conn.close()
     return event
 
@@ -249,7 +457,6 @@ def get_user_participation_by_category(username):
 
     return category_participation
 
-
 def get_suggested_events_for_user(username):
     category_participation = get_user_participation_by_category(username)
 
@@ -267,7 +474,7 @@ def get_suggested_events_for_user(username):
         ''', (category,))
 
         events_in_category = cursor.fetchall()
-        suggested_events.extend(events_in_category)  # Bu kategorinin etkinliklerini ekle
+        suggested_events.extend(events_in_category)
 
     conn.close()
 
@@ -292,14 +499,94 @@ def print_events():
     else:
         print("Veritabanında etkinlik bulunamadı.")
 
+def join_event_for_user(user_id, event_id):
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
 
-def get_event_images():
+    try:
+        cursor.execute('''
+            INSERT INTO participants (user_ID, event_ID)
+            VALUES (?, ?)
+        ''', (user_id, event_id))
+        conn.commit()
+
+        if is_first_participation(user_id):
+            update_user_score(user_id, 20)
+        else:
+            update_user_score(user_id, 10)
+
+        return {"status": "success", "message": "Etkinliğe başarıyla katıldınız!"}
+    except sqlite3.IntegrityError:
+        return {"status": "info", "message": "Zaten bu etkinliğe katıldınız."}
+    except Exception as e:
+        return {"status": "danger", "message": f"Bir hata oluştu: {e}"}
+    finally:
+        conn.close()
+
+def is_first_participation(user_id):
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('''
+            SELECT COUNT(*) FROM participants WHERE user_ID = ?
+        ''', (user_id,))
+        result = cursor.fetchone()
+        return result[0] == 0
+    except Exception as e:
+        print(f"Bir hata oluştu: {e}")
+        return False
+    finally:
+        conn.close()
+
+
+def get_user_events(user_id):
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('''
+            SELECT e.ID, e.event_name, e.description, e.startDate, e.finishDate, 
+                   e.startTime, e.finishTime, e.city, e.address, e.category, e.creator_username
+            FROM events e
+            INNER JOIN participants p ON e.ID = p.event_ID
+            WHERE p.user_ID = ?
+        ''', (user_id,))
+
+        events = cursor.fetchall()
+
+        return [
+            {
+                "id": event[0],
+                "name": event[1],
+                "description": event[2],
+                "start_date": event[3],
+                "finish_date": event[4],
+                "start_time": event[5],
+                "finish_time": event[6],
+                "city": event[7],
+                "address": event[8],
+                "category": event[9],
+                "creator_username": event[10],
+            }
+            for event in events
+        ]
+    except Exception as e:
+        print(f"Bir hata oluştu: {e}")
+        return []
+    finally:
+        conn.close()
+
+def insert_message(sender_id, event_id, receiver_id, message_text):
+    sent_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT event_image_path FROM events')  # 'events' tablosundaki 'event_image_path' sütununu alıyoruz
-    event_images = cursor.fetchall()  # Sonuçları al
+    cursor.execute('''
+        INSERT INTO messages (sender_ID, event_ID, receiver_ID, message_text, sent_time)
+        VALUES (?, ?, ?, ?, ?)
+    ''', (sender_id, event_id, receiver_id, message_text, sent_time))
 
+    conn.commit()
     conn.close()
-
-    return [row['event_image_path'] for row in event_images]

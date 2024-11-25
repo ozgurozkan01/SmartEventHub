@@ -143,7 +143,7 @@ footer {
     background-color: #0056b3;
 }
 
-.indentity-correct-button {
+.edit {
     position: absolute;
     top: 150px;
     right: 30px;
@@ -212,9 +212,9 @@ footer {
 }
 
 .profile-picture {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
+    width: 100px; /* Profil fotoğrafının boyutu */
+    height: 100px; /* Profil fotoğrafının boyutu */
+    border-radius: 50%; /* Yuvarlak profil fotoğrafı */
 }
 
 .update-picture-btn {
@@ -271,11 +271,11 @@ footer {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Sayfa arka planı */
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999; /* Diğer içeriklerin önünde görünmesi için */
+    z-index: 9999;
 }
 
 /* Modal içeriği */
@@ -308,57 +308,18 @@ button:hover {
 }
 
 .user-info-item p {
-    margin: 0;              /* Paragrafın etrafındaki boşlukları kaldır */
+    margin: 0;
 }
 
 .user-info-item ul {
-    list-style-type: none;  /* Liste işaretlerini kaldır */
-    padding: 0;             /* İçerideki boşlukları kaldır */
-    margin: 0;              /* Liste dışındaki boşlukları kaldır */
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
 .user-info-item ul li {
     padding-left: 0;
-    margin-bottom: 5px;     /* Liste öğeleri arasına boşluk bırak */
-}
-
-.event-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Daha küçük kolonlar */
-    gap: 15px;
-    margin-top: 20px;
-    padding: 0 15px;
-}
-
-.event-card {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.event-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
-}
-
-.event-title {
-    font-size: 1.1em;
-    font-weight: 500;
-    color: #333;
-    margin-bottom: 8px;
-    line-height: 1.3;
-}
-
-.event-dates {
-    font-size: 0.85em;
-    color: #555;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .event-location {
@@ -379,11 +340,11 @@ button:hover {
 
 .event-list {
     display: flex;
-    overflow-x: auto; /* Yatay kaydırma ekler */
+    overflow-x: auto;
     gap: 15px;
-    padding: 10px;
-    margin-top: 20px;
-    scroll-snap-type: x mandatory; /* Kaydırma sırasında kartların sıralı olmasını sağlar */
+    padding: 5px;
+    margin-top: 10px;
+    scroll-snap-type: x mandatory;
 }
 
 .event-card {
@@ -394,8 +355,9 @@ button:hover {
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     flex-shrink: 0;
-    width: 450px;
-    scroll-snap-align: start; /* Kartlar kaydırılırken hizalanır */
+    width: 100px;
+    height: 20px;
+    scroll-snap-align: start;
 }
 
 .event-card:hover {
@@ -404,7 +366,7 @@ button:hover {
 }
 
 .event-title {
-    font-size: 1.1em;
+    font-size: .8em;
     font-weight: 500;
     color: #333;
     margin-bottom: 8px;
@@ -420,4 +382,18 @@ button:hover {
 .event-location {
     font-size: 0.85em;
     color: #777;
+}
+
+.rating-circle {
+    background-color: #0000FF; /* Sarı renk */
+    color: white;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 20px;
+    position: relative;
 }

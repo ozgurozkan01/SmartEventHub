@@ -1,10 +1,8 @@
 import os
 
 from flask import Flask, render_template, request, redirect, flash, url_for, jsonify, session
-from werkzeug.utils import secure_filename
 
 from database import *
-from event import Event
 from datetime import datetime
 
 import sys
@@ -80,9 +78,11 @@ def register():
     interests_str = ', '.join(interests)
 
     insert_user(username, password, email, location, interests_str, first_name, last_name, birth_date, gender, phone)
+    insert_score(get_user_id_by_username(username), points=0)
 
     flash("Kayıt başarılı!", "success")
     return redirect(url_for('login_form'))
+
 @app.route('/resetPassword', methods=['POST'])
 def reset_password():
     data = request.get_json()
@@ -107,7 +107,6 @@ def reset_password():
         conn.close()
         return jsonify(success=False)
 
-
 @app.route('/event-create', methods=['GET', 'POST'])
 def event_create():
     return render_template('createEvent.html')
@@ -131,18 +130,10 @@ def create_event():
 
         creator_username = session.get('user', {}).get('username')
 
-        image = request.files.get('event-image')
+        insert_event(event_name, description, start_date, finish_date, start_time, finish_time, duration, city, address, category, creator_username)
 
-        if image:
-            filename = secure_filename(image.filename)
-            image_path = os.path.join('static/images', filename)
-            image.save(image_path)
-
-            image_path = image_path.replace('\\', '/')
-        else:
-            image_path = None
-
-        insert_event(event_name, description, start_date, finish_date, start_time, finish_time, duration, city, address, category, creator_username, image_path)
+        user_id = get_user_id_by_username(creator_username)
+        update_user_score(user_id, 15)
 
         return redirect(url_for('main_page'))
 
@@ -190,14 +181,19 @@ def profile():
     if user_data:
         print(f"User Data: {user_data}")
 
-        interests = user_data.get('interests', '')
-        interests_list = interests.split(', ') if interests else []
+        interests = user_data.get('interests', [])
+
+        if isinstance(interests, list):
+            interests_list = interests
+        else:
+            interests_list = interests.split(', ') if interests else []
 
         username = user_data.get('username')
         user_events = get_created_events_by_username(username)
-        # attended_events = get_attended_events_by_username(username)
+        attended_events = get_user_events(get_user_id_by_username(username))
+        user_score = get_user_score(get_user_id_by_username(username))
 
-        return render_template('userProfile.html', user=user_data, interests=interests_list, user_events=user_events)
+        return render_template('userProfile.html', user=user_data, interests=interests_list, user_events=user_events, attended_events = attended_events, score=user_score)
     else:
         flash('Lütfen önce giriş yapın!')
         return redirect(url_for('login_form'))
@@ -205,10 +201,169 @@ def profile():
 @app.route('/event/<int:event_id>')
 def event_detail(event_id):
     event = get_event_by_id(event_id)
-    return render_template('eventDetails.html', event=event)
+    username = session.get('user').get('username')
+    return render_template('eventDetails.html', event=event, username=username)
+@app.route('/send_message/<int:event_id>', methods=['POST'])
+def send_message(event_id):
+    data = request.json  # Gelen JSON verisi
+    message_text = data.get('content')  # Mesaj içeriği
+    sender_id = session.get('user', {}).get('id')  # Oturumdaki kullanıcının ID'si
+    receiver_id = None  # Örneğin, bu birebir mesajlaşma değilse boş bırakabilirsiniz.
 
-images = get_event_images()
-print(images)
+    if not message_text or not sender_id:
+        return jsonify({"error": "Eksik bilgi"}), 400
+
+    try:
+        insert_message(sender_id, event_id, receiver_id, message_text)
+
+        sent_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        return jsonify({
+            "success": True,
+            "message": {
+                "event_id": event_id,
+                "sender_id": sender_id,
+                "receiver_id": receiver_id,
+                "message_text": message_text,
+                "sent_time": sent_time
+            }
+        }), 200
+    except Exception as e:
+        return jsonify({"error": "Mesaj kaydedilemedi", "details": str(e)}), 500
+
+@app.route('/get_messages/<int:event_id>', methods=['GET'])
+def get_messages(event_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT sender_ID, message_text, sent_time 
+        FROM messages 
+        WHERE event_ID = ?
+        ORDER BY sent_time ASC
+    ''', (event_id,))
+
+    messages = cursor.fetchall()
+    conn.close()
+
+    messages_list = [
+        {
+            "sender_id": row[0],
+            "message_text": row[1],
+            "sent_time": row[2]
+        }
+        for row in messages
+    ]
+
+    return jsonify(messages_list), 200
+
+@app.route('/editProfile')
+def edit_profile():
+    user_data = session.get('user')
+
+    if user_data:
+        print(f"User Data: {user_data}")
+
+        interests = user_data.get('interests', '')
+
+        if isinstance(interests, list):
+            interests = ', '.join(interests)
+        elif not isinstance(interests, str):
+            interests = ''
+
+        interests_list = interests.split(', ') if interests else []
+
+        return render_template('editProfile.html', user=user_data, interests=interests_list)
+
+    flash('Lütfen önce giriş yapın!')
+    return redirect(url_for('login_form'))
+
+
+@app.route('/updateProfile', methods=['POST'])
+def update_profile():
+    username = request.form['username']
+    user_instance = get_user_instance(username=username)
+
+    session['user'] = {
+        'username': user_instance.username,
+        'email': user_instance.email,
+        'first_name': user_instance.first_name,
+        'last_name': user_instance.last_name,
+        'location': user_instance.location,
+        'interests': user_instance.interests,
+        'birthday': user_instance.birth_date,
+        'gender': user_instance.gender,
+        'phone_number': user_instance.phone_number,
+        'profile_photo': user_instance.profile_photo,
+    }
+
+    updated_data = {
+        'username': request.form.get('username', user_instance.username),
+        'email': request.form.get('email', user_instance.email),
+        'first_name': request.form.get('firstName', user_instance.first_name),
+        'last_name': request.form.get('lastName', user_instance.last_name),
+        'location': request.form.get('location', user_instance.location),
+        'interests': request.form.getlist('interests') or (user_instance.interests.split(', ') if isinstance(user_instance.interests, str) else user_instance.interests),
+        'birthday': request.form.get('birthDate', user_instance.birth_date),
+        'gender': request.form.get('gender', user_instance.gender),
+        'phone': request.form.get('phone', user_instance.phone_number),
+    }
+
+    user_id = get_user_id_by_username(session.get('user').get('username'))
+
+    update_user(user_id, updated_data)
+
+    session['user'].update(updated_data)
+
+    return redirect('/profile')
+
+@app.route('/update_event/<int:event_id>', methods=['GET', 'POST'])
+def update_event(event_id):
+    if request.method == 'POST':
+        data = {
+            'event-name': request.form['event-name'],
+            'event-description': request.form['event-description'],
+            'event-start-date': request.form['event-start-date'],
+            'event-finish-date': request.form['event-finish-date'],
+            'event-start-time': request.form['event-start-time'],
+            'event-finish-time': request.form['event-finish-time'],
+            'event-address': request.form['event-address'],
+            'location': request.form['location'],
+            'category': request.form['category'],
+            'creator_username': request.form['creator_username'],
+            'isApproved': request.form['isApproved']
+        }
+
+        update_event_in_db(event_id, data)
+
+        return redirect(url_for('event_detail', event_id=event_id))
+
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM events WHERE ID = ?", (event_id,))
+    event = cursor.fetchone()
+    conn.close()
+
+    if not event:
+        return "Event not found", 404
+
+    return render_template('eventDetails.html', event=event)
+@app.route('/join_event/<int:event_id>', methods=['POST'])
+def join_event(event_id):
+    if 'user' not in session:
+        flash("Etkinliğe katılmak için giriş yapmalısınız.", "warning")
+        return redirect(url_for('login_form'))
+
+    user_id = get_user_id_by_username(session['user']['username'])
+
+    join_event_for_user(user_id, event_id)
+
+    return redirect(url_for('event_detail', event_id=event_id))
+
+@app.route('/edit_event/<int:event_id>')
+def edit_event(event_id):
+    event = get_event_by_id(event_id)
+    return render_template('editEvent.html', event=event)
 
 if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):

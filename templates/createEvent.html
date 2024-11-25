@@ -133,17 +133,6 @@
                     <label><input type="radio" name="category" onchange="saveCategory()" value="E-Spor"> E-Spor </label>
                 </div>
             </div>
-
-            <div class="form-group interests-section">
-                <div class="form-group">
-                    <label for="event-image">Etkinlik İçin Görsel Ekleyin:</label>
-                    <div class="file-input-wrapper">
-                        <input type="file" id="event-image" name="event-image" accept="image/*" required>
-                        <label for="event-image" class="file-input-label">Dosya Seçiniz</label>
-                        <span id="file-name" class="file-name"></span>
-                    </div>
-                </div>
-            </div>
             <button type="submit" action="{{ url_for('create_event') }}">Etkinlik Ekle</button>
         </form>
     </section>

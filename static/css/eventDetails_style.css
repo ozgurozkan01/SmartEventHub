@@ -83,9 +83,13 @@ h2.event-title {
     color: #3498db;
 }
 
-/* Etkinlik açıklaması */
 .event-description {
+    position: relative;
+    bottom: 450px;
+    left: 10px;
+    margin-top: 20px;
     margin-bottom: 30px;
+    padding: 10px 0;
 }
 
 .event-description h3 {
@@ -101,15 +105,19 @@ h2.event-title {
     color: #7f8c8d;
 }
 
-/* Etkinlik oluşturucu bilgisi */
 .event-creator p {
+    position: relative;
+    bottom: 475px;
+    left: 10px;
     font-size: 1.2rem;
     color: #555;
     margin-top: 20px;
 }
 
-/* Etkinlik eylem butonları */
 .event-actions {
+    position: relative;
+    bottom: 475px;
+    left: 10px;
     display: flex;
     justify-content: space-between;
     margin-top: 40px;
@@ -163,7 +171,6 @@ h2.event-title {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Footer */
 footer {
     background-color: #2c3e50;
     color: white;
@@ -176,7 +183,6 @@ footer p {
     font-size: 1rem;
 }
 
-/* Animasyonlar */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -190,13 +196,14 @@ footer p {
 
 .details-and-chat {
     display: flex;
-    gap: 20px; /* İki alan arasındaki boşluk */
+    gap: 20px;
     max-width: 1200px;
+    max-height: 850px;
     margin: 0 auto;
 }
 
 .event-details {
-    flex: 2; /* Detaylar alanı daha geniş */
+    flex: 2;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 16px;
@@ -342,5 +349,60 @@ footer p {
     border-radius: 4px;
     font-size: 14px;
     font-weight: bold;
-    transition: background-color 0.3s ease; /* Hover animasyonu */
+    transition: background-color 0.3s ease;
+}
+
+#map {
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.route-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.route-controls input[type="text"],
+.route-controls select {
+    flex: 1 1 auto;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.route-controls button {
+    padding: 10px 15px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.route-controls button:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .route-controls {
+        flex-direction: column;
+    }
+
+    .route-controls input[type="text"],
+    .route-controls select,
+    .route-controls button {
+        width: 100%;
+    }
 }

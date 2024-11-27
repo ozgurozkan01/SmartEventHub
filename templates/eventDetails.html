@@ -12,9 +12,11 @@
     <main>
         <div class="details-and-chat">
             <section class="event-details">
-                <div class="edit-button">
-                    <a href="{{ url_for('edit_event', event_id=event['id']) }}" class="edit-link"> ✏️ </a>
-                </div>
+                {% if is_creator %}
+                    <div class="edit-button">
+                        <a href="{{ url_for('edit_event', event_id=event['id']) }}" class="edit-link"> ✏️ </a>
+                    </div>
+                {% endif %}
 
                 <h2 class="event-title"> {{ event['event_name'] }} <span class="event-category">{{ event['category'] }}</span></h2>
 
@@ -22,11 +24,22 @@
                     <div class="event-date">
                         <p><strong>Başlangıç:</strong> {{ event['startDate'] }} / {{ event['startTime'] }}</p>
                         <p><strong>Bitiş:</strong> {{ event['finishDate'] }} / {{ event['finishTime'] }}</p>
-                        <p><strong>Süre:</strong> 7 saat</p>
+                        <p><strong>Süre:</strong> {{ days }} gün {{ hours }} saat {{ minutes }} dakika</p>
                     </div>
 
                     <div class="event-location">
                         <p><strong>Konum:</strong> {{ event['city'] }} - {{ event['address'] }} </p>
+                        <div id="map" style="width: 100%; height: 400px; margin-top: 20px;"></div>
+                        <div class="route-controls">
+                        <input type="text" id="start-location" placeholder="Başlangıç konumunuzu girin">
+                        <select id="travel-mode">
+                            <option value="DRIVING">Araba</option>
+                            <option value="WALKING">Yürüme</option>
+                            <option value="TRANSIT">Toplu Taşıma</option>
+                        </select>
+
+                        <button id="get-route">Rota Göster</button>
+                        </div>
                     </div>
                 </div>
 
@@ -40,19 +53,42 @@
                 </div>
 
                 <div class="event-actions">
-                    <form action="{{ url_for('join_event', event_id=event['id']) }}" method="POST">
-                        <button type="submit" class="join-button">Etkinliğe Katıl</button>
-                    </form>
+                    {% if is_creator %}
+                        <form action="{{ url_for('delete_event', event_id=event['id']) }}" method="POST">
+                            <button type="submit" class="join-button">Etkinliği Sil</button>
+                        </form>
+                    {% else %}
+                        {% if conflict_message %}
+                            <p style="color: red;">{{ conflict_message }}</p>
+                            <button disabled>Bu etkinliğe katılamazsınız</button>
+                        {% elif is_participant %}
+                            <form action="{{ url_for('leave_event', event_id=event['id']) }}" method="POST">
+                                <button type="submit" class="join-button">Etkinlikten Çık</button>
+                            </form>
+                        {% else %}
+                            <form action="{{ url_for('join_event', event_id=event['id']) }}" method="POST">
+                                <button type="submit" class="join-button">Etkinliğe Katıl</button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
                 </div>
             </section>
-
-            <section class="event-chat">
-                <h3>Event Chat</h3>
-                <div id="chat-container">
-                    <div id="chat-messages">
+            <section class="event-chat" {% if not is_participant and not is_creator %} style="display: none;" {% endif %}>
+                <div class="event-chat" {% if not is_participant and not is_creator %} style="display: none;" {% endif %}>
+                    <h3>Event Chat</h3>
+                    <div id="chat-container">
+                        <div id="chat-messages">
+                            {% for message in messages %}
+                                <div class="message">
+                                    <small>{{ message['sent_time'] }}</small> <!-- Move timestamp here -->
+                                    <strong>{{ get_username_by_id(message['sender_ID']) }}:</strong>
+                                    <span>{{ message['message_text'] }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <textarea id="chat-input" placeholder="Mesajınızı yazın..."></textarea>
+                        <button id="send-message">Gönder</button>
                     </div>
-                    <textarea id="chat-input" placeholder="Mesajınızı yazın..."></textarea>
-                    <button id="send-message">Gönder</button>
                 </div>
             </section>
         </div>
@@ -63,45 +99,108 @@
     </footer>
 
     <script>
-        const eventId = {{ event['id'] }};
-        const userName = "{{ username }}";
+    document.getElementById("send-message").addEventListener("click", function() {
+        var messageContent = document.getElementById("chat-input").value;
+        if (!messageContent) return;
 
-        document.getElementById("send-message").addEventListener("click", async () => {
-            const input = document.getElementById("chat-input");
-            const content = input.value.trim();
-            if (!content) return;
+        fetch(`/send_message/{{ event['id'] }}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ content: messageContent })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                var messageElement = document.createElement("div");
+                messageElement.classList.add("message");
 
-            try {
-                const response = await fetch(`/send_message/${eventId}`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ content }),
-                });
+                var messageHtml = `
+                    <small>${data.timestamp}</small>
+                    <strong>${data.user_name}:</strong>
+                    <span>${data.content}</span>
+                `;
+                messageElement.innerHTML = messageHtml;
 
-                if (response.ok) {
-                    const message = await response.json();
-                    displayMessage({
-                        timestamp: message.timestamp,
-                        user_name: message.user_name,
-                        content: message.content,
-                    });
-                    input.value = "";
-                } else {
-                    alert("Mesaj gönderilemedi.");
-                }
-            } catch (error) {
-                console.error("Mesaj gönderme hatası:", error);
-                alert("Mesaj gönderilemedi.");
+                document.getElementById("chat-messages").appendChild(messageElement);
+
+                document.getElementById("chat-input").value = "";
+            } else {
+                alert(data.error);
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
+    });
+function initMap() {
+    var geocoder = new google.maps.Geocoder();
+    var directionsService = new google.maps.DirectionsService();
+    var directionsRenderer = new google.maps.DirectionsRenderer();
 
-        function displayMessage(message) {
-            const messagesContainer = document.getElementById("chat-messages");
-            const messageEl = document.createElement("div");
-            messageEl.textContent = `[${message.timestamp}] ${message.user_name} : ${message.content}`;
-            messagesContainer.appendChild(messageEl);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    // Hedef adres
+    var address = "{{ event['city'] }} - {{ event['address'] }}";
+    var map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 14,
+        center: { lat: 39.92077, lng: 32.85411 }
+    });
+
+    directionsRenderer.setMap(map);
+
+    geocoder.geocode({ address: address }, function (results, status) {
+        if (status === "OK") {
+            var destination = results[0].geometry.location;
+            map.setCenter(destination);
+            new google.maps.Marker({
+                map: map,
+                position: destination,
+                title: "Etkinlik Yeri"
+            });
+
+            document.getElementById("get-route").addEventListener("click", function () {
+                var startLocation = document.getElementById("start-location").value;
+                var travelMode = document.getElementById("travel-mode").value;
+
+                if (!startLocation) {
+                    alert("Lütfen başlangıç konumunu girin.");
+                    return;
+                }
+
+                directionsService.route(
+                    {
+                        origin: startLocation,
+                        destination: destination,
+                        travelMode: google.maps.TravelMode[travelMode]
+                    },
+                    function (response, status) {
+                        if (status === "OK") {
+                            directionsRenderer.setDirections(response); // Rotayı haritada çiz
+                        } else {
+                            console.error("Rota hesaplama hatası: " + status);
+                            alert("Rota hesaplanamadı: " + status);
+                        }
+                    }
+                );
+            });
+        } else {
+            console.error("Geocode hatası: " + status);
+            alert("Adres işlenemedi.");
         }
+    });
+}
+
+    function loadGoogleMapsAPI() {
+        var script = document.createElement("script");
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCA_4LDp0ENu2nDB07pz8OVohdAfBomx5A&callback=initMap`;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    }
+
+    window.onload = loadGoogleMapsAPI;
+
+
     </script>
 </body>
 </html>

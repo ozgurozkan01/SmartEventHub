@@ -11,6 +11,13 @@
 
         <div class="info-container">
         <section class="user-info">
+
+            <li>
+                <form action="{{ url_for('logout') }}" method="POST">
+                    <button type="submit" class="logout-button">Çıkış Yap</button>
+                </form>
+            </li>
+
             <h2>Kullanıcı Bilgileri</h2>
             <button class="edit" onclick="redirectToEditProfile()">Edit</button>
             <div class="user-details">

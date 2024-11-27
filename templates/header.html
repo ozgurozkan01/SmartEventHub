@@ -14,6 +14,23 @@
                 <li><a href="{{ url_for('main_page') }}">Ana Sayfa</a></li>
                 <li><a href="{{ url_for('profile') }}">Profil</a></li>
                 <li><a href="#">Destek</a></li>
+
+                <li>
+                    <div class="notification-container">
+                        <button class="notification-button" onclick="toggleNotifications()">🔔</button>
+                        <div id="notifications-list" class="notifications-list">
+                            {% if notifications %}
+                                <ul>
+                                    {% for notification in notifications %}
+                                        <li>{{ notification['message'] }} - {{ notification['date'] }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>Henüz bildiriminiz yok.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </li>
             </ul>
         </nav>
 
@@ -29,5 +46,30 @@
         {% block content %}{% endblock %}
     </main>
 
+    <script>
+        function toggleNotifications() {
+            var notificationList = document.getElementById("notifications-list");
+            notificationList.style.display = notificationList.style.display === "block" ? "none" : "block";
+        }
+
+        function fetchNotifications() {
+            fetch('/get-notifications')
+                .then(response => response.json())
+                .then(notifications => {
+                    const notificationList = document.getElementById("notifications-list");
+
+                    if (notifications.length > 0) {
+                        let notificationItems = notifications.map(notification => `
+                            <li>${notification.message} - ${new Date(notification.date).toLocaleString()}</li>
+                        `).join('');
+                        notificationList.innerHTML = `<ul>${notificationItems}</ul>`;
+                    } else {
+                        notificationList.innerHTML = "<p>Henüz bildiriminiz yok.</p>";
+                    }
+                })
+                .catch(error => console.error("Bildirimleri alırken hata oluştu:", error));
+        }
+
+    </script>
 </body>
 </html>

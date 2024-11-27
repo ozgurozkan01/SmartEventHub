@@ -459,26 +459,45 @@ def get_user_participation_by_category(username):
 
 def get_suggested_events_for_user(username):
     category_participation = get_user_participation_by_category(username)
-
     categories_order = [category for category, _ in category_participation]
 
     conn = get_db_connection()
     cursor = conn.cursor()
 
+    cursor.execute('''
+        SELECT ID FROM Users
+        WHERE username = ?
+    ''', (username,))
+    user_id_row = cursor.fetchone()
+
+    if not user_id_row:
+        conn.close()
+        raise ValueError("Kullanıcı bulunamadı")
+
+    user_id = user_id_row[0]
+
     suggested_events = []
 
     for category in categories_order:
         cursor.execute('''
-            SELECT * FROM events
-            WHERE category = ? AND isApproved = 1
-        ''', (category,))
+            SELECT e.*, 
+                   (SELECT COUNT(*) 
+                    FROM participants p2 
+                    WHERE p2.event_ID = e.ID) AS participation_count
+            FROM Events e
+            LEFT JOIN participants p ON e.ID = p.event_ID AND p.user_ID = ?
+            WHERE e.category = ? AND e.isApproved = 0 AND p.event_ID IS NULL
+            ORDER BY participation_count DESC
+        ''', (user_id, category))
 
         events_in_category = cursor.fetchall()
         suggested_events.extend(events_in_category)
 
     conn.close()
-
     return suggested_events
+
+
+
 def print_events():
     events = get_all_approved_events()
 
@@ -523,6 +542,48 @@ def join_event_for_user(user_id, event_id):
     finally:
         conn.close()
 
+def leave_event_for_user(user_id, event_id):
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    try:
+        # Remove the user from the participants table for the specific event
+        cursor.execute('''
+            DELETE FROM participants
+            WHERE user_ID = ? AND event_ID = ?
+        ''', (user_id, event_id))
+        conn.commit()
+
+        # If the user was successfully removed (affected rows > 0), update the score
+        if cursor.rowcount > 0:
+            update_user_score(user_id, -10)  # You could define a penalty for leaving, for example
+
+        return {"status": "success", "message": "Etkinlikten başarıyla çıktınız!"}
+    except Exception as e:
+        return {"status": "danger", "message": f"Bir hata oluştu: {e}"}
+    finally:
+        conn.close()
+
+def delete_event_from_db(event_id):
+    conn = sqlite3.connect(DATABASE)  # Replace DATABASE with your actual database file
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('''
+            DELETE FROM participants WHERE event_ID = ?
+        ''', (event_id,))
+
+        cursor.execute('''
+            DELETE FROM events WHERE ID = ?
+        ''', (event_id,))
+
+        conn.commit()  # Commit the changes
+    except Exception as e:
+        conn.rollback()  # Rollback in case of error
+        print(f"Error deleting event {event_id}: {e}")
+    finally:
+        conn.close()
+
 def is_first_participation(user_id):
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
@@ -540,7 +601,7 @@ def is_first_participation(user_id):
         conn.close()
 
 
-def get_user_events(user_id):
+def get_user_attended_events(user_id):
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
 
@@ -557,13 +618,13 @@ def get_user_events(user_id):
 
         return [
             {
-                "id": event[0],
+                "ID": event[0],
                 "name": event[1],
                 "description": event[2],
-                "start_date": event[3],
-                "finish_date": event[4],
-                "start_time": event[5],
-                "finish_time": event[6],
+                "startDate": event[3],
+                "finishDate": event[4],
+                "startTime": event[5],
+                "finishTime": event[6],
                 "city": event[7],
                 "address": event[8],
                 "category": event[9],
@@ -590,3 +651,73 @@ def insert_message(sender_id, event_id, receiver_id, message_text):
 
     conn.commit()
     conn.close()
+
+def is_user_participant(user_id, event_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT 1 
+        FROM participants 
+        WHERE user_id = ? AND event_id = ?
+    ''', (user_id, event_id))
+    result = cursor.fetchone()
+    conn.close()
+    return result is not None
+
+def get_event_creator_username(event_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT creator_username
+        FROM events
+        WHERE id = ?
+    ''', (event_id,))
+    result = cursor.fetchone()
+    conn.close()
+    return result['creator_username'] if result else None
+
+
+def get_messages_for_event(event_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT sender_ID, message_text, sent_time
+        FROM messages
+        WHERE event_ID = ?
+        ORDER BY sent_time ASC
+    ''', (event_id,))
+
+    messages = cursor.fetchall()
+    conn.close()
+
+    return messages
+
+
+def get_username_by_id(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT username FROM users WHERE ID = ?', (user_id,))
+    user = cursor.fetchone()
+
+    conn.close()
+
+    if user:
+        return user['username']
+    return None
+
+
+def get_participants(event_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        SELECT user_id 
+        FROM Participants 
+        WHERE event_id = ?
+    ''', (event_id,))
+
+    participants = cursor.fetchall()
+    conn.close()
+    return participants

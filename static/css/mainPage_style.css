@@ -21,9 +21,9 @@ h2 {
 
 .event-grid {
     display: flex;
-    flex-wrap: wrap;  /* Allows items to wrap into new rows */
+    flex-wrap: wrap;
     justify-content: space-between;
-    gap: 20px;  /* Space between the cards */
+    gap: 20px;
     padding: 8px;
 }
 
@@ -55,7 +55,7 @@ h2 {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('/static/images/default_pp.png'); /* Resim yolu */
+    background-image: url('/static/images/default_pp.png');
     background-size: cover;
     background-position: center;
     z-index: -1;
@@ -123,16 +123,16 @@ footer {
 }
 
 .event-title {
-    font-size: 2rem; /* Başlık boyutunu büyüt */
-    font-weight: 700; /* Kalın yazı */
-    color: #2c3e50; /* Başlık rengi */
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2c3e50;
 }
 
 .event-action {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 20px; /* Diğer içeriklerden uzaklık için */
+    margin-bottom: 20px;
 }
 
 .event-info {
@@ -158,11 +158,10 @@ footer {
         margin-bottom: 15px;
     }
 
-    /* Önerilen Etkinlikler Bölümü */
 .recommended-events-section {
     margin: 20px 0;
     text-align: center;
-    padding: 0 20px; /* Sağ ve sol taraflara padding ekledim */
+    padding: 0 20px;
 }
 
 .events-carousel {
@@ -174,10 +173,11 @@ footer {
 .events-list {
     display: flex;
     transition: transform 0.3s ease-in-out;
+    padding-left: 75px;
 }
 
 .event-card-item {
-    min-width: 180px; /* Kart genişliği */
+    min-width: 180px;
     margin: 0 10px;
     padding: 12px;
     background-color: #f9f9f9;

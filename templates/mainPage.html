@@ -17,15 +17,15 @@
                 <div class="events-list">
                     {% if suggested_events %}
                         {% for event in suggested_events %}
+                        <a href="{{ url_for('event_detail', event_id=event.id) }}" class="link">
                             <div class="event-card-item">
                                 <h3>{{ event['event_name'] }}</h3>
-                                <p><strong>Açıklama:</strong> {{ event['description'] }}</p>
                                 <p><strong>Başlangıç:</strong> {{ event['startDate'] }} / {{ event['startTime'] }}</p>
                                 <p><strong>Bitiş:</strong> {{ event['finishDate'] }} / {{ event['finishTime'] }}</p>
-                                <p><strong>Konum:</strong> {{ event['location'] }}</p>
                                 <p><strong>Kategori:</strong> {{ event['category'] }}</p>
                             </div>
                         {% endfor %}
+                        </a>
                     {% else %}
                         <p class="no-events-message">Şu anda sizin için önerilen bir etkinlik bulunmamaktadır.</p>
                     {% endif %}

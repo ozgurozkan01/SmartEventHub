@@ -14,6 +14,35 @@ app.secret_key = 'yazlab2'
 
 user_instance = User()
 
+
+def calculate_duration(start_date, start_time, finish_date, finish_time):
+    start_datetime_str = f"{start_date} {start_time}"
+    finish_datetime_str = f"{finish_date} {finish_time}"
+
+    start_datetime = datetime.strptime(start_datetime_str, "%Y-%m-%d %H:%M")
+    finish_datetime = datetime.strptime(finish_datetime_str, "%Y-%m-%d %H:%M")
+
+    duration = finish_datetime - start_datetime
+
+    days = duration.days
+    hours, remainder = divmod(duration.seconds, 3600)
+    minutes, _ = divmod(remainder, 60)
+
+    return days, hours, minutes
+
+
+def is_time_conflicting(start_date, start_time, end_date, end_time, other_start_date, other_start_time, other_end_date,
+                        other_end_time):
+    event_start = datetime.strptime(f"{start_date} {start_time}", "%Y-%m-%d %H:%M")
+    event_end = datetime.strptime(f"{end_date} {end_time}", "%Y-%m-%d %H:%M")
+
+    other_event_start = datetime.strptime(f"{other_start_date} {other_start_time}", "%Y-%m-%d %H:%M")
+    other_event_end = datetime.strptime(f"{other_end_date} {other_end_time}", "%Y-%m-%d %H:%M")
+
+    if event_start < other_event_end and event_end > other_event_start:
+        return True
+    return False
+
 @app.route('/')
 def home():
     return render_template('login.html')
@@ -190,7 +219,7 @@ def profile():
 
         username = user_data.get('username')
         user_events = get_created_events_by_username(username)
-        attended_events = get_user_events(get_user_id_by_username(username))
+        attended_events = get_user_attended_events(get_user_id_by_username(username))
         user_score = get_user_score(get_user_id_by_username(username))
 
         return render_template('userProfile.html', user=user_data, interests=interests_list, user_events=user_events, attended_events = attended_events, score=user_score)
@@ -198,38 +227,101 @@ def profile():
         flash('Lütfen önce giriş yapın!')
         return redirect(url_for('login_form'))
 
+
 @app.route('/event/<int:event_id>')
 def event_detail(event_id):
     event = get_event_by_id(event_id)
-    username = session.get('user').get('username')
-    return render_template('eventDetails.html', event=event, username=username)
+    if not event:
+        return "Etkinlik bulunamadı", 404
+
+    username = session.get('user', {}).get('username')
+    user_id = get_user_id_by_username(username) if username else None
+
+    is_participant = False
+    is_creator = False
+    if user_id:
+        is_participant = is_user_participant(user_id, event_id)
+        is_creator = username == get_event_creator_username(event_id)
+
+    user_events = [dict(row) for row in get_created_events_by_username(username)]
+    attended_events = get_user_attended_events(user_id) if user_id else []
+
+    print(f"User Events: {user_events}")
+    print(f"Attended Events: {attended_events}")
+
+    all_user_events = {event['ID']: event for event in user_events + attended_events}.values()
+    all_user_events = list(all_user_events)
+
+    conflict_message = None
+    for e in all_user_events:
+        if is_time_conflicting(
+                event['startDate'], event['startTime'], event['finishDate'], event['finishTime'],
+                e['startDate'], e['startTime'], e['finishDate'], e['finishTime']
+        ):
+            conflict_message = "Bu etkinlik, başka bir katıldığınız etkinlikle çakışıyor. Katılamazsınız."
+            break
+
+    days, hours, minutes = calculate_duration(event['startDate'], event['startTime'], event['finishDate'],
+                                              event['finishTime'])
+
+    messages = get_messages_for_event(event_id)
+
+    return render_template(
+        'eventDetails.html',
+        event=event,
+        username=username,
+        is_participant=is_participant,
+        is_creator=is_creator,
+        messages=messages,
+        get_username_by_id=get_username_by_id,
+        days=days, hours=hours, minutes=minutes,
+        conflict_message=conflict_message
+    )
+
+def send_notification(user_id, message):
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        INSERT INTO Notifications (user_id, message, is_read, created_at) 
+        VALUES (?, ?, 0, ?)
+    ''', (user_id, message, datetime.now()))
+    conn.commit()
+    conn.close()
+
 @app.route('/send_message/<int:event_id>', methods=['POST'])
 def send_message(event_id):
-    data = request.json  # Gelen JSON verisi
-    message_text = data.get('content')  # Mesaj içeriği
-    sender_id = session.get('user', {}).get('id')  # Oturumdaki kullanıcının ID'si
-    receiver_id = None  # Örneğin, bu birebir mesajlaşma değilse boş bırakabilirsiniz.
+    data = request.json
+    content = data.get('content')
+    username = session.get('user', {}).get('username')
 
-    if not message_text or not sender_id:
+    if not content or not username:
         return jsonify({"error": "Eksik bilgi"}), 400
 
-    try:
-        insert_message(sender_id, event_id, receiver_id, message_text)
+    sender_id = get_user_id_by_username(username)
+    if not sender_id:
+        return jsonify({"error": "Kullanıcı bulunamadı"}), 404
 
-        sent_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    creator_username = get_event_creator_username(event_id)
+    if username != creator_username and not is_user_participant(sender_id, event_id):
+        return jsonify({"error": "Etkinlik katılımı ya da sahiplik gereklidir"}), 403
 
-        return jsonify({
-            "success": True,
-            "message": {
-                "event_id": event_id,
-                "sender_id": sender_id,
-                "receiver_id": receiver_id,
-                "message_text": message_text,
-                "sent_time": sent_time
-            }
-        }), 200
-    except Exception as e:
-        return jsonify({"error": "Mesaj kaydedilemedi", "details": str(e)}), 500
+    insert_message(sender_id, event_id, 0, content)
+
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    participants = get_participants(event_id)
+
+    for participant in participants:
+        user_id = participant["user_id"]
+        if user_id != sender_id:
+            send_notification(user_id, f"Etkinlikte yeni bir mesaj var: {content[:50]}")
+
+    return jsonify({
+        "success": True,
+        "timestamp": timestamp,
+        "user_name": username,
+        "content": content
+    }), 200
 
 @app.route('/get_messages/<int:event_id>', methods=['GET'])
 def get_messages(event_id):
@@ -248,9 +340,9 @@ def get_messages(event_id):
 
     messages_list = [
         {
+            "sent_time": row[2],
             "sender_id": row[0],
             "message_text": row[1],
-            "sent_time": row[2]
         }
         for row in messages
     ]
@@ -360,10 +452,62 @@ def join_event(event_id):
 
     return redirect(url_for('event_detail', event_id=event_id))
 
+@app.route('/leave_event/<event_id>', methods=['POST'])
+def leave_event(event_id):
+    if 'user' not in session:
+        flash("Etkinliğe katılmak için giriş yapmalısınız.", "warning")
+        return redirect(url_for('login_form'))
+
+    user_id = get_user_id_by_username(session['user']['username'])
+
+    leave_event_for_user(user_id, event_id)
+    return redirect(url_for('event_detail', event_id=event_id))
+
+@app.route('/delete_event/<int:event_id>', methods=['POST'])
+def delete_event(event_id):
+    delete_event_from_db(event_id)
+    flash("Etkinlik başarıyla silindi.", "success")
+    return redirect(url_for('main_page'))  # Redirect to the events list or home page
+
 @app.route('/edit_event/<int:event_id>')
 def edit_event(event_id):
     event = get_event_by_id(event_id)
     return render_template('editEvent.html', event=event)
+
+@app.route('/notifications')
+def notifications():
+    # Retrieve the list of notifications for the logged-in user
+    username = session.get('user', {}).get('username')
+    user_id = get_user_id_by_username(username)
+    notifications = get_user_notifications(user_id)
+
+    return render_template('notifications.html', notifications=notifications)
+
+@app.route('/get-notifications', methods=['GET'])
+def get_notifications():
+    user_id = session.get('user_id')
+
+    if not user_id:
+        return jsonify({"status": "error", "message": "Kullanıcı oturumda değil"}), 401
+
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT message, created_at 
+        FROM Notifications 
+        WHERE user_id = ? AND is_read = 0 
+        ORDER BY created_at DESC
+    ''', (user_id,))
+    notifications = cursor.fetchall()
+    conn.close()
+
+    return jsonify([{"message": row[0], "date": row[1]} for row in notifications])
+
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):

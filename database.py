@@ -1,7 +1,9 @@
 import sqlite3
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from user import *
 from datetime import datetime
+from utilities import *
 
 DATABASE = 'event.db'
 
@@ -110,9 +112,9 @@ def get_user_instance(username=None, email=None):
 
     try:
         if username:
-            cursor.execute('SELECT * FROM Users WHERE username = ?', (username,))
+            cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
         elif email:
-            cursor.execute('SELECT * FROM Users WHERE email = ?', (email,))
+            cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
         else:
             return None
 
@@ -130,13 +132,15 @@ def get_user_instance(username=None, email=None):
                 birth_date=user_data[8],
                 gender=user_data[9],
                 phone_number=user_data[10],
-                profile_photo=user_data[11]
+                profile_photo=user_data[11],
+                status=user_data[12]
             )
             return user
         else:
             return None
     finally:
         conn.close()
+
 
 def print_all_users():
     connection = sqlite3.connect(DATABASE)
@@ -414,6 +418,7 @@ def get_all_approved_events_for_user(username):
 
     conn.close()
     return events
+
 
 def get_created_events_by_username(username):
     conn = get_db_connection()
@@ -721,3 +726,24 @@ def get_participants(event_id):
     participants = cursor.fetchall()
     conn.close()
     return participants
+
+
+def set_user_as_admin(username):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "UPDATE users SET status = 'admin' WHERE username = ?",
+            (username,)
+        )
+        conn.commit()
+
+        if cursor.rowcount > 0:
+            print(f"{username} adlı kullanıcı artık admin.")
+        else:
+            print(f"{username} adlı kullanıcı bulunamadı.")
+    except Exception as e:
+        print(f"Bir hata oluştu: {e}")
+    finally:
+        conn.close()

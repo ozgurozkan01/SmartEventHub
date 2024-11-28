@@ -1,11 +1,9 @@
 import os
+import sys
 
 from flask import Flask, render_template, request, redirect, flash, url_for, jsonify, session
-
 from database import *
-from datetime import datetime
-
-import sys
+from utilities import *
 
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -13,35 +11,6 @@ app = Flask(__name__)
 app.secret_key = 'yazlab2'
 
 user_instance = User()
-
-
-def calculate_duration(start_date, start_time, finish_date, finish_time):
-    start_datetime_str = f"{start_date} {start_time}"
-    finish_datetime_str = f"{finish_date} {finish_time}"
-
-    start_datetime = datetime.strptime(start_datetime_str, "%Y-%m-%d %H:%M")
-    finish_datetime = datetime.strptime(finish_datetime_str, "%Y-%m-%d %H:%M")
-
-    duration = finish_datetime - start_datetime
-
-    days = duration.days
-    hours, remainder = divmod(duration.seconds, 3600)
-    minutes, _ = divmod(remainder, 60)
-
-    return days, hours, minutes
-
-
-def is_time_conflicting(start_date, start_time, end_date, end_time, other_start_date, other_start_time, other_end_date,
-                        other_end_time):
-    event_start = datetime.strptime(f"{start_date} {start_time}", "%Y-%m-%d %H:%M")
-    event_end = datetime.strptime(f"{end_date} {end_time}", "%Y-%m-%d %H:%M")
-
-    other_event_start = datetime.strptime(f"{other_start_date} {other_start_time}", "%Y-%m-%d %H:%M")
-    other_event_end = datetime.strptime(f"{other_end_date} {other_end_time}", "%Y-%m-%d %H:%M")
-
-    if event_start < other_event_end and event_end > other_event_start:
-        return True
-    return False
 
 @app.route('/')
 def home():
@@ -74,9 +43,13 @@ def login():
             'gender': user_instance.gender,
             'phone_number': user_instance.phone_number,
             'profile_photo': user_instance.profile_photo,
+            'status':user_instance.status
         }
 
-        return redirect(url_for('main_page'))
+        if user_instance.status == 'admin':
+            return redirect(url_for('admin_profile'))
+        else:
+            return redirect(url_for('main_page'))
     else:
         flash('Kullanıcı adı veya şifre yanlış. Lütfen tekrar deneyin.')
         return redirect(url_for('login_form'))
@@ -88,8 +61,10 @@ def login_form():
 @app.route('/main_page')
 def main_page():
     username = session.get('user').get('username')
+
     all_events = get_all_approved_events_for_user(username)
     suggested_events = get_suggested_events_for_user(username)
+
     return render_template('mainPage.html', events=all_events, suggested_events=suggested_events)
 
 @app.route('/register', methods=['POST'])
@@ -220,6 +195,23 @@ def update_profile_picture():
         return jsonify({'success': True, 'newProfilePictureUrl': new_profile_picture_url})
 
     return jsonify({'success': False, 'message': 'Geçersiz dosya formatı'}), 400
+
+@app.route('/admin-profile')
+def admin_profile():
+    admin = {
+            "first_name": session['user']['first_name'],
+            "last_name": session['user']['last_name'],
+            "email": session['user']['email'],
+            "username": session['user']['username'],
+            "password": "******",
+            "location": session['user']['location'],
+            "interests": session['user']['interests'],
+            "birth_date": session['user']['birthday'],
+            "gender": session['user']['gender'],
+            "phone_number": session['user']['phone_number'],
+            "profile_photo": session['user']['profile_photo'],
+    }
+    return render_template('adminProfile.html', admin_info=admin)
 
 @app.route('/profile')
 def profile():
@@ -520,7 +512,6 @@ def get_notifications():
 
     return jsonify([{"message": row[0], "date": row[1]} for row in notifications])
 
-
 @app.route('/logout', methods=['POST'])
 def logout():
     session.clear()
@@ -532,3 +523,47 @@ if __name__ == '__main__':
 
     app.run(debug=True)
 
+
+
+
+api_key = 'AIzaSyCA_4LDp0ENu2nDB07pz8OVohdAfBomx5A'
+
+cities = ["Adana", "Istanbul", "Ankara"]
+
+def get_coordinates_from_city(city_name):
+    url = f'https://maps.googleapis.com/maps/api/geocode/json?address={city_name}&key={api_key}'
+    response = requests.get(url)
+    data = response.json()
+
+    if data['status'] == 'OK':
+        lat = data['results'][0]['geometry']['location']['lat']
+        lng = data['results'][0]['geometry']['location']['lng']
+        return lat, lng
+    else:
+        return None, None
+
+adana_coords = get_coordinates_from_city("Adana")
+istanbul_coords = get_coordinates_from_city("Istanbul")
+ankara_coords = get_coordinates_from_city("Ankara")
+
+def get_distance_matrix(orig_coords, dest_coords):
+    url = f'https://maps.googleapis.com/maps/api/distancematrix/json?origins={orig_coords[0]},{orig_coords[1]}&destinations={dest_coords[0]},{dest_coords[1]}&key={api_key}'
+    response = requests.get(url)
+    data = response.json()
+
+    if data['status'] == 'OK':
+        distance = data['rows'][0]['elements'][0]['distance']['value']
+        return distance
+    else:
+        return None
+
+distance_to_istanbul = get_distance_matrix(adana_coords, istanbul_coords)
+distance_to_ankara = get_distance_matrix(adana_coords, ankara_coords)
+
+if distance_to_istanbul and distance_to_ankara:
+    if distance_to_istanbul < distance_to_ankara:
+        print("Adana İstanbul'a daha yakındır.")
+    else:
+        print("Adana Ankara'ya daha yakındır.")
+else:
+    print("Mesafe hesaplama sırasında bir hata oluştu.")

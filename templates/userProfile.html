@@ -19,16 +19,18 @@
             </li>
 
             <h2>Kullanıcı Bilgileri</h2>
-            <button class="edit" onclick="redirectToEditProfile()">Edit</button>
+            <button class="edit" onclick="redirectToEditProfile()">Düzenle</button>
             <div class="user-details">
                 <div class="profile-picture-container">
                     <img src="{{ url_for('static', filename=user.profile_photo) }}" alt="Profil Fotoğrafı" class="profile-picture">
                     <input type="file" id="profile-picture" name="profile-picture" accept="image/*" style="display:none;" onchange="updateProfilePicture()">
                     <button class="update-picture-btn" onclick="triggerFileInput()">📥</button>
 
-                    <div class="rating-circle">
-                        <span class="rating-text"> {{ score }} </span>
-                    </div>
+                <div class="rating-container">
+                    <span class="score-label">Score</span>
+                    <span class="rating-text" id="scoreText" data-score="{{ score }}"> {{ score }} </span>
+                </div>
+
 
                 </div>
                 <div class="user-details">
@@ -74,7 +76,7 @@
         <h2>Oluşturduğunuz Etkinlikler</h2>
             <div class="event-list">
                 {% for event in user_events %}
-                    <a href="{{ url_for('event_detail', event_id=event.id) }}" class="link">
+                    <a href="{{ url_for('event_detail', event_id=event.ID) }}" class="link">
                         <div class="event-card">
                                 <h3 class="event-title">{{ event['event_name'] }}</h3>
                             <!---<p class="event-dates">
@@ -91,7 +93,7 @@
         <h2>Katıldığınız Etkinlikler</h2>
                 <div class="event-list">
                 {% for event in attended_events %}
-                    <a href="{{ url_for('event_detail', event_id=event.id) }}" class="link">
+                    <a href="{{ url_for('event_detail', event_id=event.ID) }}" class="link">
                         <div class="event-card">
                                 <h3 class="event-title">{{ event['event_name'] }}</h3>
                             <!---<p class="event-dates">
@@ -273,8 +275,26 @@
         }
 
         function redirectToEditProfile() {
-    window.location.href = "/editProfile";
-}
+            window.location.href = "/editProfile";
+        }
+
+        const ratingContainer = document.querySelector('.rating-container');
+            const scoreElement = document.getElementById('scoreText');
+
+            let score = parseInt(scoreElement.innerText);
+
+            function changeContainerColor(score) {
+                if (score <= 100) {
+                    ratingContainer.style.background = '#FF0000';
+                } else if (score <= 250) {
+                    ratingContainer.style.background = '#FFD700';
+                } else {
+                    ratingContainer.style.background = '#008000';
+                }
+            }
+
+            changeContainerColor(score);
+
     </script>
 </body>
 </html>

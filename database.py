@@ -619,7 +619,7 @@ def get_user_attended_events(user_id):
         return [
             {
                 "ID": event[0],
-                "name": event[1],
+                "event_name": event[1],
                 "description": event[2],
                 "startDate": event[3],
                 "finishDate": event[4],

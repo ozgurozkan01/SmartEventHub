@@ -11,6 +11,13 @@
 
     <section class="event-form">
         <h2>Etkinlik Detaylarını Girin</h2>
+
+            {% if conflict_message %}
+                <div class="alert alert-warning">
+                    {{ conflict_message }}
+                </div>
+            {% endif %}
+
             <form method="POST" id="event-form" action="{{ url_for('create_event') }}" enctype="multipart/form-data">
             <div class="form-group interests-section">
                 <label for="event-name">Etkinlik İsmi:</label>

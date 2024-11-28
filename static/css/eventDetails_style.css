@@ -83,6 +83,13 @@ h2.event-title {
     color: #3498db;
 }
 
+.event-description h3 {
+    font-size: 1.5rem;
+    color: #34495e;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
 .event-description {
     position: relative;
     bottom: 450px;
@@ -90,13 +97,8 @@ h2.event-title {
     margin-top: 20px;
     margin-bottom: 30px;
     padding: 10px 0;
-}
-
-.event-description h3 {
-    font-size: 1.5rem;
-    color: #34495e;
-    margin-bottom: 15px;
-    text-transform: uppercase;
+    width: 350px;
+    height: 100px;
 }
 
 .event-description p {
@@ -107,7 +109,7 @@ h2.event-title {
 
 .event-creator p {
     position: relative;
-    bottom: 475px;
+    bottom: 235px;
     left: 10px;
     font-size: 1.2rem;
     color: #555;
@@ -116,7 +118,7 @@ h2.event-title {
 
 .event-actions {
     position: relative;
-    bottom: 475px;
+    bottom: 250px;
     left: 10px;
     display: flex;
     justify-content: space-between;
@@ -220,14 +222,21 @@ footer p {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    max-width: 800px; /* Genişliği artırdım */
+    max-width: 800px;
+    height: 800px;
 }
 
 #chat-container {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 700px;
     width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
 #chat-messages {
@@ -258,7 +267,7 @@ footer p {
 }
 
 #chat-input {
-    width: calc(100% - 80px);
+    width: 100%;
     padding: 10px;
     font-size: 14px;
     border: 1px solid #ddd;
@@ -303,8 +312,9 @@ footer p {
     margin-top: 10px;
 }
 
-.chat-message {
+.chat-messages {
     padding: 10px;
+    overflow-y: auto;
     margin-bottom: 8px;
     border-radius: 8px;
     background-color: #ecf0f1;
@@ -314,14 +324,14 @@ footer p {
     word-wrap: break-word;
 }
 
-.chat-message.user {
+.chat-messages.user {
     background-color: #3498db;
     color: white;
     margin-left: auto;
     text-align: right;
 }
 
-.chat-message.system {
+.chat-messages.system {
     background-color: #f1c40f;
     color: #333;
     font-style: italic;
@@ -406,3 +416,15 @@ footer p {
         width: 100%;
     }
 }
+
+.conflict-message {
+    color: #d9534f;
+    font-weight: bold;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 5px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px; /
+}
+

@@ -16,26 +16,26 @@ body {
 
 body::before {
     content: '';
-    background-image: url('../images/events.jpg'); /* Arka plan resmi */
-    background-size: cover; /* Resim tüm ekrana tam oturur */
-    background-position: center; /* Resmi ortalar */
-    opacity: 0.6; /* Opaklık ayarı */
-    position: fixed; /* Arka plan sabit kalır */
+    background-image: url('../images/events.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.6;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1; /* İçerik arka planda */
+    z-index: -1;
 }
 
 .form-container {
     max-width: 600px;
-    margin: 50px auto; /* Dikey boşluk ekler */
+    margin: 50px auto;
     background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Gölge efekti */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     padding: 30px;
-    backdrop-filter: blur(10px); /* Arka plan bulanıklığı efekti */
+    backdrop-filter: blur(10px);
 }
 
 h2 {
@@ -63,13 +63,13 @@ input[type="tel"],
 input[type="date"],
 select {
     width: 100%;
-    height: 30px; /* Yüksekliği ayarlayın */
-    padding: 5px; /* İçerik ile kenarlar arasındaki boşluk */
+    height: 30px;
+    padding: 5px;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
     transition: border-color 0.3s;
-    font-size: 14px; /* Yazı tipi boyutu */
+    font-size: 14px;
 }
 
 input[type="text"]:focus,
@@ -98,13 +98,12 @@ input[type="submit"]:hover {
     background-color: #0056b3;
 }
 
-/* İlgi Alanları Bölümü Stilleri */
 .interests-section {
     margin-top: 15px;
 }
 
 .interests-options {
-    display: none; /* Başlangıçta gizli */
+    display: none;
     margin-top: 10px;
     background-color: #f9f9f9;
     border: 1px solid #ccc;

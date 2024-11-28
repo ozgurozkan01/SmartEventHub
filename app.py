@@ -159,9 +159,27 @@ def create_event():
 
         creator_username = session.get('user', {}).get('username')
 
+        user_id = get_user_id_by_username(creator_username)
+        user_events = [dict(row) for row in get_created_events_by_username(creator_username)]
+        attended_events = get_user_attended_events(user_id) if user_id else []
+
+        all_user_events = {event['ID']: event for event in user_events + attended_events}.values()
+        all_user_events = list(all_user_events)
+
+        conflict_message = None
+        for e in all_user_events:
+            if is_time_conflicting(
+                    start_date, start_time, finish_date, finish_time,
+                    e['startDate'], e['startTime'], e['finishDate'], e['finishTime']
+            ):
+                conflict_message = "Bu etkinlik, başka bir etkinlik ile çakışıyor. Etkinlik oluşturulamaz."
+                break
+
+        if conflict_message:
+            return render_template('createEvent.html', conflict_message=conflict_message)
+
         insert_event(event_name, description, start_date, finish_date, start_time, finish_time, duration, city, address, category, creator_username)
 
-        user_id = get_user_id_by_username(creator_username)
         update_user_score(user_id, 15)
 
         return redirect(url_for('main_page'))
@@ -220,6 +238,7 @@ def profile():
         username = user_data.get('username')
         user_events = get_created_events_by_username(username)
         attended_events = get_user_attended_events(get_user_id_by_username(username))
+
         user_score = get_user_score(get_user_id_by_username(username))
 
         return render_template('userProfile.html', user=user_data, interests=interests_list, user_events=user_events, attended_events = attended_events, score=user_score)
@@ -246,9 +265,6 @@ def event_detail(event_id):
     user_events = [dict(row) for row in get_created_events_by_username(username)]
     attended_events = get_user_attended_events(user_id) if user_id else []
 
-    print(f"User Events: {user_events}")
-    print(f"Attended Events: {attended_events}")
-
     all_user_events = {event['ID']: event for event in user_events + attended_events}.values()
     all_user_events = list(all_user_events)
 
@@ -258,7 +274,7 @@ def event_detail(event_id):
                 event['startDate'], event['startTime'], event['finishDate'], event['finishTime'],
                 e['startDate'], e['startTime'], e['finishDate'], e['finishTime']
         ):
-            conflict_message = "Bu etkinlik, başka bir katıldığınız etkinlikle çakışıyor. Katılamazsınız."
+            conflict_message = "Bu etkinlik, diğer bir etkinlik ile çakışıyor."
             break
 
     days, hours, minutes = calculate_duration(event['startDate'], event['startTime'], event['finishDate'],
@@ -270,6 +286,7 @@ def event_detail(event_id):
         'eventDetails.html',
         event=event,
         username=username,
+        user_id= user_id,
         is_participant=is_participant,
         is_creator=is_creator,
         messages=messages,

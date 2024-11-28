@@ -59,8 +59,7 @@
                         </form>
                     {% else %}
                         {% if conflict_message %}
-                            <p style="color: red;">{{ conflict_message }}</p>
-                            <button disabled>Bu etkinliğe katılamazsınız</button>
+                            <p class="conflict-message">{{ conflict_message }}</p>
                         {% elif is_participant %}
                             <form action="{{ url_for('leave_event', event_id=event['id']) }}" method="POST">
                                 <button type="submit" class="join-button">Etkinlikten Çık</button>
@@ -74,22 +73,20 @@
                 </div>
             </section>
             <section class="event-chat" {% if not is_participant and not is_creator %} style="display: none;" {% endif %}>
-                <div class="event-chat" {% if not is_participant and not is_creator %} style="display: none;" {% endif %}>
-                    <h3>Event Chat</h3>
+                    <h2>Etkinlik Sohbeti</h2>
                     <div id="chat-container">
                         <div id="chat-messages">
                             {% for message in messages %}
-                                <div class="message">
-                                    <small>{{ message['sent_time'] }}</small> <!-- Move timestamp here -->
-                                    <strong>{{ get_username_by_id(message['sender_ID']) }}:</strong>
-                                    <span>{{ message['message_text'] }}</span>
-                                </div>
+                            <div class="message {% if message['sender_ID'] == current_user_id %} user-message {% endif %}">
+                                <small>{{ message['sent_time'] }}</small>
+                                <strong>{{ get_username_by_id(message['sender_ID']) }}:</strong>
+                                <span>{{ message['message_text'] }}</span>
+                            </div>
                             {% endfor %}
                         </div>
                         <textarea id="chat-input" placeholder="Mesajınızı yazın..."></textarea>
                         <button id="send-message">Gönder</button>
                     </div>
-                </div>
             </section>
         </div>
     </main>

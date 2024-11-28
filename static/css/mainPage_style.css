@@ -1,7 +1,5 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     background-color: #f4f4f4;
 }
 
@@ -217,24 +215,23 @@ footer {
 }
 
 .prev-btn {
-    left: 10px; /* Sol tarafta daha fazla padding */
+    left: 10px;
 }
 
 .next-btn {
-    right: 10px; /* Sağ tarafta daha fazla padding */
+    right: 10px;
 }
 
 .event-card-item:hover {
     transform: scale(1.05);
 }
 
-/* Başlık Tasarımı */
 .recommended-events-title {
     font-size: 28px;
     font-weight: bold;
     color: #2c3e50;
     text-transform: uppercase;
-    letter-spacing: 2px; /* Harf aralıklarını açtık */
+    letter-spacing: 2px;
     margin-bottom: 30px;
     position: relative;
     display: inline-block;

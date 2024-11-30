@@ -99,12 +99,17 @@ def delete_single_user(username=None, email=None):
         conn.close()
 
 def get_user_password(username):
-    conn = sqlite3.connect(DATABASE)
+    conn = get_db_connection()
     cursor = conn.cursor()
-    cursor.execute('SELECT password FROM Users WHERE username = ?', (username,))
-    user = cursor.fetchone()
+
+    cursor.execute("SELECT password FROM users WHERE username = ?", (username,))
+    result = cursor.fetchone()
     conn.close()
-    return user
+
+    if result:
+        return result[0]
+    else:
+        return None
 
 def get_user_instance(username=None, email=None):
     conn = sqlite3.connect(DATABASE)
@@ -235,59 +240,39 @@ def update_event_in_db(event_id, data):
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM events WHERE ID = ?", (event_id,))
-    event = cursor.fetchone()
-
-    if not event:
-        print("Event not found.")
-        conn.close()
-        return
-
-    updated_data = {
-        'event_name': data.get('event-name', event[1]),  # event[1] -> old event_name
-        'description': data.get('event-description', event[2]),  # event[2] -> old description
-        'start_date': data.get('event-start-date', event[3]),  # event[3] -> old startDate
-        'finish_date': data.get('event-finish-date', event[4]),  # event[4] -> old finishDate
-        'start_time': data.get('event-start-time', event[5]),  # event[5] -> old startTime
-        'finish_time': data.get('event-finish-time', event[6]),  # event[6] -> old finishTime
-        'duration': data.get('duration', event[7]),  # event[7] -> old duration
-        'city': data.get('location', event[8]),  # event[8] -> old city
-        'address': data.get('event-address', event[9]),  # event[9] -> old address
-        'category': data.get('category', event[10]),  # event[10] -> old category
-        'creator_username': data.get('creator_username', event[11]),  # event[11] -> old creator_username
-        'is_approved': data.get('isApproved', event[12])  # event[12] -> old isApproved
-    }
-
     query = '''
-    UPDATE events
-    SET event_name = ?, description = ?, startDate = ?, finishDate = ?, startTime = ?, finishTime = ?, 
-        duration = ?, city = ?, address = ?, category = ?, creator_username = ?, isApproved = ?
-    WHERE ID = ?
+        UPDATE events SET 
+            event_name = ?, 
+            description = ?, 
+            startDate = ?, 
+            finishDate = ?, 
+            startTime = ?, 
+            finishTime = ?, 
+            duration = ?, 
+            city = ?, 
+            address = ?, 
+            category = ? 
+        WHERE ID = ?
     '''
-
     cursor.execute(query, (
-        updated_data['event_name'],
-        updated_data['description'],
-        updated_data['start_date'],
-        updated_data['finish_date'],
-        updated_data['start_time'],
-        updated_data['finish_time'],
-        updated_data['duration'],
-        updated_data['city'],
-        updated_data['address'],
-        updated_data['category'],
-        updated_data['creator_username'],
-        updated_data['is_approved'],
+        data['event-name'],
+        data['event-description'],
+        data['event-start-date'],
+        data['event-finish-date'],
+        data['event-start-time'],
+        data['event-finish-time'],
+        data['duration'],
+        data['event-city'],
+        data['event-address'],
+        data['category'],
         event_id
     ))
 
     conn.commit()
 
-    # Fetch the updated event details to confirm
     cursor.execute("SELECT * FROM events WHERE ID = ?", (event_id,))
     updated_event = cursor.fetchone()
-
-    print(f"Updated event data: {updated_event}")
+    print("Updated event:", updated_event)
 
     conn.close()
 
@@ -371,7 +356,7 @@ def get_all_approved_events():
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute("SELECT * FROM events WHERE isApproved = 0")
+    cursor.execute("SELECT * FROM events WHERE isApproved = 1")
     events = cursor.fetchall()
 
     conn.close()
@@ -395,7 +380,7 @@ def get_all_approved_events_for_user(username):
 
         query = '''
             SELECT * FROM events
-            WHERE isApproved = 0
+            WHERE isApproved = 1
             AND category IN ({})
         '''.format(','.join(['?'] * len(interests)))
 
@@ -404,7 +389,7 @@ def get_all_approved_events_for_user(username):
 
         query_non_matching = '''
             SELECT * FROM events
-            WHERE isApproved = 0
+            WHERE isApproved = 1
             AND category NOT IN ({})
         '''.format(','.join(['?'] * len(interests)))
 
@@ -424,12 +409,32 @@ def get_created_events_by_username(username):
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    cursor.execute('''
-        SELECT * FROM events WHERE creator_username = ?
+    cursor.execute(''' 
+        SELECT ID, event_name, description, startDate, finishDate, startTime, finishTime, city, address, category, creator_username, isApproved 
+        FROM events 
+        WHERE creator_username = ? 
     ''', (username,))
+
     events = cursor.fetchall()
     conn.close()
-    return events
+
+    return [
+        {
+            "ID": event[0],
+            "event_name": event[1],
+            "description": event[2],
+            "startDate": event[3],
+            "finishDate": event[4],
+            "startTime": event[5],
+            "finishTime": event[6],
+            "city": event[7],
+            "address": event[8],
+            "category": event[9],
+            "creator_username": event[10],
+            "is_approved": event[11],
+        }
+        for event in events
+    ]
 
 def get_event_by_id(event_id):
     conn = get_db_connection()
@@ -491,7 +496,7 @@ def get_suggested_events_for_user(username):
                     WHERE p2.event_ID = e.ID) AS participation_count
             FROM Events e
             LEFT JOIN participants p ON e.ID = p.event_ID AND p.user_ID = ?
-            WHERE e.category = ? AND e.isApproved = 0 AND p.event_ID IS NULL
+            WHERE e.category = ? AND e.isApproved = 1 AND p.event_ID IS NULL
             ORDER BY participation_count DESC
         ''', (user_id, category))
 
@@ -747,3 +752,152 @@ def set_user_as_admin(username):
         print(f"Bir hata oluştu: {e}")
     finally:
         conn.close()
+
+
+def get_all_users():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM users")
+
+    users = cursor.fetchall()
+
+    conn.close()
+
+    return users
+
+
+def delete_user_from_database(user_id):
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
+
+        conn.commit()
+
+        print(f"Kullanıcı (ID: {user_id}) başarıyla silindi.")
+    except sqlite3.Error as e:
+        print(f"Veritabanı hatası: {e}")
+    finally:
+        conn.close()
+
+
+def is_admin(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT status FROM users WHERE ID = ?', (user_id,))
+    result = cursor.fetchone()
+    if result and result[0] == 'admin':
+        return True
+    return False
+
+
+def get_all_events():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    query = "SELECT * FROM events"
+
+    cursor.execute(query)
+
+    events = cursor.fetchall()
+
+    conn.close()
+
+    return events
+
+
+def update_event_approval(event_id, new_approval_status):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('''
+            UPDATE events
+            SET isApproved = ?
+            WHERE ID = ?
+        ''', (new_approval_status, event_id))
+
+        conn.commit()
+
+        print("Etkinlik onayı başarıyla güncellendi.")
+
+    except sqlite3.Error as e:
+        print(f"Veritabanı hatası: {e}")
+
+    finally:
+        conn.close()
+
+
+import sqlite3
+
+
+def get_email_by_username(username):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT email FROM users WHERE username = ?", (username,))
+    result = cursor.fetchone()
+
+    conn.close()
+
+    if result:
+        return result[0]
+    else:
+        return None
+
+
+def update_user_status(user_id, user_statu):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('''
+            UPDATE users
+            SET status = ?
+            WHERE ID = ?
+        ''', (user_statu, user_id))
+
+        conn.commit()
+
+        if cursor.rowcount == 0:
+            raise Exception("Kullanıcı bulunamadı veya zaten hedef statüye sahip.")
+
+    except Exception as e:
+        print(f"Hata: {str(e)}")
+        conn.rollback()
+
+    finally:
+        conn.close()
+
+
+def get_user_by_id(user_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM users WHERE ID = ?", (user_id,))
+    user = cursor.fetchone()
+
+    conn.close()
+
+    if user:
+        user_dict = {
+            'ID': user[0],
+            'username': user[1],
+            'password': user[2],
+            'email': user[3],
+            'location': user[4],
+            'interests': user[5],
+            'first_name': user[6],
+            'last_name': user[7],
+            'birth_date': user[8],
+            'gender': user[9],
+            'phone_number': user[10],
+            'profile_photo': user[11],
+            'status': user[12]
+        }
+        return user_dict
+    else:
+        return None

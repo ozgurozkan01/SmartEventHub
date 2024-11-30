@@ -39,24 +39,30 @@
 
         <section class="upcoming-events">
             <h2 class="event-title">Etkinlik Takvimi 📅</h2>
+            {% if events|length == 0 %}
+            <p class="no-events-message">Şu anda görüntülenecek etkinlik bulunmamaktadır.</p>
+            {% else %}
             <div class="event-grid">
-                {% for event in events %}
-                <a href="{{ url_for('event_detail', event_id=event.id) }}" class="link">
-                    <div class="event-card">
-                        <div class="background-image"></div>
-                        <div class="event-content">
-                            <h3>{{ event['event_name'] }}</h3>
-                            <p><strong>Başlangıç:</strong> {{ event['startDate'] }} / {{ event['startTime'] }}</p>
-                            <p><strong>Bitiş:</strong> {{ event['finishDate'] }} / {{ event['finishTime'] }}</p>
-                            <p><strong>Konum:</strong> {{ event['city'] }}</p>
-                            <p><strong>Kategori:</strong> {{ event['category'] }}</p>
+                {% for event_group in events|batch(3) %}
+                <div class="event-row {{ 'last-row' if loop.last and event_group|length < 3 else '' }}">
+                    {% for event in event_group %}
+                    <a href="{{ url_for('event_detail', event_id=event.id) }}" class="link">
+                        <div class="event-card">
+                            <img src="https://picsum.photos/id/{{ event['ID'] }}/200/300" class="event-image">
+                            <div class="event-content">
+                                <h3>{{ event['event_name'] }}</h3>
+                                <p><strong>Başlangıç:</strong> {{ event['startDate'] }} / {{ event['startTime'] }}</p>
+                                <p><strong>Bitiş:</strong> {{ event['finishDate'] }} / {{ event['finishTime'] }}</p>
+                                <p><strong>Konum:</strong> {{ event['city'] }}</p>
+                                <p><strong>Kategori:</strong> {{ event['category'] }}</p>
+                            </div>
                         </div>
-                    </div>
-                </a>
-                {% else %}
-                    <p class="no-event-message">Henüz aktif bir etkinlik bulunmamaktadır.</p>
+                    </a>
+                    {% endfor %}
+                </div>
                 {% endfor %}
             </div>
+            {% endif %}
         </section>
 
         <section class="about">

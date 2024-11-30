@@ -8,18 +8,14 @@
 </head>
 <body>
         {% include 'header.html' %}
-
-        <div class="info-container">
+<div class="profile-wrapper">
+            <div class="info-container">
         <section class="user-info">
 
-            <li>
-                <form action="{{ url_for('logout') }}" method="POST">
-                    <button type="submit" class="logout-button">Çıkış Yap</button>
-                </form>
-            </li>
+
 
             <h2>Kullanıcı Bilgileri</h2>
-            <button class="edit" onclick="redirectToEditProfile()">Düzenle</button>
+
             <div class="user-details">
                 <div class="profile-picture-container">
                     <img src="{{ url_for('static', filename=user.profile_photo) }}" alt="Profil Fotoğrafı" class="profile-picture">
@@ -51,12 +47,12 @@
                     </div>
                     <div class="user-info-item">
                     <p>İlgi Alanları:
-                    <span class="highlight" id="interests-display">
-                        {% for interest in interests %}
-                            {{ interest }}<br>
-                        {% endfor %}
-                    </span>
-                </p>
+                        <span class="highlight" id="interests-display">
+                            {% for interest in interests %}
+                                {{ interest }}<br>
+                            {% endfor %}
+                        </span>
+                    </p>
                     </div>
                     <div class="user-info-item">
                         <p>Doğum Tarihi: <span class="highlight" id="birth-date">{{ user.birthday }}</span></p>
@@ -68,6 +64,13 @@
                         <p>Telefon Numarası: <span class="highlight" id="phone-number">{{ user.phone_number }}</span></p>
                     </div>
                 </div>
+                <div class="user-routes">
+                    <button class="edit" onclick="redirectToEditProfile()">Düzenle</button>
+
+                    <form action="{{ url_for('logout') }}" method="POST">
+                        <button type="submit" class="logout-button">Çıkış Yap</button>
+                    </form>
+                </div>
             </div>
         </section>
     </div>
@@ -77,13 +80,8 @@
             <div class="event-list">
                 {% for event in user_events %}
                     <a href="{{ url_for('event_detail', event_id=event.ID) }}" class="link">
-                        <div class="event-card">
-                                <h3 class="event-title">{{ event['event_name'] }}</h3>
-                            <!---<p class="event-dates">
-                                <strong>Başlangıç:</strong> {{ event['startDate'] }} / {{ event['startTime'] }} <br>
-                                <strong>Bitiş:</strong> {{ event['finishDate'] }} / {{ event['finishTime'] }}
-                            </p>
-                            <p class="event-location"><strong>Konum:</strong> {{ event['location'] }}</p>--->
+                        <div class="event-card {% if event.is_approved %}approved{% else %}not-approved{% endif %}">
+                            <h3 class="event-title">{{ event['event_name'] }}</h3>
                         </div>
                     </a>
                 {% else %}
@@ -126,6 +124,8 @@
             </div>
         </div>
     </div>
+
+</div>
 
     <script>
         function toggleEditField() {

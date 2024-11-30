@@ -113,3 +113,24 @@ footer {
     border: 1px solid #ccc; /* Açık gri kenar */
     border-radius: 4px; /* Kenar yuvarlama */
 }
+
+.logout-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.logout-btn:active {
+    background-color: #a71d2a;
+    transform: translateY(0);
+}

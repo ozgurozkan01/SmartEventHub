@@ -1,0 +1,432 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 1800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 36px;
+    color: #333;
+    font-weight: 600;
+}
+
+h1
+{
+    text-align: center;
+}
+
+.user-table
+{
+    table-layout: fixed;
+}
+
+.user-table th {
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.user-list {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.user-list h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+.profile-photo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+}
+
+th {
+    background-color: #007BFF;
+    color: white;
+    font-weight: bold;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+td {
+    background-color: #f9f9f9;
+    font-size: 12px;
+}
+
+td:hover {
+    background-color: #f1f1f1;
+}
+
+.profile-photo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #007BFF;
+}
+
+tr:hover {
+    background-color: #f4f7f6;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    th, td {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .container {
+        width: 95%;
+    }
+
+    table {
+        font-size: 12px;
+    }
+
+    .profile-photo img {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+.user-table tbody td {
+    line-height: 10px;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+td.interests {
+    word-wrap: break-word;
+    white-space: normal;
+    max-width: 250px;
+    padding: 10px;
+}
+
+td.interests {
+    overflow-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 250px;
+}
+
+td.interests:hover {
+    overflow: visible;
+    white-space: normal;
+}
+
+.delete-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.delete-button:hover {
+    background-color: #ff1a1a;
+}
+
+.delete-button {
+    display: block;
+    width: 100%;
+    margin: 5px 0;
+    padding: 10px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.events-list {
+    max-height: 60px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 10px;
+}
+
+.events-list p {
+    margin: 0;
+    padding: 10px 0;
+    border-bottom: 1px solid #000000;
+}
+
+.events-list p:last-child {
+    border-bottom: none; /* Son etkinlikte çizgi olmaz */
+}
+
+.event-link {
+    color: #007bff; /* Link rengi */
+    text-decoration: none; /* Alt çizgi kaldırılır */
+    font-weight: bold; /* Kalın yazı */
+}
+
+.event-link:hover {
+    text-decoration: underline; /* Üzerine gelince alt çizgi eklenir */
+    color: #0056b3; /* Daha koyu bir renk */
+}
+
+.filter-buttons {
+    text-align: center;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Butonlar arasına mesafe ekler */
+}
+
+.filter-button {
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #007BFF;
+    border: 2px solid #007BFF;
+    border-radius: 25px; /* Butonun köşelerini yuvarlar */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+}
+
+.filter-button:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    transform: scale(1.05); /* Hoverda buton biraz büyür */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Hoverda gölge büyür */
+}
+
+.filter-button:active {
+    background-color: #003f7f;
+    border-color: #003f7f;
+    transform: scale(0.98); /* Tıklanırken buton biraz küçülür */
+}
+
+.filter-button.active {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+@media (max-width: 768px) {
+    .filter-button {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .filter-button {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+th, td {
+    width: 150px;
+    word-wrap: break-word;
+}
+
+th:nth-child(1), td:nth-child(1) {
+    width: 50px;
+}
+
+th:nth-child(2), td:nth-child(2) {
+    width: 70px;
+}
+
+th:nth-child(3), td:nth-child(3) {
+    width: 70px;
+}
+
+th:nth-child(4), td:nth-child(4) {
+    width: 125px;
+}
+
+th:nth-child(5), td:nth-child(5) {
+    width: 80px;
+}
+
+th:nth-child(6), td:nth-child(6) {
+    width: 55px;
+}
+
+th:nth-child(7), td:nth-child(7) {
+    width: 70px;
+}
+
+th:nth-child(8), td:nth-child(8) {
+    width: 50px;
+}
+
+th:nth-child(9), td:nth-child(9) {
+    width: 70px;
+}
+
+th:nth-child(10), td:nth-child(10) {
+    width: 100px;
+}
+
+th:nth-child(11), td:nth-child(11) {
+    width: 150px;
+}
+
+th:nth-child(12), td:nth-child(12) {
+    width: 150px;
+}
+
+th:nth-child(13), td:nth-child(13) {
+    width: 50px;
+}
+
+.logout-section {
+    text-align: right;
+    margin: 20px;
+}
+
+.logout-btn {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-top: -10px; /* Bu değer ile butonun daha yukarıda olmasını sağlayabilirsiniz */
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.logout-btn:active {
+    background-color: #bd2130;
+    transform: translateY(0);
+}
+
+td form {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.assign-role-button, .delete-button {
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.assign-role-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.delete-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.revoke-role-button {
+    background-color: #f44336;
+    padding: 5px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    color: white;
+}
+
+.revoke-role-button:hover {
+    background-color: #c0392b;  /* Hover (fare üzerine gelince) durumunda daha koyu kırmızı */
+}
+
+/* Modal Pencere Stili */
+.modal {
+    display: none; /* Başlangıçta gizli */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+

@@ -7,30 +7,34 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/eventDetails_style.css') }}">
 </head>
 <body>
-        {% include 'header.html' %}
+{% include 'header.html' %}
 
-    <main>
-        <div class="details-and-chat">
-            <section class="event-details">
-                {% if is_creator %}
-                    <div class="edit-button">
-                        <a href="{{ url_for('edit_event', event_id=event['id']) }}" class="edit-link"> ✏️ </a>
+<main>
+    <div class="details-and-chat">
+        <section class="event-details">
+
+
+            <h2 class="event-title"> {{ event['event_name'] }} <span
+                    class="event-category">{{ event['category'] }}</span></h2>
+
+            <div class="event-info">
+                <div class="event-date">
+                    <p><strong>Başlangıç:</strong> {{ event['startDate'] }} / {{ event['startTime'] }}</p>
+                    <p><strong>Bitiş:</strong> {{ event['finishDate'] }} / {{ event['finishTime'] }}</p>
+                    <p><strong>Süre:</strong> {{ days }} gün {{ hours }} saat {{ minutes }} dakika</p>
+                    <div class="event-description">
+                        <h3>Açıklama:</h3>
+                        <p>{{ event['description'] }}</p>
                     </div>
-                {% endif %}
-
-                <h2 class="event-title"> {{ event['event_name'] }} <span class="event-category">{{ event['category'] }}</span></h2>
-
-                <div class="event-info">
-                    <div class="event-date">
-                        <p><strong>Başlangıç:</strong> {{ event['startDate'] }} / {{ event['startTime'] }}</p>
-                        <p><strong>Bitiş:</strong> {{ event['finishDate'] }} / {{ event['finishTime'] }}</p>
-                        <p><strong>Süre:</strong> {{ days }} gün {{ hours }} saat {{ minutes }} dakika</p>
+                    <div class="event-creator">
+                        <p><strong>Oluşturan:</strong> {{ event['creator_username'] }} </p>
                     </div>
+                </div>
 
-                    <div class="event-location">
-                        <p><strong>Konum:</strong> {{ event['city'] }} - {{ event['address'] }} </p>
-                        <div id="map" style="width: 100%; height: 400px; margin-top: 20px;"></div>
-                        <div class="route-controls">
+                <div class="event-location">
+                    <p><strong>Konum:</strong> {{ event['city'] }} - {{ event['address'] }} </p>
+                    <div id="map" style="width: 100%; height: 400px; margin-top: 20px;"></div>
+                    <div class="route-controls">
                         <input type="text" id="start-location" placeholder="Başlangıç konumunuzu girin">
                         <select id="travel-mode">
                             <option value="DRIVING">Araba</option>
@@ -39,64 +43,71 @@
                         </select>
 
                         <button id="get-route">Rota Göster</button>
-                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="event-description">
-                    <h3>Açıklama:</h3>
-                    <p>{{ event['description'] }}</p>
-                </div>
-
-                <div class="event-creator">
-                    <p><strong>Oluşturan:</strong> {{ event['creator_username'] }} </p>
-                </div>
-
+            <div class="event-action-wrapper">
                 <div class="event-actions">
-                    {% if is_creator %}
-                        <form action="{{ url_for('delete_event', event_id=event['id']) }}" method="POST">
-                            <button type="submit" class="join-button">Etkinliği Sil</button>
-                        </form>
-                    {% else %}
-                        {% if conflict_message %}
-                            <p class="conflict-message">{{ conflict_message }}</p>
-                        {% elif is_participant %}
-                            <form action="{{ url_for('leave_event', event_id=event['id']) }}" method="POST">
-                                <button type="submit" class="join-button">Etkinlikten Çık</button>
+                    {% if not is_user_admin %}
+                        {% if is_creator %}
+                            <form action="{{ url_for('delete_event', event_id=event['id']) }}" method="POST">
+                                <button type="submit" class="join-button">Etkinliği Sil</button>
                             </form>
                         {% else %}
-                            <form action="{{ url_for('join_event', event_id=event['id']) }}" method="POST">
-                                <button type="submit" class="join-button">Etkinliğe Katıl</button>
-                            </form>
+                            {% if is_participant %}
+                                <form action="{{ url_for('leave_event', event_id=event['id']) }}" method="POST">
+                                    <button type="submit" class="join-button">Etkinlikten Çık</button>
+                                </form>
+                            {% else %}
+                                {% if conflict_message %}
+                                    <p class="conflict-message">{{ conflict_message }}</p>
+                                {% else %}
+                                    <form action="{{ url_for('join_event', event_id=event['id']) }}" method="POST">
+                                        <button type="submit" class="join-button">Etkinliğe Katıl</button>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 </div>
-            </section>
-            <section class="event-chat" {% if not is_participant and not is_creator %} style="display: none;" {% endif %}>
-                    <h2>Etkinlik Sohbeti</h2>
-                    <div id="chat-container">
-                        <div id="chat-messages">
-                            {% for message in messages %}
-                            <div class="message {% if message['sender_ID'] == current_user_id %} user-message {% endif %}">
-                                <small>{{ message['sent_time'] }}</small>
-                                <strong>{{ get_username_by_id(message['sender_ID']) }}:</strong>
-                                <span>{{ message['message_text'] }}</span>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        <textarea id="chat-input" placeholder="Mesajınızı yazın..."></textarea>
-                        <button id="send-message">Gönder</button>
+                {% if is_creator or is_user_admin %}
+                    <div class="edit-button-gradient">
+                        <a href="{{ url_for('edit_event', event_id=event['id']) }}" class="edit-link">Düzenle</a>
                     </div>
-            </section>
-        </div>
-    </main>
+                {% endif %}
+            </div>
 
-    <footer>
-        <p>© 2024 Etkinlik Planlama Platformu. Tüm Hakları Saklıdır.</p>
-    </footer>
+        </section>
+        <section class="event-chat" {% if not is_participant and not is_creator %} style="display: none;" {% endif %}>
+            <h2>Etkinlik Sohbeti</h2>
+            <div id="chat-container">
+                <div id="chat-messages">
+                    {% for message in messages %}
+                        <div class="message {% if message['sender_ID'] == user_id %} user-message {% else %} other-message {% endif %}">
+                            <div class="message-bubble">
+                                <small class="message-time">{{ message['sent_time'] }}</small>
+                                <strong class="message-sender">{{ get_username_by_id(message['sender_ID']) }}:</strong>
+                                <span class="message-text">{{ message['message_text'] }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="chat-actions">
+                    <textarea id="chat-input" placeholder="Mesajınızı yazın..."></textarea>
+                    <button id="send-message">Gönder</button>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
 
-    <script>
-    document.getElementById("send-message").addEventListener("click", function() {
+<footer>
+    <p>© 2024 Etkinlik Planlama Platformu. Tüm Hakları Saklıdır.</p>
+</footer>
+
+<script>
+    document.getElementById("send-message").addEventListener("click", function () {
         var messageContent = document.getElementById("chat-input").value;
         if (!messageContent) return;
 
@@ -105,87 +116,94 @@
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ content: messageContent })
+            body: JSON.stringify({content: messageContent})
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                var messageElement = document.createElement("div");
-                messageElement.classList.add("message");
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    var messageElement = document.createElement("div");
+                    var messageClass = data.sender_id === {{ user_id }} ? 'user-message' : 'other-message';
+                    messageElement.classList.add("message", messageClass);
 
-                var messageHtml = `
-                    <small>${data.timestamp}</small>
-                    <strong>${data.user_name}:</strong>
-                    <span>${data.content}</span>
-                `;
-                messageElement.innerHTML = messageHtml;
+                    var messageHtml = `
+                <div class="message-bubble">
+                    <small class="message-time">${data.timestamp}</small>
+                    <strong class="message-sender">${data.user_name}:</strong>
+                    <span class="message-text">${data.content}</span>
+                </div>
+            `;
+                    messageElement.innerHTML = messageHtml;
 
-                document.getElementById("chat-messages").appendChild(messageElement);
+                    document.getElementById("chat-messages").appendChild(messageElement);
 
-                document.getElementById("chat-input").value = "";
-            } else {
-                alert(data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    });
-function initMap() {
-    var geocoder = new google.maps.Geocoder();
-    var directionsService = new google.maps.DirectionsService();
-    var directionsRenderer = new google.maps.DirectionsRenderer();
+                    document.getElementById("chat-input").value = "";
 
-    // Hedef adres
-    var address = "{{ event['city'] }} - {{ event['address'] }}";
-    var map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 14,
-        center: { lat: 39.92077, lng: 32.85411 }
-    });
-
-    directionsRenderer.setMap(map);
-
-    geocoder.geocode({ address: address }, function (results, status) {
-        if (status === "OK") {
-            var destination = results[0].geometry.location;
-            map.setCenter(destination);
-            new google.maps.Marker({
-                map: map,
-                position: destination,
-                title: "Etkinlik Yeri"
-            });
-
-            document.getElementById("get-route").addEventListener("click", function () {
-                var startLocation = document.getElementById("start-location").value;
-                var travelMode = document.getElementById("travel-mode").value;
-
-                if (!startLocation) {
-                    alert("Lütfen başlangıç konumunu girin.");
-                    return;
+                    var chatContainer = document.getElementById("chat-messages");
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                } else {
+                    alert(data.error);
                 }
-
-                directionsService.route(
-                    {
-                        origin: startLocation,
-                        destination: destination,
-                        travelMode: google.maps.TravelMode[travelMode]
-                    },
-                    function (response, status) {
-                        if (status === "OK") {
-                            directionsRenderer.setDirections(response); // Rotayı haritada çiz
-                        } else {
-                            console.error("Rota hesaplama hatası: " + status);
-                            alert("Rota hesaplanamadı: " + status);
-                        }
-                    }
-                );
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
-        } else {
-            console.error("Geocode hatası: " + status);
-            alert("Adres işlenemedi.");
-        }
     });
-}
+
+
+    function initMap() {
+        var geocoder = new google.maps.Geocoder();
+        var directionsService = new google.maps.DirectionsService();
+        var directionsRenderer = new google.maps.DirectionsRenderer();
+
+        var address = "{{ event['city'] }} - {{ event['address'] }}";
+        var map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 14,
+            center: {lat: 39.92077, lng: 32.85411}
+        });
+
+        directionsRenderer.setMap(map);
+
+        geocoder.geocode({address: address}, function (results, status) {
+            if (status === "OK") {
+                var destination = results[0].geometry.location;
+                map.setCenter(destination);
+                new google.maps.Marker({
+                    map: map,
+                    position: destination,
+                    title: "Etkinlik Yeri"
+                });
+
+                document.getElementById("get-route").addEventListener("click", function () {
+                    var startLocation = document.getElementById("start-location").value;
+                    var travelMode = document.getElementById("travel-mode").value;
+
+                    if (!startLocation) {
+                        alert("Lütfen başlangıç konumunu girin.");
+                        return;
+                    }
+
+                    directionsService.route(
+                        {
+                            origin: startLocation,
+                            destination: destination,
+                            travelMode: google.maps.TravelMode[travelMode]
+                        },
+                        function (response, status) {
+                            if (status === "OK") {
+                                directionsRenderer.setDirections(response); // Rotayı haritada çiz
+                            } else {
+                                console.error("Rota hesaplama hatası: " + status);
+                                alert("Rota hesaplanamadı: " + status);
+                            }
+                        }
+                    );
+                });
+            } else {
+                console.error("Geocode hatası: " + status);
+                alert("Adres işlenemedi.");
+            }
+        });
+    }
 
     function loadGoogleMapsAPI() {
         var script = document.createElement("script");
@@ -196,9 +214,7 @@ function initMap() {
     }
 
     window.onload = loadGoogleMapsAPI;
-
-
-    </script>
+</script>
 </body>
 </html>
 

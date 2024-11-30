@@ -19,10 +19,19 @@ h2 {
 
 .event-grid {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.event-row {
+    display: flex;
     justify-content: space-between;
     gap: 20px;
-    padding: 8px;
+}
+
+.last-row {
+    justify-content: center;
+    gap: 40px;
 }
 
 .link {
@@ -32,13 +41,13 @@ h2 {
 .event-card {
     position: relative;
     display: flex;
-    flex-direction: column;
+    align-items: center;
     border: 1px solid #ddd;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 5px;
+    padding: 15px;
     width: 100%;
-    height: 200px;
+    /*height: 200px;*/
     box-sizing: border-box;
     text-align: center;
     transition: transform 0.3s, box-shadow 0.3s;
@@ -47,23 +56,20 @@ h2 {
     overflow: hidden;
 }
 
-.background-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('/static/images/default_pp.png');
-    background-size: cover;
-    background-position: center;
-    z-index: -1;
-    filter: brightness(0.6);
+.event-image {
+    position: relative;
+    width: 150px!important;
+    height: 150px!important;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .event-content {
     position: relative;
     z-index: 1;
     padding: 5px;
+    text-align: left;
+    margin-left: 10px;
 }
 
 .event-card::before {
@@ -83,13 +89,15 @@ h2 {
 .event-card h3, .event-card p {
     position: relative;
     z-index: 1;
+    margin: 0px;
+    padding: 0px;
 }
 
-.event-card > * {
+/*.event-card > * {
     position: relative;
     z-index: 1;
     color: black;
-}
+}*/
 
 .event-card:hover {
     transform: scale(1.05);
@@ -114,23 +122,23 @@ footer {
     background-color: #333;
     color: white;
     text-align: center;
-    padding: 10px;
+    padding: 10px 0px;
     position: relative;
     bottom: 0;
     width: 100%;
 }
 
 .event-title {
-    font-size: 2rem;
-    font-weight: 700;
+    font-size: 1.7em;
+    font-weight: 600;
     color: #2c3e50;
+    margin-bottom: 20px;
 }
 
 .event-action {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
 }
 
 .event-info {

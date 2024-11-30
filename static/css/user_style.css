@@ -14,16 +14,23 @@ body::before {
     height: 100%;
     z-index: -1;
 }
+.profile-wrapper {
+    display: flex;
+    align-items: stretch;
+    max-width: 1200px;
+    margin: 0px auto;
+    gap: 10px;
+}
+
 
 .info-container, .event-container {
     width: 600px;
-    height: 775px;
     margin-top: 10px;
     padding: 20px;
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
-    position: absolute;
+    flex: 1;
 }
 
 .info-container {
@@ -136,8 +143,12 @@ footer {
     border-radius: 3px;
 }
 
-.edit {
+.user-routes {
+    display: flex;
+    justify-content: end;
+}
 
+.edit {
     background-color: #007bff;
     color: white;
     border: none;
@@ -146,11 +157,23 @@ footer {
     cursor: pointer;
     font-size: 12px;
     display: inline-block;
-    position: absolute;
-    bottom: 10px;
-    right: 130px;
-    transform: translateX(-50%);
-    z-index: 10;
+    margin-right: 20px;
+}
+
+
+.logout-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 10px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 12px;
+    display: inline-block;
+}
+
+.logout-button:hover {
+    background-color: #e60000;
 }
 
 .profile-picture-container {
@@ -246,11 +269,13 @@ footer {
     cursor: pointer;
 }
 
+/*
 button {
-    padding: 10px 20px;
-    font-size: 1em;
-    margin-top: 10px;
+    padding: 10px 20px!important;
+    font-size: 1em!important;
+    !* margin-top: 10px; *!
 }
+*/
 
 button:hover {
     background-color: #ddd;
@@ -278,30 +303,40 @@ button:hover {
     gap: 15px;
     padding: 5px;
     margin-top: 10px;
+    margin-bottom: 30px;
     scroll-snap-type: x mandatory;
 }
 
 .event-card {
     background-color: #e0f7fa;
     padding: 15px;
-    border-radius: 8px; /* Slightly rounded corners */
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    width: 150px; /* Reduced width for compact cards */
+    border-radius: 8px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    width: 150px;
     text-align: center;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
 }
 
+.event-card.approved {
+    background-color: #28a745;
+    color: white;
+}
+
+.event-card.not-approved {
+    background-color: #dc3545;
+    color: white;
+}
+
 .event-card:hover {
-    transform: translateY(-5px); /* Hover effect: lifts the card */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow on hover */
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
 .event-title {
     font-size: .8em;
     font-weight: 600;
     color: #333;
-    margin-bottom: 8px;
     line-height: 1.2;
     text-transform: capitalize;
 }
@@ -436,14 +471,13 @@ button:hover {
     background-color: #003c8f;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .event-list {
-        justify-content: center; /* Center the items on smaller screens */
+        justify-content: center;
     }
 
     .event-card {
-        width: 100%; /* Make cards take full width on smaller screens */
+        width: 100%;
         max-width: 300px;
     }
 
@@ -503,25 +537,6 @@ button:hover {
     z-index: 0;
 }
 
-.logout-button {
-    background-color: #ff4d4d;
-    color: white;
-    border: none;
-    padding: 10px 10px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-size: 12px;
-    display: inline-block;
-    position: absolute;
-    bottom: 10px;  /* Moves it to the bottom of the page */
-    right: 25px;
-    transform: translateX(-50%);  /* Centers the button horizontally */
-    z-index: 10;
-}
-
-.logout-button:hover {
-    background-color: #e60000;
-}
 
 .no-events-message {
     font-size: 0.95em;
@@ -532,4 +547,28 @@ button:hover {
     border-radius: 6px;
     border: 1px solid #ddd;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+#interests-display {
+    display: block;
+    height: 50px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+#interests-display::-webkit-scrollbar {
+    width: 8px;
+}
+
+#interests-display::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+#interests-display::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
 }

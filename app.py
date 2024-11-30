@@ -4,6 +4,7 @@ import sys
 from flask import Flask, render_template, request, redirect, flash, url_for, jsonify, session
 from database import *
 from utilities import *
+from flask_mail import Mail, Message
 
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -64,6 +65,7 @@ def main_page():
 
     all_events = get_all_approved_events_for_user(username)
     suggested_events = get_suggested_events_for_user(username)
+    suggested_events = [event for event in suggested_events if event['creator_username'] != username]
 
     return render_template('mainPage.html', events=all_events, suggested_events=suggested_events)
 
@@ -211,6 +213,7 @@ def admin_profile():
             "phone_number": session['user']['phone_number'],
             "profile_photo": session['user']['profile_photo'],
     }
+
     return render_template('adminProfile.html', admin_info=admin)
 
 @app.route('/profile')
@@ -273,6 +276,7 @@ def event_detail(event_id):
                                               event['finishTime'])
 
     messages = get_messages_for_event(event_id)
+    is_user_admin = is_admin(user_id)
 
     return render_template(
         'eventDetails.html',
@@ -284,7 +288,8 @@ def event_detail(event_id):
         messages=messages,
         get_username_by_id=get_username_by_id,
         days=days, hours=hours, minutes=minutes,
-        conflict_message=conflict_message
+        conflict_message=conflict_message,
+        is_user_admin = is_user_admin
     )
 
 def send_notification(user_id, message):
@@ -318,18 +323,12 @@ def send_message(event_id):
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    participants = get_participants(event_id)
-
-    for participant in participants:
-        user_id = participant["user_id"]
-        if user_id != sender_id:
-            send_notification(user_id, f"Etkinlikte yeni bir mesaj var: {content[:50]}")
-
     return jsonify({
         "success": True,
         "timestamp": timestamp,
         "user_name": username,
-        "content": content
+        "content": content,
+        "sender_id": sender_id
     }), 200
 
 @app.route('/get_messages/<int:event_id>', methods=['GET'])
@@ -421,18 +420,34 @@ def update_profile():
 @app.route('/update_event/<int:event_id>', methods=['GET', 'POST'])
 def update_event(event_id):
     if request.method == 'POST':
+        event_name = request.form['event-name']
+        description = request.form['event-description']
+        start_date = request.form['event-start-date']
+        finish_date = request.form['event-finish-date']
+        start_time = request.form['event-start-time']
+        finish_time = request.form['event-finish-time']
+        city = request.form['location']
+        address = request.form['event-address']
+        category = request.form.get('category')
+
+        start_datetime = datetime.strptime(f"{start_date} {start_time}", "%Y-%m-%d %H:%M")
+        finish_datetime = datetime.strptime(f"{finish_date} {finish_time}", "%Y-%m-%d %H:%M")
+
+        duration = finish_datetime - start_datetime
+
+        duration_in_seconds = duration.total_seconds()
+
         data = {
-            'event-name': request.form['event-name'],
-            'event-description': request.form['event-description'],
-            'event-start-date': request.form['event-start-date'],
-            'event-finish-date': request.form['event-finish-date'],
-            'event-start-time': request.form['event-start-time'],
-            'event-finish-time': request.form['event-finish-time'],
-            'event-address': request.form['event-address'],
-            'location': request.form['location'],
-            'category': request.form['category'],
-            'creator_username': request.form['creator_username'],
-            'isApproved': request.form['isApproved']
+            'event-name': event_name,
+            'event-description': description,
+            'event-start-date': start_date,
+            'event-finish-date': finish_date,
+            'event-start-time': start_time,
+            'event-finish-time': finish_time,
+            'event-city': city,
+            'event-address': address,
+            'category': category,
+            'duration': duration_in_seconds,
         }
 
         update_event_in_db(event_id, data)
@@ -449,6 +464,7 @@ def update_event(event_id):
         return "Event not found", 404
 
     return render_template('eventDetails.html', event=event)
+
 @app.route('/join_event/<int:event_id>', methods=['POST'])
 def join_event(event_id):
     if 'user' not in session:
@@ -478,6 +494,16 @@ def delete_event(event_id):
     flash("Etkinlik başarıyla silindi.", "success")
     return redirect(url_for('main_page'))  # Redirect to the events list or home page
 
+@app.route('/approve_event/<int:event_id>', methods=['POST'])
+def approve_event(event_id):
+    update_event_approval(event_id, 1)
+    return redirect(url_for('view_event', event_id=event_id))
+
+@app.route('/disapprove_event/<int:event_id>', methods=['POST'])
+def disapprove_event(event_id):
+    update_event_approval(event_id, 0)
+    return redirect(url_for('view_event', event_id=event_id))
+
 @app.route('/edit_event/<int:event_id>')
 def edit_event(event_id):
     event = get_event_by_id(event_id)
@@ -485,7 +511,6 @@ def edit_event(event_id):
 
 @app.route('/notifications')
 def notifications():
-    # Retrieve the list of notifications for the logged-in user
     username = session.get('user', {}).get('username')
     user_id = get_user_id_by_username(username)
     notifications = get_user_notifications(user_id)
@@ -512,58 +537,140 @@ def get_notifications():
 
     return jsonify([{"message": row[0], "date": row[1]} for row in notifications])
 
+@app.route('/admin/user/')
+def view_user():
+    users = get_all_users()
+    return render_template('view_users.html',
+                           users=users,
+                           get_created_events_by_username=get_created_events_by_username, # function
+                           get_user_attended_events=get_user_attended_events) # function
+
+@app.route('/admin/event/<int:event_id>')
+def view_event(event_id):
+    events = get_all_events()
+    return render_template('view_events.html', events=events, is_user_admin=is_admin, event_id=event_id)
+
+@app.route('/delete_user/<int:user_id>', methods=['POST'])
+def delete_user(user_id):
+    delete_user_from_database(user_id)
+    return redirect(url_for('view_user'))
+
 @app.route('/logout', methods=['POST'])
 def logout():
     session.clear()
     return redirect(url_for('home'))
+
+@app.route('/authorize/<int:user_id>', methods=['POST'])
+def authorize(user_id):
+    user = get_user_by_id(user_id)
+
+    if not user:
+        flash('Kullanıcı bulunamadı', 'danger')
+        return redirect(url_for('view_user'))
+
+    if user['status'] == 'user':
+        try:
+            update_user_status(user_id, 'admin')
+
+            flash(f'{user["name"]} başarıyla admin yapıldı!', 'success')
+        except Exception as e:
+            flash(f'Hata: {str(e)}', 'danger')
+    else:
+        flash(f'{user["name"]} zaten admin.', 'warning')
+
+    return redirect(url_for('view_user'))
+
+
+@app.route('/revoke_authorization/<int:user_id>', methods=['POST'])
+def revoke_authorization(user_id):
+    user = get_user_by_id(user_id)
+
+    if not user:
+        flash('Kullanıcı bulunamadı', 'danger')
+        return redirect(url_for('view_user'))
+
+    if user['status'] == 'admin':
+        try:
+            update_user_status(user_id, 'user')
+
+            flash(f'{user["name"]} başarıyla admin statüsünden çıkarıldı.', 'success')
+        except Exception as e:
+            flash(f'Hata: {str(e)}', 'danger')
+    else:
+        flash(f'{user["name"]} zaten user.', 'warning')
+
+    return redirect(url_for('view_user'))
+
+@app.route('/send_password', methods=['POST'])
+def send_password():
+    data = request.json
+    username = data.get('username')
+    email = data.get('email')
+    print('1')
+
+    if not username or not email:
+        return jsonify({'message': 'Kullanıcı adı ve e-posta gereklidir.'}), 400
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT password FROM users WHERE username = ? AND email = ?", (username, email))
+    result = cursor.fetchone()
+    print(f"Veritabanı sorgu sonucu: {result}")
+    conn.close()
+
+    if result:
+        print('2')
+        user_password = result[0]
+        if not isinstance(user_password, str):
+            return jsonify({'message': 'Şifre hatalı formatta.'}), 400
+
+        mail_username = get_email_by_username(username)
+        mail_password = get_user_password(username)
+
+        print(f"Mail username: {mail_username}, Mail password: {mail_password}")
+
+        if not isinstance(mail_username, str) or not isinstance(mail_password, str):
+            return jsonify({'message': 'E-posta veya şifre hatalı.'}), 400
+
+        mail_password = mail_password[0]
+        print(f"Mail password: {mail_password}")
+
+        app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+        app.config['MAIL_PORT'] = 587
+        app.config['MAIL_USE_TLS'] = True
+        app.config['MAIL_USERNAME'] = mail_username
+        app.config['MAIL_PASSWORD'] = mail_password
+        mail = Mail(app)
+
+        print('4 - Mail gönderme başlıyor...')
+
+        try:
+            print(f"Mail gönderilecek adres: {email}")
+            mail.connect()
+            print('SMTP Bağlantısı başarılı')
+
+            msg = Message("Şifre Bilgileriniz",
+                          sender=app.config['MAIL_USERNAME'],
+                          recipients=[email])
+            msg.body = f"Merhaba {username},\n\nŞifreniz: {user_password}\n\nİyi günler!"
+            if not isinstance(msg.body, str):
+                return jsonify({'message': 'E-posta içeriği hatalı formatta.'}), 400
+
+            print('5 - E-posta gönderiliyor...')
+            mail.send(msg)
+            print('E-posta başarıyla gönderildi.')
+            return jsonify({'message': 'E-posta başarıyla gönderildi.'}), 200
+        except Exception as e:
+            print(f"Hata oluştu: {e}")
+            return jsonify({'message': f'E-posta gönderimi sırasında bir hata oluştu: {str(e)}'}), 500
+    else:
+        print("Kullanıcı adı veya e-posta eşleşmedi.")
+        return jsonify({'message': 'Kullanıcı adı veya e-posta eşleşmedi.'}), 404
+
 
 if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
         os.makedirs(app.config['UPLOAD_FOLDER'])
 
     app.run(debug=True)
-
-
-
-
-api_key = 'AIzaSyCA_4LDp0ENu2nDB07pz8OVohdAfBomx5A'
-
-cities = ["Adana", "Istanbul", "Ankara"]
-
-def get_coordinates_from_city(city_name):
-    url = f'https://maps.googleapis.com/maps/api/geocode/json?address={city_name}&key={api_key}'
-    response = requests.get(url)
-    data = response.json()
-
-    if data['status'] == 'OK':
-        lat = data['results'][0]['geometry']['location']['lat']
-        lng = data['results'][0]['geometry']['location']['lng']
-        return lat, lng
-    else:
-        return None, None
-
-adana_coords = get_coordinates_from_city("Adana")
-istanbul_coords = get_coordinates_from_city("Istanbul")
-ankara_coords = get_coordinates_from_city("Ankara")
-
-def get_distance_matrix(orig_coords, dest_coords):
-    url = f'https://maps.googleapis.com/maps/api/distancematrix/json?origins={orig_coords[0]},{orig_coords[1]}&destinations={dest_coords[0]},{dest_coords[1]}&key={api_key}'
-    response = requests.get(url)
-    data = response.json()
-
-    if data['status'] == 'OK':
-        distance = data['rows'][0]['elements'][0]['distance']['value']
-        return distance
-    else:
-        return None
-
-distance_to_istanbul = get_distance_matrix(adana_coords, istanbul_coords)
-distance_to_ankara = get_distance_matrix(adana_coords, ankara_coords)
-
-if distance_to_istanbul and distance_to_ankara:
-    if distance_to_istanbul < distance_to_ankara:
-        print("Adana İstanbul'a daha yakındır.")
-    else:
-        print("Adana Ankara'ya daha yakındır.")
-else:
-    print("Mesafe hesaplama sırasında bir hata oluştu.")

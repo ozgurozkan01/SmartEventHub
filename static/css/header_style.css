@@ -1,8 +1,19 @@
+* {
+    margin: 0;
+    padding: 0;
+    /*box-sizing: border-box;*/
+    font-family: 'Arial', sans-serif;
+    transition: all 0.3s ease;
+}
+
 body, html {
     margin: 0;
     padding: 0;
     width: 100%; /* Tam genişlik */
     height: 100%; /* Yüksekliği de tam yap */
+    color: #333;
+    line-height: 1.6;
+    font-size: 16px;
 }
 
 header {
@@ -11,7 +22,7 @@ header {
     justify-content: space-between; /* Alanı eşit dağıtmak için */
     background: linear-gradient(to right, #0036b3, #00Abff); /* Koyu mavi (#0056b3) dan açık mavi (#007bff) ye geçiş */
     color: black;
-    padding: 15px 20px;
+    padding: 15px 0px;
     width: 100%; /* Header'ın genişliğini %100 yap */
 }
 
@@ -22,24 +33,24 @@ h1 {
     padding-left: 20px; /* Sol boşluk ekleyin */
     margin: 5px 0;
     font-weight: bold;
-    flex-grow: 1;
 }
 
 nav {
-    margin: 0 auto;
     padding: 20px;
-    width: fit-content;
+    display: flex;
+    justify-content: start;
+    flex-grow: 1;
 }
 
 .nav-links {
     list-style: none;
     display: flex;
     gap: 20px;
-    margin: 0;
+    margin: 0px 0px 0px 30px;
     padding: 0;
-    position: absolute;
-    top: 50px;
-    left: 500px;
+    align-items: center;
+    justify-content: start;
+    flex-grow: 1;
 }
 
 .nav-links li a {
@@ -49,20 +60,21 @@ nav {
 }
 
 .event-action {
+    margin-right: 10px;
+    padding: 10px;
+    border: 1px solid #fff;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
-    margin-left: 150px;
-    position: relative;
-    left: -150px;
 }
 
 .event-info {
     font-size: 1em;
-    color: #333;
+    color: #fff;
     margin-top: 10px;
     text-align: left;
+
 }
 
 .add-event-button {

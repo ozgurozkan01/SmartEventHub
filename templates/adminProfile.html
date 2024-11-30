@@ -15,7 +15,7 @@
             <h2>Yönetici Bilgileri</h2>
             <div class="admin-details">
                 <span class="highlight" style="margin-right: 10px;">
-                    <img src="{{ admin_info.profile_photo }}" alt="Profil Fotoğrafı" style="width: 100px; height: 100px; border-radius: 50%;">
+                    <img src="{{ url_for('static', filename=admin_info.profile_photo) }}" alt="Profil Fotoğrafı" style="width: 100px; height: 100px; border-radius: 50%;">
                 </span>
                 <div>
                     <p>Ad: <span class="highlight">{{ admin_info.first_name }}</span></p>
@@ -34,10 +34,22 @@
         <section class="user-management">
             <h2>Yönetim</h2>
             <div class="button-group">
-                <button class="btn">Kullanıcı Hesaplarını Yönet</button>
-                <button class="btn">Etkinlikleri İncele</button>
+                <a href="{{ url_for('view_user', user_id=1) }}">
+                    <button class="btn">Kullanıcıları Yönet</button>
+                </a>
+
+                <a href="{{ url_for('view_event', event_id=1) }}">
+                    <button class="btn">Etkinlikleri Yönet</button>
+                </a>
             </div>
         </section>
+
+        <section class="logout-section">
+            <form action="{{ url_for('logout') }}" method="POST">
+                <button type="submit" class="btn logout-btn">Çıkış Yap</button>
+            </form>
+        </section>
+
         <footer>
             <p>Tüm hakları saklıdır &copy; 2024</p>
         </footer>

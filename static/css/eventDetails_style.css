@@ -1,21 +1,4 @@
-/* Genel reset ve temel stil ayarları */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
-    transition: all 0.3s ease;
-}
 
-/* Arka plan ve temel stil ayarları */
-body {
-    background-color: #f9f9f9;
-    color: #333;
-    line-height: 1.6;
-    font-size: 16px;
-}
-
-/* Başlık ve genel yapı */
 h1, h2, h3 {
     font-weight: 600;
     color: #333;
@@ -53,7 +36,7 @@ h2.event-title {
     background-color: #fff;
     border-radius: 15px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    margin: 40px auto;
+    margin: 20px auto;
     padding: 40px;
     max-width: 900px;
     animation: fadeIn 0.8s ease-in-out;
@@ -63,7 +46,7 @@ h2.event-title {
 .event-info {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 30px;
+    /* margin-bottom: 30px;*/
 }
 
 .event-info .event-date,
@@ -92,13 +75,13 @@ h2.event-title {
 
 .event-description {
     position: relative;
-    bottom: 450px;
     left: 10px;
     margin-top: 20px;
     margin-bottom: 30px;
     padding: 10px 0;
     width: 350px;
-    height: 100px;
+    height: 400px;
+    overflow-y: auto;
 }
 
 .event-description p {
@@ -108,21 +91,19 @@ h2.event-title {
 }
 
 .event-creator p {
-    position: relative;
-    bottom: 235px;
-    left: 10px;
     font-size: 1.2rem;
     color: #555;
     margin-top: 20px;
 }
 
+.event-action-wrapper {
+    display: flex;
+    margin-top: 20px;
+}
+
 .event-actions {
-    position: relative;
-    bottom: 250px;
-    left: 10px;
     display: flex;
     justify-content: space-between;
-    margin-top: 40px;
 }
 
 .event-actions a {
@@ -148,6 +129,36 @@ h2.event-title {
 
 .join-button {
     background: linear-gradient(90deg, #3498db, #1abc9c);
+    font-weight: bold;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+    display: inline-block;
+    color: white;
+    padding: 15px 30px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+.join-button:hover {
+    background: linear-gradient(90deg, #1abc9c, #3498db);
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.join-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.edit-button-gradient {
+    background: linear-gradient(90deg, #3498db, #1abc9c);
     color: white;
     font-size: 1rem;
     font-weight: bold;
@@ -162,13 +173,13 @@ h2.event-title {
     display: inline-block;
 }
 
-.join-button:hover {
+.edit-button-gradient:hover {
     background: linear-gradient(90deg, #1abc9c, #3498db);
     transform: translateY(-3px) scale(1.1);
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
 
-.join-button:active {
+.edit-button-gradient:active {
     transform: translateY(1px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -200,12 +211,12 @@ footer p {
     display: flex;
     gap: 20px;
     max-width: 1200px;
-    max-height: 850px;
+    max-height: 950px;
     margin: 0 auto;
 }
 
 .event-details {
-    flex: 2;
+    flex: 1;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 16px;
@@ -213,44 +224,125 @@ footer p {
 }
 
 .event-chat {
-    flex: 1;
     border: 1px solid #ddd;
-    border-radius: 12px;
+    border-radius: 10px;
     padding: 20px;
-    background-color: #ffffff;
-    margin-top: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    max-width: 800px;
-    height: 800px;
+    background: #f9f9f9;
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.event-chat h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
 }
 
 #chat-container {
     display: flex;
     flex-direction: column;
-    height: 700px;
-    width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: relative;
+    height: 720px;
+    width: 400px;
+    justify-content: space-between;
 }
 
 #chat-messages {
-    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
     overflow-y: auto;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    padding: 16px;
-    margin-bottom: 10px;
-    background-color: #f9f9f9;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-    font-size: 14px;
-    line-height: 1.5;
+    max-height: 600px;
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    flex-grow: 1;
+}
+
+.chat-actions {
+    display: flex;
+    flex-direction: column;
+
+}
+
+
+.user-message {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.user-message .message-bubble {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    text-align: right;
+    border-radius: 15px 15px 0 15px;
+    padding: 10px 15px;
+    max-width: 80%;
+    word-wrap: break-word;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.other-message {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.other-message .message-bubble {
+    background-color: #f8d7da;
+    color: #842029;
+    text-align: left;
+    border-radius: 15px 15px 15px 0;
+    padding: 10px 15px;
+    max-width: 80%;
+    word-wrap: break-word;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.message-sender {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
     color: #333;
+}
+
+.message-text {
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.message-time {
+    display: block;
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 5px;
+    text-align: right;
+}
+
+#chat-input {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 1rem;
+    height: 50px;
+    resize: none;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+#send-message {
+    border: none;
+    background: #0d6efd;
+    color: white;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#send-message:hover {
+    background: #0a58ca;
 }
 
 #chat-messages::-webkit-scrollbar {
@@ -258,96 +350,20 @@ footer p {
 }
 
 #chat-messages::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 4px;
+    background: #aaa;
+    border-radius: 10px;
 }
 
 #chat-messages::-webkit-scrollbar-thumb:hover {
-    background: #bbb;
-}
-
-#chat-input {
-    width: 100%;
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    resize: none;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-#chat-input:focus {
-    border-color: #3498db;
-    outline: none;
-    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
-}
-
-#send-message {
-    width: 150px;
-    height: 42px;
-    margin-left: 10px;
-    margin-top: 15px;
-    background-color: #3498db;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-#send-message:hover {
-    background-color: #2980b9;
-    transform: scale(1.05);
-}
-
-#send-message:active {
-    background-color: #1f5f8b;
-}
-
-#chat-input-container {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-}
-
-.chat-messages {
-    padding: 10px;
-    overflow-y: auto;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    background-color: #ecf0f1;
-    max-width: 80%;
-    font-size: 14px;
-    line-height: 1.5;
-    word-wrap: break-word;
-}
-
-.chat-messages.user {
-    background-color: #3498db;
-    color: white;
-    margin-left: auto;
-    text-align: right;
-}
-
-.chat-messages.system {
-    background-color: #f1c40f;
-    color: #333;
-    font-style: italic;
-    text-align: center;
+    background: #888;
 }
 
 .event-details {
     position: relative;
-    padding-top: 40px;
+    padding-top: 20px;
 }
 
 .edit-button {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 10;
     background-color: transparent;
     border: none;
 }
@@ -425,6 +441,6 @@ footer p {
     padding: 5px;
     border-radius: 10px;
     text-align: center;
-    max-width: 400px; /
+    max-width: 400px;
+/
 }
-

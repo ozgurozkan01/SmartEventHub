@@ -99,14 +99,14 @@ button:hover {
     font-size: 14px;
     font-weight: 500;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     margin-top: 10px; /* Add some spacing from other elements */
 }
 
 .forgot-password-link:hover {
     color: #e63946; /* Darker shade for hover effect */
     text-decoration: underline;
-    transform: scale(1.1); /* Slight zoom effect */
+    transform: scale(1.03); /* Slight zoom effect */
 }
 
 /* Center align text in case the link feels isolated */

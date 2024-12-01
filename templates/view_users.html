@@ -7,162 +7,178 @@
     <title>Kullanıcıları Yönet</title>
 </head>
 <body>
-    <div class="container">
-        <section class="logout-section">
-            <form action="{{ url_for('logout') }}" method="POST">
-                <button type="submit" class="btn logout-btn">Çıkış Yap</button>
-            </form>
-        </section>
+<div class="container">
+    <nav class="admin-navigation-buttons">
 
-        <h1>Kullanıcı Yönetim Paneli</h1>
+        <button onclick="location.href='{{ url_for('view_user', user_id=1) }}'" class="admin-nav-btn">Kullanıcıları
+            Yönet
+        </button>
+        <button onclick="location.href='{{ url_for('view_event', event_id=1) }}'" class="admin-nav-btn">Etkinlikleri
+            Yönet
+        </button>
+        <button onclick="location.href='{{ url_for('admin_profile') }}'" class="admin-nav-btn">Profil</button>
+        <form action="{{ url_for('logout') }}" method="POST">
+            <button type="submit" class="btn logout-btn">Çıkış Yap</button>
+        </form>
+    </nav>
 
-        <div class="filter-buttons">
-            <button class="filter-button" id="admin-btn">Adminler</button>
-            <button class="filter-button" id="user-btn">Kullanıcılar</button>
-        </div>
+    <h1>Kullanıcı Yönetim Paneli</h1>
 
-        <section class="user-list">
-            <table class="user-table">
-                <thead>
-                    <tr>
-                        <th>Profil Fotoğrafı</th>
-                        <th>Ad</th>
-                        <th>Soyad</th>
-                        <th>Email</th>
-                        <th>Kullanıcı Adı</th>
-                        <th>Telefon</th>
-                        <th>Doğum Tarihi</th>
-                        <th>Cinsiyet</th>
-                        <th>Lokasyon</th>
-                        <th>İlgi Alanları</th>
-                        <th>Oluşturduğu Etkinlikler</th>
-                        <th>Katıldığı Etkinlikler</th>
-                        <th>İşlem</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in users %}
-                        <tr class="user-row" data-status="{{ user[12] }}">
-                            <td><img src="{{ url_for('static', filename=user[11]) }}" alt="Profil Fotoğrafı" class="profile-photo"></td>
-                            <td>{{ user[6] }}</td>
-                            <td>{{ user[7] }}</td>
-                            <td>{{ user[3] }}</td>
-                            <td>{{ user[1] }}</td>
-                            <td>{{ user[10] }}</td>
-                            <td>{{ user[8] }}</td>
-                            <td>{{ user[9] }}</td>
-                            <td>{{ user[4] }}</td>
-                            <td class="interests">{{ user[5] }}</td>
-                            <td>
-                                <div class="events-list">
-                                    {% set created_events = get_created_events_by_username(user[1]) %}
-                                    {% if created_events %}
-                                        {% for event in created_events %}
-                                            <p>
-                                                <a href="{{ url_for('event_detail', event_id=event['ID']) }}" class="event-link">
-                                                    {{ event["event_name"] }}
-                                                </a>
-                                            </p>
-                                        {% endfor %}
-                                    {% else %}
-                                        <p>Herhangi bir etkinlik oluşturmadı.</p>
-                                    {% endif %}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="events-list">
-                                    {% set attended_events = get_user_attended_events(user[0]) %}
-                                    {% if attended_events %}
-                                        {% for event in attended_events %}
-                                            <p>
-                                                <a href="{{ url_for('event_detail', event_id=event['ID']) }}" class="event-link">
-                                                    {{ event.event_name }}
-                                                </a>
-                                            </p>
-                                        {% endfor %}
-                                    {% else %}
-                                        <p>Herhangi bir etkinliğe katılmadı.</p>
-                                    {% endif %}
-                                </div>
-                            </td>
-                            <td style="text-align: center;">
-                                {% if user[12] == 'user' %}
-                                    <form action="{{ url_for('authorize', user_id=user[0]) }}" method="POST" onsubmit="return confirm('Bu kullanıcıya yetki vermek istediğinize emin misiniz?');">
-                                        <button type="submit" class="assign-role-button">Yetki Ver</button>
-                                    </form>
-                                {% elif user[12] == 'admin' %}
-                                    <form action="{{ url_for('revoke_authorization', user_id=user[0]) }}" method="POST" onsubmit="return confirm('Bu kullanıcının yetkisini iptal etmek istediğinize emin misiniz?');">
-                                        <button type="submit" class="revoke-role-button">Yetki İptal</button>
-                                    </form>
-                                {% endif %}
-                                <br>
-                                <form action="{{ url_for('delete_user', user_id=user[0]) }}" method="POST" onsubmit="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?');">
-                                    <button type="submit" class="delete-button">Sil</button>
-                                </form>
-                                <br>
-                                <button class="details-button" onclick="showUserDetails('{{ user[12] }}', {{ user[0] }})">Detaylar</button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </section>
+    <div class="filter-buttons">
+        <button class="filter-button" id="admin-btn">Adminler</button>
+        <button class="filter-button" id="user-btn">Kullanıcılar</button>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const adminBtn = document.getElementById("admin-btn");
-            const userBtn = document.getElementById("user-btn");
+    <section class="user-list">
+        <table class="user-table">
+            <thead>
+            <tr>
+                <th>Profil Fotoğrafı</th>
+                <th>Ad</th>
+                <th>Soyad</th>
+                <th>Email</th>
+                <th>Kullanıcı Adı</th>
+                <th>Telefon</th>
+                <th>Doğum Tarihi</th>
+                <th>Cinsiyet</th>
+                <th>Lokasyon</th>
+                <th>İlgi Alanları</th>
+                <th>Oluşturduğu Etkinlikler</th>
+                <th>Katıldığı Etkinlikler</th>
+                <th>İşlem</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr class="user-row" data-status="{{ user[12] }}">
+                    <td><img src="{{ url_for('static', filename=user[11]) }}" alt="Profil Fotoğrafı"
+                             class="profile-photo"></td>
+                    <td>{{ user[6] }}</td>
+                    <td>{{ user[7] }}</td>
+                    <td>{{ user[3] }}</td>
+                    <td>{{ user[1] }}</td>
+                    <td>{{ user[10] }}</td>
+                    <td>{{ user[8] }}</td>
+                    <td>{{ user[9] }}</td>
+                    <td>{{ user[4] }}</td>
+                    <td class="interests">{{ user[5] }}</td>
+                    <td>
+                        <div class="events-list">
+                            {% set created_events = get_created_events_by_username(user[1]) %}
+                            {% if created_events %}
+                                {% for event in created_events %}
+                                    <p>
+                                        <a href="{{ url_for('event_detail', event_id=event['ID']) }}"
+                                           class="event-link">
+                                            {{ event["event_name"] }}
+                                        </a>
+                                    </p>
+                                {% endfor %}
+                            {% else %}
+                                <p>Herhangi bir etkinlik oluşturmadı.</p>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="events-list">
+                            {% set attended_events = get_user_attended_events(user[0]) %}
+                            {% if attended_events %}
+                                {% for event in attended_events %}
+                                    <p>
+                                        <a href="{{ url_for('event_detail', event_id=event['ID']) }}"
+                                           class="event-link">
+                                            {{ event.event_name }}
+                                        </a>
+                                    </p>
+                                {% endfor %}
+                            {% else %}
+                                <p>Herhangi bir etkinliğe katılmadı.</p>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td style="text-align: center;">
+                        {% if user[12] == 'user' %}
+                            <form action="{{ url_for('authorize', user_id=user[0]) }}" method="POST"
+                                  onsubmit="return confirm('Bu kullanıcıya yetki vermek istediğinize emin misiniz?');">
+                                <button type="submit" class="assign-role-button">Yetki Ver</button>
+                            </form>
+                        {% elif user[12] == 'admin' %}
+                            <form action="{{ url_for('revoke_authorization', user_id=user[0]) }}" method="POST"
+                                  onsubmit="return confirm('Bu kullanıcının yetkisini iptal etmek istediğinize emin misiniz?');">
+                                <button type="submit" class="revoke-role-button">Yetki İptal</button>
+                            </form>
+                        {% endif %}
+                        <br>
+                        <form action="{{ url_for('delete_user', user_id=user[0]) }}" method="POST"
+                              onsubmit="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?');">
+                            <button type="submit" class="delete-button">Sil</button>
+                        </form>
+                        <br>
+                        <button class="details-button" onclick="showUserDetails('{{ user[12] }}', {{ user[0] }})">
+                            Detaylar
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>
 
-            const rows = document.querySelectorAll(".user-row");
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const adminBtn = document.getElementById("admin-btn");
+        const userBtn = document.getElementById("user-btn");
 
-            showUsers();
+        const rows = document.querySelectorAll(".user-row");
 
-            adminBtn.addEventListener("click", () => {
-                showAdmins();
-            });
+        showUsers();
 
-            userBtn.addEventListener("click", () => {
-                showUsers();
-            });
-
-            function showAdmins() {
-                rows.forEach(row => {
-                    if (row.dataset.status === "admin") {
-                        row.classList.remove("hidden");
-                    } else {
-                        row.classList.add("hidden");
-                    }
-                });
-
-                adminBtn.classList.add("active");
-                userBtn.classList.remove("active");
-            }
-
-            function showUsers() {
-                rows.forEach(row => {
-                    if (row.dataset.status === "user") {
-                        row.classList.remove("hidden");
-                    } else {
-                        row.classList.add("hidden");
-                    }
-                });
-
-                userBtn.classList.add("active");
-                adminBtn.classList.remove("active");
-            }
+        adminBtn.addEventListener("click", () => {
+            showAdmins();
         });
 
+        userBtn.addEventListener("click", () => {
+            showUsers();
+        });
 
-        function showUserDetails(userStatus, userId) {
-    if (userStatus === 'user') {
-        window.location.href = `/profile/${userId}`;
-    } else if (userStatus === 'admin') {
-        window.location.href = `/admin-profile/${userId}`;
-    } else {
-        console.error('Geçersiz kullanıcı statüsü.');
+        function showAdmins() {
+            rows.forEach(row => {
+                if (row.dataset.status === "admin") {
+                    row.classList.remove("hidden");
+                } else {
+                    row.classList.add("hidden");
+                }
+            });
+
+            adminBtn.classList.add("active");
+            userBtn.classList.remove("active");
+        }
+
+        function showUsers() {
+            rows.forEach(row => {
+                if (row.dataset.status === "user") {
+                    row.classList.remove("hidden");
+                } else {
+                    row.classList.add("hidden");
+                }
+            });
+
+            userBtn.classList.add("active");
+            adminBtn.classList.remove("active");
+        }
+    });
+
+
+    function showUserDetails(userStatus, userId) {
+        if (userStatus === 'user') {
+            window.location.href = `/profile/${userId}`;
+        } else if (userStatus === 'admin') {
+            window.location.href = `/admin-profile/${userId}`;
+        } else {
+            console.error('Geçersiz kullanıcı statüsü.');
+        }
     }
-}
 
 
     function closeModal() {
@@ -170,13 +186,13 @@
         modal.style.display = "none";
     }
 
-    window.onclick = function(event) {
+    window.onclick = function (event) {
         var modal = document.getElementById("user-details-modal");
         if (event.target === modal) {
             modal.style.display = "none";
         }
     }
-    </script>
+</script>
 </body>
 </html>
 

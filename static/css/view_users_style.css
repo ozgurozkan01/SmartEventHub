@@ -342,7 +342,6 @@ th:nth-child(13), td:nth-child(13) {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
-    margin-top: -10px; /* Bu değer ile butonun daha yukarıda olmasını sağlayabilirsiniz */
 }
 
 .logout-btn:hover {
@@ -430,3 +429,22 @@ td form {
     cursor: pointer;
 }
 
+.admin-navigation-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.admin-nav-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.admin-nav-btn:hover {
+    background-color: #0056b3;
+}

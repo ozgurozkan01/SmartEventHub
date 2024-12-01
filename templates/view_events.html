@@ -7,71 +7,79 @@
     <title>Etkinlikleri Yönet</title>
 </head>
 <body>
-    <div class="container">
-        <section class="logout-section">
-            <form action="{{ url_for('logout') }}" method="POST">
-                <button type="submit" class="btn logout-btn">Çıkış Yap</button>
-            </form>
-        </section>
+<div class="container">
+    <nav class="admin-navigation-buttons">
 
-        <h1>Tüm Etkinlikler</h1>
-        <section class="event-list">
-            <table class="event-table">
-                <thead>
-                    <tr>
-                        <th>Etkinlik Adı</th>
-                        <th>Oluşturan</th>
-                        <th>Açıklama</th>
-                        <th>Açılış</th>
-                        <th>Kapanış</th>
-                        <th>Şehir</th>
-                        <th>Adres</th>
-                        <th>Kategori</th>
-                        <th>Durum</th>
-                        <th>İşlem</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for event in events %}
-                        <tr>
-                            <td>
-                                <a href="{{ url_for('event_detail', event_id=event[0]) }}">{{ event[1] }}</a>
-                            </td>
-                            <td>{{ event[11] }}</td>
-                            <td>{{ event[2] }}</td>
-                            <td>{{ event[3] }} / {{ event[5] }}</td>
-                            <td>{{ event[4] }} / {{ event[6] }}</td>
-                            <td>{{ event[8] }}</td>
-                            <td>{{ event[9] }}</td>
-                            <td>{{ event[10] }}</td>
-                            <td>
-                                {% if event[12] %}
-                                    <span class="approved">Onaylı ✅</span>
-                                {% else %}
-                                    <span class="pending">Beklemede 🕒</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if event[12] %}
-                                    <form action="{{ url_for('disapprove_event', event_id=event[0]) }}" method="POST">
-                                        <button type="submit" class="action-button">Kaldır</button>
-                                    </form>
-                                {% else %}
-                                    <form action="{{ url_for('approve_event', event_id=event[0]) }}" method="POST">
-                                        <button type="submit" class="action-button">Onayla</button>
-                                    </form>
-                                {% endif %}
-                                {% if not is_user_admin(event[11]) %}
-                                    <form action="{{ url_for('delete_event', event_id=event[0]) }}" method="POST">
-                                        <button type="submit" class="delete-button">Sil</button>
-                                    </form>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </section>
-    </div>
+        <button onclick="location.href='{{ url_for('view_user', user_id=1) }}'" class="admin-nav-btn">Kullanıcıları
+            Yönet
+        </button>
+        <button onclick="location.href='{{ url_for('view_event', event_id=1) }}'" class="admin-nav-btn">Etkinlikleri
+            Yönet
+        </button>
+        <button onclick="location.href='{{ url_for('admin_profile') }}'" class="admin-nav-btn">Profil</button>
+        <form action="{{ url_for('logout') }}" method="POST">
+            <button type="submit" class="btn logout-btn">Çıkış Yap</button>
+        </form>
+    </nav>
+
+    <h1>Tüm Etkinlikler</h1>
+    <section class="event-list">
+        <table class="event-table">
+            <thead>
+            <tr>
+                <th>Etkinlik Adı</th>
+                <th>Oluşturan</th>
+                <th>Açıklama</th>
+                <th>Açılış</th>
+                <th>Kapanış</th>
+                <th>Şehir</th>
+                <th>Adres</th>
+                <th>Kategori</th>
+                <th>Durum</th>
+                <th>İşlem</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for event in events %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('event_detail', event_id=event[0]) }}">{{ event[1] }}</a>
+                    </td>
+                    <td>{{ event[11] }}</td>
+                    <td>{{ event[2] }}</td>
+                    <td>{{ event[3] }} / {{ event[5] }}</td>
+                    <td>{{ event[4] }} / {{ event[6] }}</td>
+                    <td>{{ event[8] }}</td>
+                    <td>{{ event[9] }}</td>
+                    <td>{{ event[10] }}</td>
+                    <td>
+                        {% if event[12] %}
+                            <span class="approved">Onaylı ✅</span>
+                        {% else %}
+                            <span class="pending">Beklemede 🕒</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if event[12] %}
+                            <form action="{{ url_for('disapprove_event', event_id=event[0]) }}" method="POST">
+                                <button type="submit" class="action-button">Kaldır</button>
+                            </form>
+                        {% else %}
+                            <form action="{{ url_for('approve_event', event_id=event[0]) }}" method="POST">
+                                <button type="submit" class="action-button">Onayla</button>
+                            </form>
+                        {% endif %}
+                        {% if not is_user_admin(event[11]) %}
+                            <form action="{{ url_for('delete_event', event_id=event[0]) }}" method="POST">
+                                <button type="submit" class="delete-button">Sil</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>
 </body>
 </html>

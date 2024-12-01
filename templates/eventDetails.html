@@ -79,7 +79,8 @@
             </div>
 
         </section>
-        <section class="event-chat" {% if not is_participant and not is_creator %} style="display: none;" {% endif %}>
+        <section class="event-chat" {% if not is_participant and not is_creator and not is_user_admin %}
+                 style="display: none;" {% endif %}>
             <h2>Etkinlik Sohbeti</h2>
             <div id="chat-container">
                 <div id="chat-messages">
@@ -93,7 +94,7 @@
                         </div>
                     {% endfor %}
                 </div>
-                <div class="chat-actions">
+                <div class="chat-actions" {% if is_user_admin %} style="display: none;" {% endif %}>
                     <textarea id="chat-input" placeholder="Mesajınızı yazın..."></textarea>
                     <button id="send-message">Gönder</button>
                 </div>

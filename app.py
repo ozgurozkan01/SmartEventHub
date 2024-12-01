@@ -452,18 +452,12 @@ def update_event(event_id):
 
         update_event_in_db(event_id, data)
 
-        return redirect(url_for('event_detail', event_id=event_id))
+        user_id = get_user_id_by_username(session.get('user').get('username'))
 
-    conn = sqlite3.connect(DATABASE)
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM events WHERE ID = ?", (event_id,))
-    event = cursor.fetchone()
-    conn.close()
-
-    if not event:
-        return "Event not found", 404
-
-    return render_template('eventDetails.html', event=event)
+        if is_admin(user_id):
+            return redirect(url_for('view_event', event_id=event_id))
+        else:
+            return redirect(url_for('event_detail', event_id=event_id))
 
 @app.route('/join_event/<int:event_id>', methods=['POST'])
 def join_event(event_id):

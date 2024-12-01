@@ -7,182 +7,230 @@
     <title>Etkinlik Oluştur</title>
 </head>
 <body>
-    {% include 'header.html' %}
+{% include 'header.html' %}
 
-    <section class="event-form">
-        <h2>Etkinlik Detaylarını Girin</h2>
+<section class="event-form">
+    <h2>Etkinlik Detaylarını Girin</h2>
 
-            {% if conflict_message %}
-                <div class="alert alert-warning">
-                    {{ conflict_message }}
-                </div>
-            {% endif %}
+    {% if conflict_message %}
+        <div class="alert alert-warning">
+            {{ conflict_message }}
+        </div>
+    {% endif %}
 
-            <form method="POST" id="event-form" action="{{ url_for('create_event') }}" enctype="multipart/form-data">
-            <div class="form-group interests-section">
-                <label for="event-name">Etkinlik İsmi:</label>
-                <input type="text" id="event-name" name="event-name" placeholder="Etkinlik ismini girin" required>
+    <form method="POST" id="event-form" action="{{ url_for('create_event') }}" enctype="multipart/form-data">
+        <div class="form-group interests-section">
+            <label for="event-name">Etkinlik İsmi:</label>
+            <input type="text" id="event-name" name="event-name" placeholder="Etkinlik ismini girin" required>
+        </div>
+        <div class="form-group interests-section">
+            <label for="event-start-date">Başlangıç Tarihi:</label>
+            <input type="date" id="event-start-date" name="event-start-date" required>
+
+            <label for="event-finish-date">Bitiş Tarihi:</label>
+            <input type="date" id="event-finish-date" name="event-finish-date" required>
+
+            <label for="event-start-time">Başlama Saati:</label>
+            <input type="time" id="event-start-time" name="event-start-time" required>
+
+            <label for="event-finish-time">Bitiş Saati:</label>
+            <input type="time" id="event-finish-time" name="event-finish-time" required>
+        </div>
+
+        <div class="form-group interests-section">
+            <label for="event-description">Açıklama:</label>
+            <textarea id="event-description" name="event-description" placeholder="Etkinlik açıklamasını girin"
+                      required></textarea>
+        </div>
+
+        <div class="form-group interests-section">
+            <label for="event-city">Konum:</label>
+            <select id="event-city" name="event-city" required>
+                <option value="" disabled selected>Şehir Seçiniz</option>
+                <option value="Adana">Adana</option>
+                <option value="Adıyaman">Adıyaman</option>
+                <option value="Afyonkarahisar">Afyonkarahisar</option>
+                <option value="Ağrı">Ağrı</option>
+                <option value="Amasya">Amasya</option>
+                <option value="Ankara">Ankara</option>
+                <option value="Antalya">Antalya</option>
+                <option value="Artvin">Artvin</option>
+                <option value="Aydın">Aydın</option>
+                <option value="Balıkesir">Balıkesir</option>
+                <option value="Bilecik">Bilecik</option>
+                <option value="Bingöl">Bingöl</option>
+                <option value="Bitlis">Bitlis</option>
+                <option value="Bolu">Bolu</option>
+                <option value="Burdur">Burdur</option>
+                <option value="Bursa">Bursa</option>
+                <option value="Çanakkale">Çanakkale</option>
+                <option value="Çankırı">Çankırı</option>
+                <option value="Denizli">Denizli</option>
+                <option value="Diyarbakır">Diyarbakır</option>
+                <option value="Edirne">Edirne</option>
+                <option value="Elazığ">Elazığ</option>
+                <option value="Erzincan">Erzincan</option>
+                <option value="Erzurum">Erzurum</option>
+                <option value="Eskişehir">Eskişehir</option>
+                <option value="Gaziantep">Gaziantep</option>
+                <option value="Giresun">Giresun</option>
+                <option value="Gümüşhane">Gümüşhane</option>
+                <option value="Hakkari">Hakkari</option>
+                <option value="Hatay">Hatay</option>
+                <option value="Iğdır">Iğdır</option>
+                <option value="Isparta">Isparta</option>
+                <option value="İstanbul">İstanbul</option>
+                <option value="İzmir">İzmir</option>
+                <option value="Kars">Kars</option>
+                <option value="Kastamonu">Kastamonu</option>
+                <option value="Kayseri">Kayseri</option>
+                <option value="Kırklareli">Kırklareli</option>
+                <option value="Kırşehir">Kırşehir</option>
+                <option value="Kocaeli">Kocaeli</option>
+                <option value="Konya">Konya</option>
+                <option value="Kütahya">Kütahya</option>
+                <option value="Malatya">Malatya</option>
+                <option value="Manisa">Manisa</option>
+                <option value="Mardin">Mardin</option>
+                <option value="Muğla">Muğla</option>
+                <option value="Muş">Muş</option>
+                <option value="Nevşehir">Nevşehir</option>
+                <option value="Niğde">Niğde</option>
+                <option value="Ordu">Ordu</option>
+                <option value="Osmaniye">Osmaniye</option>
+                <option value="Rize">Rize</option>
+                <option value="Sakarya">Sakarya</option>
+                <option value="Samsun">Samsun</option>
+                <option value="Siirt">Siirt</option>
+                <option value="Sinop">Sinop</option>
+                <option value="Sivas">Sivas</option>
+                <option value="Tekirdağ">Tekirdağ</option>
+                <option value="Tokat">Tokat</option>
+                <option value="Trabzon">Trabzon</option>
+                <option value="Tunceli">Tunceli</option>
+                <option value="Şanlıurfa">Şanlıurfa</option>
+                <option value="Uşak">Uşak</option>
+                <option value="Van">Van</option>
+                <option value="Yalova">Yalova</option>
+                <option value="Yozgat">Yozgat</option>
+                <option value="Zonguldak">Zonguldak</option>
+            </select>
+
+            <label for="event-address">Adres:</label>
+            <input type="text" id="event-address" name="event-address" placeholder="Örn: Mahalle, Cadde, Sokak"
+                   required>
+        </div>
+
+        <div class="form-group interests-section">
+            <label for="interests">Kategoriler:</label>
+            <div class="selected-interests" id="selected-interests"></div>
+            <button type="button" class="manage-interests-btn" onclick="toggleInterests()">Kategori Ekleyiniz</button>
+            <div class="interests-options" id="interests-options" style="display:none;">
+                <label><input type="radio" name="category" onchange="saveCategory()" value="Spor"> Spor </label>
+                <label><input type="radio" name="category" onchange="saveCategory()" value="Sanat"> Sanat </label>
+                <label><input type="radio" name="category" onchange="saveCategory()" value="Müzik"> Müzik </label>
+                <label><input type="radio" name="category" onchange="saveCategory()" value="Tiyatro"> Tiyatro </label>
+                <label><input type="radio" name="category" onchange="saveCategory()" value="Edebiyat"> Edebiyat </label>
+                <label><input type="radio" name="category" onchange="saveCategory()" value="Yemek"> Yemek </label>
+                <label><input type="radio" name="category" onchange="saveCategory()" value="Moda-Tasarım"> Moda-Tasarım
+                </label>
+                <label><input type="radio" name="category" onchange="saveCategory()" value="Doğa-Macera"> Doğa-Macera
+                </label>
+                <label><input type="radio" name="category" onchange="saveCategory()" value="Teknoloji"> Teknoloji
+                </label>
+                <label><input type="radio" name="category" onchange="saveCategory()" value="Fotoğrafçılık">
+                    Fotoğrafçılık</label>
+                <label><input type="radio" name="category" onchange="saveCategory()" value="Film-Sinema">
+                    Film-Sinema</label>
+                <label><input type="radio" name="category" onchange="saveCategory()" value="Seyahat-Keşif">
+                    Seyahat-Keşif </label>
+                <label><input type="radio" name="category" onchange="saveCategory()" value="Dans"> Dans </label>
+                <label><input type="radio" name="category" onchange="saveCategory()" value="E-Spor"> E-Spor </label>
             </div>
-            <div class="form-group interests-section">
-                <label for="event-start-date">Başlangıç Tarihi:</label>
-                <input type="date" id="event-start-date" name="event-start-date" required>
+        </div>
+        <button type="submit" action="{{ url_for('create_event') }}">Etkinlik Ekle</button>
+    </form>
+</section>
 
-                <label for="event-finish-date">Bitiş Tarihi:</label>
-                <input type="date" id="event-finish-date" name="event-finish-date" required>
+<script>
+    function toggleInterests() {
+        var interestsOptions = document.getElementById("interests-options");
+        if (interestsOptions.style.display === "none") {
+            interestsOptions.style.display = "block";
+        } else {
+            interestsOptions.style.display = "none";
+        }
+    }
 
-                <label for="event-start-time">Başlama Saati:</label>
-                <input type="time" id="event-start-time" name="event-start-time" required>
+    function saveCategory() {
+        var selectedInterest = document.querySelector('input[name="category"]:checked');
+        var selectedInterestsDiv = document.getElementById('selected-interests');
 
-                <label for="event-finish-time">Bitiş Saati:</label>
-                <input type="time" id="event-finish-time" name="event-finish-time" required>
-            </div>
+        if (selectedInterest) {
+            selectedInterestsDiv.innerHTML = '<span class="interest-tag">' + selectedInterest.value + '</span>';
+        } else {
+            selectedInterestsDiv.innerHTML = '';
+        }
+    }
 
-            <div class="form-group interests-section">
-                <label for="event-description">Açıklama:</label>
-                <textarea id="event-description" name="event-description" placeholder="Etkinlik açıklamasını girin" required></textarea>
-            </div>
-
-            <div class="form-group interests-section">
-                <label for="event-city">Konum:</label>
-                <select id="event-city" name="event-city" required>
-                    <option value="" disabled selected>Şehir Seçiniz</option>
-                    <option value="Adana">Adana</option>
-                    <option value="Adıyaman">Adıyaman</option>
-                    <option value="Afyonkarahisar">Afyonkarahisar</option>
-                    <option value="Ağrı">Ağrı</option>
-                    <option value="Amasya">Amasya</option>
-                    <option value="Ankara">Ankara</option>
-                    <option value="Antalya">Antalya</option>
-                    <option value="Artvin">Artvin</option>
-                    <option value="Aydın">Aydın</option>
-                    <option value="Balıkesir">Balıkesir</option>
-                    <option value="Bilecik">Bilecik</option>
-                    <option value="Bingöl">Bingöl</option>
-                    <option value="Bitlis">Bitlis</option>
-                    <option value="Bolu">Bolu</option>
-                    <option value="Burdur">Burdur</option>
-                    <option value="Bursa">Bursa</option>
-                    <option value="Çanakkale">Çanakkale</option>
-                    <option value="Çankırı">Çankırı</option>
-                    <option value="Denizli">Denizli</option>
-                    <option value="Diyarbakır">Diyarbakır</option>
-                    <option value="Edirne">Edirne</option>
-                    <option value="Elazığ">Elazığ</option>
-                    <option value="Erzincan">Erzincan</option>
-                    <option value="Erzurum">Erzurum</option>
-                    <option value="Eskişehir">Eskişehir</option>
-                    <option value="Gaziantep">Gaziantep</option>
-                    <option value="Giresun">Giresun</option>
-                    <option value="Gümüşhane">Gümüşhane</option>
-                    <option value="Hakkari">Hakkari</option>
-                    <option value="Hatay">Hatay</option>
-                    <option value="Iğdır">Iğdır</option>
-                    <option value="Isparta">Isparta</option>
-                    <option value="İstanbul">İstanbul</option>
-                    <option value="İzmir">İzmir</option>
-                    <option value="Kars">Kars</option>
-                    <option value="Kastamonu">Kastamonu</option>
-                    <option value="Kayseri">Kayseri</option>
-                    <option value="Kırklareli">Kırklareli</option>
-                    <option value="Kırşehir">Kırşehir</option>
-                    <option value="Kocaeli">Kocaeli</option>
-                    <option value="Konya">Konya</option>
-                    <option value="Kütahya">Kütahya</option>
-                    <option value="Malatya">Malatya</option>
-                    <option value="Manisa">Manisa</option>
-                    <option value="Mardin">Mardin</option>
-                    <option value="Muğla">Muğla</option>
-                    <option value="Muş">Muş</option>
-                    <option value="Nevşehir">Nevşehir</option>
-                    <option value="Niğde">Niğde</option>
-                    <option value="Ordu">Ordu</option>
-                    <option value="Osmaniye">Osmaniye</option>
-                    <option value="Rize">Rize</option>
-                    <option value="Sakarya">Sakarya</option>
-                    <option value="Samsun">Samsun</option>
-                    <option value="Siirt">Siirt</option>
-                    <option value="Sinop">Sinop</option>
-                    <option value="Sivas">Sivas</option>
-                    <option value="Tekirdağ">Tekirdağ</option>
-                    <option value="Tokat">Tokat</option>
-                    <option value="Trabzon">Trabzon</option>
-                    <option value="Tunceli">Tunceli</option>
-                    <option value="Şanlıurfa">Şanlıurfa</option>
-                    <option value="Uşak">Uşak</option>
-                    <option value="Van">Van</option>
-                    <option value="Yalova">Yalova</option>
-                    <option value="Yozgat">Yozgat</option>
-                    <option value="Zonguldak">Zonguldak</option>
-                </select>
-
-                <label for="event-address">Adres:</label>
-                <input type="text" id="event-address" name="event-address" placeholder="Örn: Mahalle, Cadde, Sokak" required>
-            </div>
-
-            <div class="form-group interests-section">
-                <label for="interests">Kategoriler:</label>
-                <div class="selected-interests" id="selected-interests"></div>
-                <button type="button" class="manage-interests-btn" onclick="toggleInterests()">Kategori Ekleyiniz</button>
-                <div class="interests-options" id="interests-options" style="display:none;">
-                    <label><input type="radio" name="category" onchange="saveCategory()" value="Spor"> Spor </label>
-                    <label><input type="radio" name="category" onchange="saveCategory()" value="Sanat"> Sanat </label>
-                    <label><input type="radio" name="category" onchange="saveCategory()" value="Müzik"> Müzik </label>
-                    <label><input type="radio" name="category" onchange="saveCategory()" value="Tiyatro"> Tiyatro </label>
-                    <label><input type="radio" name="category" onchange="saveCategory()" value="Edebiyat"> Edebiyat </label>
-                    <label><input type="radio" name="category" onchange="saveCategory()" value="Yemek"> Yemek </label>
-                    <label><input type="radio" name="category" onchange="saveCategory()" value="Moda-Tasarım"> Moda-Tasarım </label>
-                    <label><input type="radio" name="category" onchange="saveCategory()" value="Doğa-Macera"> Doğa-Macera </label>
-                    <label><input type="radio" name="category" onchange="saveCategory()" value="Teknoloji"> Teknoloji </label>
-                    <label><input type="radio" name="category" onchange="saveCategory()" value="Fotoğrafçılık"> Fotoğrafçılık</label>
-                    <label><input type="radio" name="category" onchange="saveCategory()" value="Film-Sinema"> Film-Sinema</label>
-                    <label><input type="radio" name="category" onchange="saveCategory()" value="Seyahat-Keşif"> Seyahat-Keşif </label>
-                    <label><input type="radio" name="category" onchange="saveCategory()" value="Dans"> Dans </label>
-                    <label><input type="radio" name="category" onchange="saveCategory()" value="E-Spor"> E-Spor </label>
-                </div>
-            </div>
-            <button type="submit" action="{{ url_for('create_event') }}">Etkinlik Ekle</button>
-        </form>
-    </section>
-
-    <script>
-        function toggleInterests() {
-            var interestsOptions = document.getElementById("interests-options");
-            if (interestsOptions.style.display === "none") {
-                interestsOptions.style.display = "block";
-            } else {
-                interestsOptions.style.display = "none";
-            }
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById('event-form');
+    form.addEventListener('submit', function (e) {
+        // Hata mesajı alanını kontrol edin veya oluşturun
+        let errorMessage = document.getElementById('error-message');
+        if (!errorMessage) {
+            errorMessage = document.createElement('div');
+            errorMessage.id = 'error-message';
+            errorMessage.style.color = 'red';
+            form.prepend(errorMessage);
         }
 
-        function saveCategory() {
-            var selectedInterest = document.querySelector('input[name="category"]:checked');
-            var selectedInterestsDiv = document.getElementById('selected-interests');
+        errorMessage.textContent = ''; // Önceki hatayı temizle
 
-            if (selectedInterest) {
-                selectedInterestsDiv.innerHTML = '<span class="interest-tag">' + selectedInterest.value + '</span>';
-            } else {
-                selectedInterestsDiv.innerHTML = '';
-            }
+        // Form alanlarını al
+        const startDateValue = document.getElementById('event-start-date').value;
+        const finishDateValue = document.getElementById('event-finish-date').value;
+        const startTime = document.getElementById('event-start-time').value;
+        const finishTime = document.getElementById('event-finish-time').value;
+
+        // Alanların doluluğunu kontrol et
+        if (!startDateValue || !finishDateValue || !startTime || !finishTime) {
+            errorMessage.textContent = 'Tüm tarih ve saat alanlarını doldurmalısınız.';
+            e.preventDefault();
+            return;
         }
 
-        document.getElementById('event-form').addEventListener('submit', function(event) {
-            const startDate = new Date(document.getElementById('event-start-date').value);
-            const finishDate = new Date(document.getElementById('event-finish-date').value);
+        const startDateTime = new Date(`${startDateValue}T${startTime}`);
+        const finishDateTime = new Date(`${finishDateValue}T${finishTime}`);
 
-            if (startDate >= finishDate) {
-                alert('Başlangıç tarihi, bitiş tarihinden önce olmalıdır.');
-                event.preventDefault();
-            }
-        });
-        document.getElementById('event-image').addEventListener('change', function(e) {
-            var fileName = e.target.files[0].name;
-            document.getElementById('file-name').textContent = "Seçilen dosya: " + fileName;
-        });
-                document.getElementById('event-image').addEventListener('change', function(event) {
-            var filePath = event.target.value;
-            var correctedPath = filePath.replace(/\\/g, '/');
-            document.getElementById('file-name').textContent = correctedPath;
-        });
-    </script>
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+
+        const minStartDateTime = new Date(now);
+        minStartDateTime.setDate(minStartDateTime.getDate() + 7);
+
+        if (startDateTime < now) {
+            errorMessage.textContent = 'Başlangıç tarihi geçmiş bir tarih olamaz.';
+            e.preventDefault();
+            return;
+        }
+
+        if (startDateTime < minStartDateTime) {
+            errorMessage.textContent = 'Başlangıç tarihi bugünden en az 7 gün sonrası olmalıdır.';
+            e.preventDefault();
+            return;
+        }
+
+        if (finishDateTime <= startDateTime) {
+            errorMessage.textContent = 'Bitiş tarihi ve saati, başlangıç tarih ve saatinden sonra olmalıdır.';
+            e.preventDefault();
+            return;
+        }
+    });
+});
+
+
+
+</script>
 </body>
 </html>

@@ -789,6 +789,7 @@ def is_admin(user_id):
 
     cursor.execute('SELECT status FROM users WHERE ID = ?', (user_id,))
     result = cursor.fetchone()
+
     if result and result[0] == 'admin':
         return True
     return False

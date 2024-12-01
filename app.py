@@ -278,6 +278,17 @@ def event_detail(event_id):
     messages = get_messages_for_event(event_id)
     is_user_admin = is_admin(user_id)
 
+    event_participants = get_participants(event_id)
+
+    for participant in event_participants:
+        print(f"Username: {participant.username}")
+        print(f"Full Name: {participant.first_name} {participant.last_name}")
+        print(f"Email: {participant.email}")
+        print(f"Phone Number: {participant.phone_number}")
+        print(f"Profile Photo: {participant.profile_photo}")
+        print(f"Location: {participant.location}")
+        print("-" * 40)
+
     return render_template(
         'eventDetails.html',
         event=event,
@@ -289,7 +300,8 @@ def event_detail(event_id):
         get_username_by_id=get_username_by_id,
         days=days, hours=hours, minutes=minutes,
         conflict_message=conflict_message,
-        is_user_admin = is_user_admin
+        is_user_admin = is_user_admin,
+        event_participants=event_participants
     )
 
 def send_notification(user_id, message):

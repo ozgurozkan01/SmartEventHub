@@ -723,14 +723,28 @@ def get_participants(event_id):
     cursor = conn.cursor()
 
     cursor.execute('''
-        SELECT user_id 
-        FROM Participants 
-        WHERE event_id = ?
+        SELECT p.user_ID
+        FROM Participants p
+        WHERE p.event_ID = ?
     ''', (event_id,))
 
-    participants = cursor.fetchall()
+    participant_ids = [row[0] for row in cursor.fetchall()]
+
+    cursor.execute('''
+        SELECT u.username, u.email, u.location, u.interests, u.first_name, u.last_name, u.birth_date, u.gender, 
+               u.phone_number, u.profile_photo, u.status
+        FROM Users u
+        WHERE u.ID IN ({})
+    '''.format(','.join(['?'] * len(participant_ids))), participant_ids)
+
+    users = [User(username=row[0], email=row[1], location=row[2], interests=row[3], first_name=row[4],
+                  last_name=row[5], birth_date=row[6], gender=row[7], phone_number=row[8],
+                  profile_photo=row[9], status=row[10]) for row in cursor.fetchall()]
+
     conn.close()
-    return participants
+    return users
+
+
 
 
 def set_user_as_admin(username):

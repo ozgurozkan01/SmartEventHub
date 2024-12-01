@@ -12,8 +12,6 @@
 <main>
     <div class="details-and-chat">
         <section class="event-details">
-
-
             <h2 class="event-title"> {{ event['event_name'] }} <span
                     class="event-category">{{ event['category'] }}</span></h2>
 
@@ -79,24 +77,49 @@
             </div>
 
         </section>
-        <section class="event-chat" {% if not is_participant and not is_creator and not is_user_admin %}
+        <section class="event-interaction" {% if not is_participant and not is_creator and not is_user_admin %}
                  style="display: none;" {% endif %}>
-            <h2>Etkinlik Sohbeti</h2>
-            <div id="chat-container">
-                <div id="chat-messages">
-                    {% for message in messages %}
-                        <div class="message {% if message['sender_ID'] == user_id %} user-message {% else %} other-message {% endif %}">
-                            <div class="message-bubble">
-                                <small class="message-time">{{ message['sent_time'] }}</small>
-                                <strong class="message-sender">{{ get_username_by_id(message['sender_ID']) }}:</strong>
-                                <span class="message-text">{{ message['message_text'] }}</span>
-                            </div>
-                        </div>
-                    {% endfor %}
+            <div class="controls">
+                <button id="participants-btn" class="tab-btn active">Katılımcılar</button>
+                <button id="chat-btn" class="tab-btn">Etkinlik Sohbeti</button>
+            </div>
+
+            <div id="participants-section" class="content-section">
+                <h2>Katılımcılar ({{ event_participants|length }})</h2>
+                <div id="chat-container">
+                    <ul id="participants-list">
+                        {% for participant in event_participants %}
+                            <li>
+                                <div class="participant-info">
+                                    <img src="{{ url_for('static', filename=participant.profile_photo) }}"
+                                         alt="{{ participant.username }}" class="participant-pp">
+                                    <span class="participant-username">{{ participant.username }}</span>
+                                    <span class="participant-name"> ({{ participant.first_name }} {{ participant.last_name }}) </span>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
-                <div class="chat-actions" {% if is_user_admin %} style="display: none;" {% endif %}>
-                    <textarea id="chat-input" placeholder="Mesajınızı yazın..."></textarea>
-                    <button id="send-message">Gönder</button>
+            </div>
+
+            <div id="chat-section" class="content-section" style="display: none;">
+                <h2>Etkinlik Sohbeti</h2>
+                <div id="chat-container">
+                    <div id="chat-messages">
+                        {% for message in messages %}
+                            <div class="message {% if message['sender_ID'] == user_id %} user-message {% else %} other-message {% endif %}">
+                                <div class="message-bubble">
+                                    <small class="message-time">{{ message['sent_time'] }}</small>
+                                    <strong class="message-sender">{{ get_username_by_id(message['sender_ID']) }}:</strong>
+                                    <span class="message-text">{{ message['message_text'] }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="chat-actions" {% if is_user_admin %} style="display: none;" {% endif %}>
+                        <textarea id="chat-input" placeholder="Mesajınızı yazın..."></textarea>
+                        <button id="send-message">Gönder</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -108,7 +131,38 @@
 </footer>
 
 <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const participantsBtn = document.getElementById("participants-btn");
+        const chatBtn = document.getElementById("chat-btn");
+
+        const participantsSection = document.getElementById("participants-section");
+        const chatSection = document.getElementById("chat-section");
+
+        chatSection.style.display = "block";
+        participantsSection.style.display = "none";
+        chatBtn.classList.add("active");
+        participantsBtn.classList.remove("active");
+
+        participantsBtn.addEventListener("click", function () {
+            participantsBtn.classList.add("active");
+            chatBtn.classList.remove("active");
+
+            participantsSection.style.display = "block";
+            chatSection.style.display = "none";
+        });
+
+        chatBtn.addEventListener("click", function () {
+            chatBtn.classList.add("active");
+            participantsBtn.classList.remove("active");
+
+            chatSection.style.display = "block";
+            participantsSection.style.display = "none";
+        });
+    });
+
     document.getElementById("send-message").addEventListener("click", function () {
+
         var messageContent = document.getElementById("chat-input").value;
         if (!messageContent) return;
 

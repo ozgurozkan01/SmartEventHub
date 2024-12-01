@@ -2,14 +2,18 @@ import os
 import sys
 
 from flask import Flask, render_template, request, redirect, flash, url_for, jsonify, session
+from werkzeug.security import check_password_hash
+
 from database import *
 from utilities import *
 from flask_mail import Mail, Message
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 app.secret_key = 'yazlab2'
+app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'images')
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
 user_instance = User()
 
@@ -164,9 +168,6 @@ def create_event():
     return render_template('createEvent.html')
 
 
-app.config['UPLOAD_FOLDER'] = 'static/images'
-app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
-
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
@@ -189,14 +190,17 @@ def update_profile_picture():
 
         file.save(file_path)
 
-        new_profile_picture_url = f"/{app.config['UPLOAD_FOLDER']}/{filename}"
-
-        username = session.get('username')
+        new_profile_picture_url = f"images/{filename}"
+        username = session.get('user').get('username')
+        session['user']['profile_photo'] = new_profile_picture_url
         update_profile_picture_in_db(username, new_profile_picture_url)
+
+        new_profile_picture_url = 'static/' + new_profile_picture_url
 
         return jsonify({'success': True, 'newProfilePictureUrl': new_profile_picture_url})
 
     return jsonify({'success': False, 'message': 'Geçersiz dosya formatı'}), 400
+
 
 @app.route('/admin-profile')
 def admin_profile():
@@ -279,15 +283,6 @@ def event_detail(event_id):
     is_user_admin = is_admin(user_id)
 
     event_participants = get_participants(event_id)
-
-    for participant in event_participants:
-        print(f"Username: {participant.username}")
-        print(f"Full Name: {participant.first_name} {participant.last_name}")
-        print(f"Email: {participant.email}")
-        print(f"Phone Number: {participant.phone_number}")
-        print(f"Profile Photo: {participant.profile_photo}")
-        print(f"Location: {participant.location}")
-        print("-" * 40)
 
     return render_template(
         'eventDetails.html',
@@ -427,7 +422,10 @@ def update_profile():
 
     session['user'].update(updated_data)
 
-    return redirect('/profile')
+    if is_admin(get_user_id_by_username(session.get('user').get('username'))):
+        return redirect('/admin-profile')
+    else:
+        return redirect('/profile')
 
 @app.route('/update_event/<int:event_id>', methods=['GET', 'POST'])
 def update_event(event_id):
@@ -515,34 +513,6 @@ def edit_event(event_id):
     event = get_event_by_id(event_id)
     return render_template('editEvent.html', event=event)
 
-@app.route('/notifications')
-def notifications():
-    username = session.get('user', {}).get('username')
-    user_id = get_user_id_by_username(username)
-    notifications = get_user_notifications(user_id)
-
-    return render_template('notifications.html', notifications=notifications)
-
-@app.route('/get-notifications', methods=['GET'])
-def get_notifications():
-    user_id = session.get('user_id')
-
-    if not user_id:
-        return jsonify({"status": "error", "message": "Kullanıcı oturumda değil"}), 401
-
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-    cursor.execute('''
-        SELECT message, created_at 
-        FROM Notifications 
-        WHERE user_id = ? AND is_read = 0 
-        ORDER BY created_at DESC
-    ''', (user_id,))
-    notifications = cursor.fetchall()
-    conn.close()
-
-    return jsonify([{"message": row[0], "date": row[1]} for row in notifications])
-
 @app.route('/admin/user/')
 def view_user():
     users = get_all_users()
@@ -606,74 +576,6 @@ def revoke_authorization(user_id):
         flash(f'{user["name"]} zaten user.', 'warning')
 
     return redirect(url_for('view_user'))
-
-@app.route('/send_password', methods=['POST'])
-def send_password():
-    data = request.json
-    username = data.get('username')
-    email = data.get('email')
-    print('1')
-
-    if not username or not email:
-        return jsonify({'message': 'Kullanıcı adı ve e-posta gereklidir.'}), 400
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT password FROM users WHERE username = ? AND email = ?", (username, email))
-    result = cursor.fetchone()
-    print(f"Veritabanı sorgu sonucu: {result}")
-    conn.close()
-
-    if result:
-        print('2')
-        user_password = result[0]
-        if not isinstance(user_password, str):
-            return jsonify({'message': 'Şifre hatalı formatta.'}), 400
-
-        mail_username = get_email_by_username(username)
-        mail_password = get_user_password(username)
-
-        print(f"Mail username: {mail_username}, Mail password: {mail_password}")
-
-        if not isinstance(mail_username, str) or not isinstance(mail_password, str):
-            return jsonify({'message': 'E-posta veya şifre hatalı.'}), 400
-
-        mail_password = mail_password[0]
-        print(f"Mail password: {mail_password}")
-
-        app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-        app.config['MAIL_PORT'] = 587
-        app.config['MAIL_USE_TLS'] = True
-        app.config['MAIL_USERNAME'] = mail_username
-        app.config['MAIL_PASSWORD'] = mail_password
-        mail = Mail(app)
-
-        print('4 - Mail gönderme başlıyor...')
-
-        try:
-            print(f"Mail gönderilecek adres: {email}")
-            mail.connect()
-            print('SMTP Bağlantısı başarılı')
-
-            msg = Message("Şifre Bilgileriniz",
-                          sender=app.config['MAIL_USERNAME'],
-                          recipients=[email])
-            msg.body = f"Merhaba {username},\n\nŞifreniz: {user_password}\n\nİyi günler!"
-            if not isinstance(msg.body, str):
-                return jsonify({'message': 'E-posta içeriği hatalı formatta.'}), 400
-
-            print('5 - E-posta gönderiliyor...')
-            mail.send(msg)
-            print('E-posta başarıyla gönderildi.')
-            return jsonify({'message': 'E-posta başarıyla gönderildi.'}), 200
-        except Exception as e:
-            print(f"Hata oluştu: {e}")
-            return jsonify({'message': f'E-posta gönderimi sırasında bir hata oluştu: {str(e)}'}), 500
-    else:
-        print("Kullanıcı adı veya e-posta eşleşmedi.")
-        return jsonify({'message': 'Kullanıcı adı veya e-posta eşleşmedi.'}), 404
-
 
 if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):

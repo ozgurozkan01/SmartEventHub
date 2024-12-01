@@ -7,52 +7,114 @@
     <title>Admin Profili</title>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Yönetici Profili</h1>
-        </header>
-        <section class="admin-info">
-            <h2>Yönetici Bilgileri</h2>
-            <div class="admin-details">
-                <span class="highlight" style="margin-right: 10px;">
-                    <img src="{{ url_for('static', filename=admin_info.profile_photo) }}" alt="Profil Fotoğrafı" style="width: 100px; height: 100px; border-radius: 50%;">
-                </span>
-                <div>
-                    <p>Ad: <span class="highlight">{{ admin_info.first_name }}</span></p>
-                    <p>Soyad: <span class="highlight">{{ admin_info.last_name }}</span></p>
-                    <p>Email: <span class="highlight">{{ admin_info.email }}</span></p>
-                    <p>Kullanıcı Adı: <span class="highlight">{{ admin_info.username }}</span></p>
-                    <p>Şifre: <span class="highlight">{{ admin_info.password }}</span></p>
-                    <p>Konum: <span class="highlight">{{ admin_info.location }}</span></p>
-                    <p>İlgi Alanları: <span class="highlight">{{ admin_info.interests }}</span></p>
-                    <p>Doğum Tarihi: <span class="highlight">{{ admin_info.birth_date }}</span></p>
-                    <p>Cinsiyet: <span class="highlight">{{ admin_info.gender }}</span></p>
-                    <p>Telefon Numarası: <span class="highlight">{{ admin_info.phone_number }}</span></p>
-                </div>
+<div class="container">
+    <header>
+        <h1>Yönetici Profili</h1>
+    </header>
+    <section class="admin-info">
+        <h2>Yönetici Bilgileri</h2>
+        <div class="admin-details">
+        <span class="highlight" style="margin-right: 10px;">
+            <img src="{{ url_for('static', filename=admin_info.profile_photo) }}" alt="Profil Fotoğrafı"
+                 style="width: 100px; height: 100px; border-radius: 50%;">
+        </span>
+            <div>
+                <p>Ad: <span class="highlight">{{ admin_info.first_name }}</span></p>
+                <p>Soyad: <span class="highlight">{{ admin_info.last_name }}</span></p>
+                <p>Email: <span class="highlight">{{ admin_info.email }}</span></p>
+                <p>Kullanıcı Adı: <span class="highlight">{{ admin_info.username }}</span></p>
+                <p>Şifre: <span class="highlight">{{ admin_info.password }}</span></p>
+                <p>Konum: <span class="highlight">{{ admin_info.location }}</span></p>
+                <p>İlgi Alanları: <span class="highlight">{{ admin_info.interests }}</span></p>
+                <p>Doğum Tarihi: <span class="highlight">{{ admin_info.birth_date }}</span></p>
+                <p>Cinsiyet: <span class="highlight">{{ admin_info.gender }}</span></p>
+                <p>Telefon Numarası: <span class="highlight">{{ admin_info.phone_number }}</span></p>
             </div>
-        </section>
-        <section class="user-management">
-            <h2>Yönetim</h2>
-            <div class="button-group">
-                <a href="{{ url_for('view_user', user_id=1) }}">
-                    <button class="btn">Kullanıcıları Yönet</button>
-                </a>
-
-                <a href="{{ url_for('view_event', event_id=1) }}">
-                    <button class="btn">Etkinlikleri Yönet</button>
+            <div class="edit-button">
+                <a href="{{ url_for('edit_profile') }}">
+                    <button class="admin-edit-btn">Düzenle</button>
                 </a>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="logout-section">
-            <form action="{{ url_for('logout') }}" method="POST">
-                <button type="submit" class="btn logout-btn">Çıkış Yap</button>
-            </form>
-        </section>
+    <section>
+        <h2>Şifre Yenileme</h2>
+        <div class="password-reset">
+            <div>
+                <label for="old-password">Eski Şifre:</label>
+                <input type="password" id="old-password" name="old-password">
+            </div>
+            <div>
+                <label for="new-password">Yeni Şifre:</label>
+                <input type="password" id="new-password" name="new-password">
+            </div>
+            <div>
+                <label for="confirm-new-password">Yeni Şifre Onaylama:</label>
+                <input type="password" id="confirm-new-password" name="confirm-new-password">
+            </div>
+            <div>
+                <button class="resetPassword" onclick="resetPassword()">Onayla</button>
+            </div>
+        </div>
+    </section>
 
-        <footer>
-            <p>Tüm hakları saklıdır &copy; 2024</p>
-        </footer>
-    </div>
+    <section class="user-management">
+        <h2>Yönetim</h2>
+        <div class="button-group">
+            <a href="{{ url_for('view_user', user_id=1) }}">
+                <button class="btn">Kullanıcıları Yönet</button>
+            </a>
+
+            <a href="{{ url_for('view_event', event_id=1) }}">
+                <button class="btn">Etkinlikleri Yönet</button>
+            </a>
+        </div>
+    </section>
+
+    <section class="logout-section">
+        <form action="{{ url_for('logout') }}" method="POST">
+            <button type="submit" class="btn logout-btn">Çıkış Yap</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>Tüm hakları saklıdır &copy; 2024</p>
+    </footer>
+</div>
+
+<script>
+    function resetPassword() {
+        const oldPassword = document.getElementById('old-password').value;
+        const newPassword = document.getElementById('new-password').value;
+        const confirmNewPassword = document.getElementById('confirm-new-password').value;
+
+        if (newPassword !== confirmNewPassword) {
+            alert('Yeni şifreler eşleşmiyor!');
+            return;
+        }
+
+        fetch('/resetPassword', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                oldPassword: oldPassword,
+                newPassword: newPassword
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Şifre başarıyla güncellendi!');
+                } else {
+                    alert('Eski şifre hatalı. Lütfen tekrar deneyin.');
+                }
+            })
+            .catch(error => console.error('Hata:', error));
+    }
+
+</script>
 </body>
 </html>

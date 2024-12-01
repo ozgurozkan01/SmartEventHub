@@ -7,25 +7,26 @@
     <title>Kullanıcı Profili</title>
 </head>
 <body>
-        {% include 'header.html' %}
+{% include 'header.html' %}
 <div class="profile-wrapper">
-            <div class="info-container">
+    <div class="info-container">
         <section class="user-info">
-
 
 
             <h2>Kullanıcı Bilgileri</h2>
 
             <div class="user-details">
                 <div class="profile-picture-container">
-                    <img src="{{ url_for('static', filename=user.profile_photo) }}" alt="Profil Fotoğrafı" class="profile-picture">
-                    <input type="file" id="profile-picture" name="profile-picture" accept="image/*" style="display:none;" onchange="updateProfilePicture()">
+                    <img src="{{ url_for('static', filename=user.profile_photo) }}" alt="Profil Fotoğrafı"
+                         class="profile-picture">
+                    <input type="file" id="profile-picture" name="profile-picture" accept="image/*"
+                           style="display:none;" onchange="updateProfilePicture()">
                     <button class="update-picture-btn" onclick="triggerFileInput()">📥</button>
 
-                <div class="rating-container">
-                    <span class="score-label">Score</span>
-                    <span class="rating-text" id="scoreText" data-score="{{ score }}"> {{ score }} </span>
-                </div>
+                    <div class="rating-container">
+                        <span class="score-label">Score</span>
+                        <span class="rating-text" id="scoreText" data-score="{{ score }}"> {{ score }} </span>
+                    </div>
 
 
                 </div>
@@ -46,13 +47,13 @@
                         <p>Konum: <span class="highlight" id="location">{{ user.location }}</span></p>
                     </div>
                     <div class="user-info-item">
-                    <p>İlgi Alanları:
-                        <span class="highlight" id="interests-display">
+                        <p>İlgi Alanları:
+                            <span class="highlight" id="interests-display">
                             {% for interest in interests %}
                                 {{ interest }}<br>
                             {% endfor %}
                         </span>
-                    </p>
+                        </p>
                     </div>
                     <div class="user-info-item">
                         <p>Doğum Tarihi: <span class="highlight" id="birth-date">{{ user.birthday }}</span></p>
@@ -61,7 +62,8 @@
                         <p>Cinsiyet: <span class="highlight" id="gender">{{ user.gender }}</span></p>
                     </div>
                     <div class="user-info-item">
-                        <p>Telefon Numarası: <span class="highlight" id="phone-number">{{ user.phone_number }}</span></p>
+                        <p>Telefon Numarası: <span class="highlight" id="phone-number">{{ user.phone_number }}</span>
+                        </p>
                     </div>
                 </div>
                 <div class="user-routes">
@@ -77,34 +79,34 @@
 
     <div class="event-container">
         <h2>Oluşturduğunuz Etkinlikler</h2>
-            <div class="event-list">
-                {% for event in user_events %}
-                    <a href="{{ url_for('event_detail', event_id=event.ID) }}" class="link">
-                        <div class="event-card {% if event.is_approved %}approved{% else %}not-approved{% endif %}">
-                            <h3 class="event-title">{{ event['event_name'] }}</h3>
-                        </div>
-                    </a>
-                {% else %}
-                    <p>Oluşturduğunuz bir etkinlik bulunmamaktadır.</p>
-                {% endfor %}
-            </div>
+        <div class="event-list">
+            {% for event in user_events %}
+                <a href="{{ url_for('event_detail', event_id=event.ID) }}" class="link">
+                    <div class="event-card {% if event.is_approved %}approved{% else %}not-approved{% endif %}">
+                        <h3 class="event-title">{{ event['event_name'] }}</h3>
+                    </div>
+                </a>
+            {% else %}
+                <p>Oluşturduğunuz bir etkinlik bulunmamaktadır.</p>
+            {% endfor %}
+        </div>
         <h2>Katıldığınız Etkinlikler</h2>
-                <div class="event-list">
-                {% for event in attended_events %}
-                    <a href="{{ url_for('event_detail', event_id=event.ID) }}" class="link">
-                        <div class="event-card">
-                                <h3 class="event-title">{{ event['event_name'] }}</h3>
-                            <!---<p class="event-dates">
+        <div class="event-list">
+            {% for event in attended_events %}
+                <a href="{{ url_for('event_detail', event_id=event.ID) }}" class="link">
+                    <div class="event-card">
+                        <h3 class="event-title">{{ event['event_name'] }}</h3>
+                        <!---<p class="event-dates">
                                 <strong>Başlangıç:</strong> {{ event['startDate'] }} / {{ event['startTime'] }} <br>
                                 <strong>Bitiş:</strong> {{ event['finishDate'] }} / {{ event['finishTime'] }}
                             </p>
                             <p class="event-location"><strong>Konum:</strong> {{ event['location'] }}</p>--->
-                        </div>
-                    </a>
-                {% else %}
-                    <p>Katıldığınız bir etkinlik bulunmamaktadır.</p>
-                {% endfor %}
-            </div>
+                    </div>
+                </a>
+            {% else %}
+                <p>Katıldığınız bir etkinlik bulunmamaktadır.</p>
+            {% endfor %}
+        </div>
         <h2>Şifre Yenileme</h2>
         <div class="password-reset">
             <div>
@@ -127,36 +129,36 @@
 
 </div>
 
-    <script>
-        function toggleEditField() {
-            var interestsOptions = document.getElementById('interests-options');
-            interestsOptions.style.display = interestsOptions.style.display === 'none' ? 'block' : 'none';
+<script>
+    function toggleEditField() {
+        var interestsOptions = document.getElementById('interests-options');
+        interestsOptions.style.display = interestsOptions.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function triggerFileInput() {
+        document.getElementById('profile-picture').click();
+    }
+
+    function resetPassword() {
+        const oldPassword = document.getElementById('old-password').value;
+        const newPassword = document.getElementById('new-password').value;
+        const confirmNewPassword = document.getElementById('confirm-new-password').value;
+
+        if (newPassword !== confirmNewPassword) {
+            alert('Yeni şifreler eşleşmiyor!');
+            return;
         }
 
-        function triggerFileInput() {
-            document.getElementById('profile-picture').click();
-        }
-
-        function resetPassword() {
-            const oldPassword = document.getElementById('old-password').value;
-            const newPassword = document.getElementById('new-password').value;
-            const confirmNewPassword = document.getElementById('confirm-new-password').value;
-
-            if (newPassword !== confirmNewPassword) {
-                alert('Yeni şifreler eşleşmiyor!');
-                return;
-            }
-
-            fetch('/resetPassword', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    oldPassword: oldPassword,
-                    newPassword: newPassword
-                })
+        fetch('/resetPassword', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                oldPassword: oldPassword,
+                newPassword: newPassword
             })
+        })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -166,103 +168,122 @@
                 }
             })
             .catch(error => console.error('Hata:', error));
+    }
+
+    function updateProfilePicture() {
+        const fileInput = document.getElementById('profile-picture');
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert('Lütfen bir profil resmi seçin!');
+            return;
         }
 
-        function updateProfilePicture() {
-            const fileInput = document.getElementById('profile-picture');
-            const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('profile-picture', file);
 
-            if (!file) {
-                alert('Lütfen bir profil resmi seçin!');
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('profile-picture', file);
-
-            fetch('/updateProfilePicture', {
-                method: 'POST',
-                body: formData
-            })
+        fetch('/updateProfilePicture', {
+            method: 'POST',
+            body: formData
+        })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Profil resmi başarıyla güncellendi!');
-
+                    // Yeni fotoğrafın URL'sini almak ve DOM üzerinde güncellemek
                     const imgElement = document.querySelector('.profile-picture');
-                    imgElement.src = data.newProfilePictureUrl;
+                    imgElement.src = `${data.newProfilePictureUrl}?v=${new Date().getTime()}`;
 
-                    window.location.reload();
+                    // Kullanıcı verilerini yeniden yükle
+                    reloadUserData();
                 } else {
-                    alert('Profil resmi güncellenirken bir hata oluştu.');
+                    alert(data.message || 'Profil resmi güncellenirken bir hata oluştu.');
                 }
             })
             .catch(error => {
                 console.error('Hata:', error);
                 alert('Bir hata oluştu.');
             });
-        }
+    }
 
-        let editMode = {};
+    function reloadUserData() {
+        fetch('/getUserData')  // Profil verilerini almak için bir endpoint çağırılıyor
+            .then(response => response.json())
+            .then(data => {
+                // Profil fotoğrafı URL'sini güncelle
+                const profilePicture = document.querySelector('.profile-picture');
+                profilePicture.src = `${data.profile_photo}?v=${new Date().getTime()}`;
 
-        function editField(field) {
-            const displayField = document.getElementById(`${field}-display`);
-            const editField = document.getElementById(`${field}-edit`);
-
-            displayField.style.display = 'none';
-            editField.style.display = 'block';
-        }
-
-        function toggleInterests() {
-            const interestsOptions = document.getElementById("interests-options");
-            interestsOptions.style.display = interestsOptions.style.display === "block" ? "none" : "block";
-        }
-
-        function saveInterests() {
-            const selectedInterestsContainer = document.getElementById("selected-interests");
-            selectedInterestsContainer.innerHTML = "";
-
-            const checkboxes = document.querySelectorAll(".interests-options input:checked");
-            checkboxes.forEach(checkbox => {
-                const interest = document.createElement("span");
-                interest.textContent = checkbox.value;
-                interest.classList.add("interest-tag");
-                selectedInterestsContainer.appendChild(interest);
-            });
-
-            const displayField = document.getElementById("interests-display");
-            const editField = document.getElementById("interests-edit");
-
-            const newInterests = [];
-            checkboxes.forEach(checkbox => {
-                newInterests.push(checkbox.value);
-            });
-
-            let interestList = '<ul>';
-            newInterests.forEach(interest => {
-                interestList += `<li>${interest}</li>`;
-            });
-            interestList += '</ul>';
-
-            displayField.innerHTML = interestList;
-
-            displayField.style.display = 'block';
-            editField.style.display = 'none';
-        }
-
-        function updateUserField(fieldId, updatedValue) {
-            console.log(`Güncellenen alan: ${fieldId}, Yeni Değer: ${updatedValue}`);
-
-            fetch(`/updateUserField`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    fieldId: fieldId,
-                    value: updatedValue
-                })
+                // Diğer kullanıcı bilgilerini de güncelleyebilirsiniz
+                document.getElementById('first-name').innerText = data.first_name;
+                document.getElementById('last-name').innerText = data.last_name;
+                document.getElementById('email').innerText = data.email;
+                document.getElementById('username').innerText = data.username;
+                document.getElementById('location').innerText = data.location;
+                // vb.
             })
+            .catch(error => console.error('Hata:', error));
+    }
+
+    let editMode = {};
+
+    function editField(field) {
+        const displayField = document.getElementById(`${field}-display`);
+        const editField = document.getElementById(`${field}-edit`);
+
+        displayField.style.display = 'none';
+        editField.style.display = 'block';
+    }
+
+    function toggleInterests() {
+        const interestsOptions = document.getElementById("interests-options");
+        interestsOptions.style.display = interestsOptions.style.display === "block" ? "none" : "block";
+    }
+
+    function saveInterests() {
+        const selectedInterestsContainer = document.getElementById("selected-interests");
+        selectedInterestsContainer.innerHTML = "";
+
+        const checkboxes = document.querySelectorAll(".interests-options input:checked");
+        checkboxes.forEach(checkbox => {
+            const interest = document.createElement("span");
+            interest.textContent = checkbox.value;
+            interest.classList.add("interest-tag");
+            selectedInterestsContainer.appendChild(interest);
+        });
+
+        const displayField = document.getElementById("interests-display");
+        const editField = document.getElementById("interests-edit");
+
+        const newInterests = [];
+        checkboxes.forEach(checkbox => {
+            newInterests.push(checkbox.value);
+        });
+
+        let interestList = '<ul>';
+        newInterests.forEach(interest => {
+            interestList += `<li>${interest}</li>`;
+        });
+        interestList += '</ul>';
+
+        displayField.innerHTML = interestList;
+
+        displayField.style.display = 'block';
+        editField.style.display = 'none';
+    }
+
+    function updateUserField(fieldId, updatedValue) {
+        console.log(`Güncellenen alan: ${fieldId}, Yeni Değer: ${updatedValue}`);
+
+        fetch(`/updateUserField`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                fieldId: fieldId,
+                value: updatedValue
+            })
+        })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -272,29 +293,29 @@
                 }
             })
             .catch(error => console.error('Hata:', error));
+    }
+
+    function redirectToEditProfile() {
+        window.location.href = "/editProfile";
+    }
+
+    const ratingContainer = document.querySelector('.rating-container');
+    const scoreElement = document.getElementById('scoreText');
+
+    let score = parseInt(scoreElement.innerText);
+
+    function changeContainerColor(score) {
+        if (score <= 100) {
+            ratingContainer.style.background = '#FF0000';
+        } else if (score <= 250) {
+            ratingContainer.style.background = '#FFD700';
+        } else {
+            ratingContainer.style.background = '#008000';
         }
+    }
 
-        function redirectToEditProfile() {
-            window.location.href = "/editProfile";
-        }
+    changeContainerColor(score);
 
-        const ratingContainer = document.querySelector('.rating-container');
-            const scoreElement = document.getElementById('scoreText');
-
-            let score = parseInt(scoreElement.innerText);
-
-            function changeContainerColor(score) {
-                if (score <= 100) {
-                    ratingContainer.style.background = '#FF0000';
-                } else if (score <= 250) {
-                    ratingContainer.style.background = '#FFD700';
-                } else {
-                    ratingContainer.style.background = '#008000';
-                }
-            }
-
-            changeContainerColor(score);
-
-    </script>
+</script>
 </body>
 </html>

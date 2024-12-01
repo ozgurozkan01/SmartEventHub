@@ -1,8 +1,5 @@
-import sqlite3
-
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import generate_password_hash
 from user import *
-from datetime import datetime
 from utilities import *
 
 DATABASE = 'event.db'
@@ -166,14 +163,21 @@ def update_profile_picture_in_db(username, new_profile_picture_url):
     conn = get_db_connection()
     cursor = conn.cursor()
 
+    print(f'New Picture : {new_profile_picture_url}')
+    print(f'Username : {username}')
+
     cursor.execute('''
         UPDATE users 
-        SET profile_photo = ?
+        SET profile_photo = ? 
         WHERE username = ?
     ''', (new_profile_picture_url, username))
 
     conn.commit()
-    conn.close()
+
+    if cursor.rowcount > 0:
+        print(f"Successfully updated profile photo for {username}")
+    else:
+        print("No rows updated. Check if the username exists and is correct.")
 
 
 def update_user(user_id, data):
@@ -189,18 +193,18 @@ def update_user(user_id, data):
         return
 
     updated_data = {
-        'username': data.get('username', user[1]),  # user[1] -> eski username
-        'password': data.get('password', user[2]),  # user[2] -> eski password
-        'email': data.get('email', user[3]),  # user[3] -> eski email
-        'location': data.get('location', user[4]),  # user[4] -> eski location
-        'interests': data.get('interests', user[5]),  # user[5] -> eski interests
-        'first_name': data.get('first_name', user[6]),  # user[6] -> eski first_name
-        'last_name': data.get('last_name', user[7]),  # user[7] -> eski last_name
-        'birth_date': data.get('birth_date', user[8]),  # user[8] -> eski birth_date
-        'gender': data.get('gender', user[9]),  # user[9] -> eski gender
-        'phone_number': data.get('phone', user[10]),  # user[10] -> eski phone_number
-        'profile_photo': user[11],  # Fotoğrafı değiştirmiyoruz, eski veriyi kullanıyoruz
-        'status': user[12]  # Status değerini değiştirmiyoruz
+        'username': data.get('username', user[1]),
+        'password': data.get('password', user[2]),
+        'email': data.get('email', user[3]),
+        'location': data.get('location', user[4]),
+        'interests': data.get('interests', user[5]),
+        'first_name': data.get('first_name', user[6]),
+        'last_name': data.get('last_name', user[7]),
+        'birth_date': data.get('birth_date', user[8]),
+        'gender': data.get('gender', user[9]),
+        'phone_number': data.get('phone', user[10]),
+        'profile_photo': user[11],
+        'status': user[12]
     }
 
     query = '''
@@ -557,16 +561,14 @@ def leave_event_for_user(user_id, event_id):
     cursor = conn.cursor()
 
     try:
-        # Remove the user from the participants table for the specific event
         cursor.execute('''
             DELETE FROM participants
             WHERE user_ID = ? AND event_ID = ?
         ''', (user_id, event_id))
         conn.commit()
 
-        # If the user was successfully removed (affected rows > 0), update the score
         if cursor.rowcount > 0:
-            update_user_score(user_id, -10)  # You could define a penalty for leaving, for example
+            update_user_score(user_id, -10)
 
         return {"status": "success", "message": "Etkinlikten başarıyla çıktınız!"}
     except Exception as e:
@@ -575,7 +577,7 @@ def leave_event_for_user(user_id, event_id):
         conn.close()
 
 def delete_event_from_db(event_id):
-    conn = sqlite3.connect(DATABASE)  # Replace DATABASE with your actual database file
+    conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
 
     try:
@@ -587,7 +589,7 @@ def delete_event_from_db(event_id):
             DELETE FROM events WHERE ID = ?
         ''', (event_id,))
 
-        conn.commit()  # Commit the changes
+        conn.commit()
     except Exception as e:
         conn.rollback()  # Rollback in case of error
         print(f"Error deleting event {event_id}: {e}")

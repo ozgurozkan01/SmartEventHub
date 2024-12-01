@@ -198,18 +198,18 @@ td.interests:hover {
 }
 
 .events-list p:last-child {
-    border-bottom: none; /* Son etkinlikte çizgi olmaz */
+    border-bottom: none;
 }
 
 .event-link {
-    color: #007bff; /* Link rengi */
-    text-decoration: none; /* Alt çizgi kaldırılır */
-    font-weight: bold; /* Kalın yazı */
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
 }
 
 .event-link:hover {
-    text-decoration: underline; /* Üzerine gelince alt çizgi eklenir */
-    color: #0056b3; /* Daha koyu bir renk */
+    text-decoration: underline;
+    color: #0056b3;
 }
 
 .filter-buttons {
@@ -217,7 +217,7 @@ td.interests:hover {
     margin: 20px 0;
     display: flex;
     justify-content: center;
-    gap: 15px; /* Butonlar arasına mesafe ekler */
+    gap: 15px;
 }
 
 .filter-button {
@@ -227,23 +227,23 @@ td.interests:hover {
     color: white;
     background-color: #007BFF;
     border: 2px solid #007BFF;
-    border-radius: 25px; /* Butonun köşelerini yuvarlar */
+    border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .filter-button:hover {
     background-color: #0056b3;
     border-color: #0056b3;
-    transform: scale(1.05); /* Hoverda buton biraz büyür */
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Hoverda gölge büyür */
+    transform: scale(1.05);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }
 
 .filter-button:active {
     background-color: #003f7f;
     border-color: #003f7f;
-    transform: scale(0.98); /* Tıklanırken buton biraz küçülür */
+    transform: scale(0.98);
 }
 
 .filter-button.active {
@@ -388,12 +388,11 @@ td form {
 }
 
 .revoke-role-button:hover {
-    background-color: #c0392b;  /* Hover (fare üzerine gelince) durumunda daha koyu kırmızı */
+    background-color: #c0392b;
 }
 
-/* Modal Pencere Stili */
 .modal {
-    display: none; /* Başlangıçta gizli */
+    display: none;
     position: fixed;
     z-index: 1;
     left: 0;

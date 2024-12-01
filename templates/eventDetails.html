@@ -245,7 +245,7 @@
                         },
                         function (response, status) {
                             if (status === "OK") {
-                                directionsRenderer.setDirections(response); // Rotayı haritada çiz
+                                directionsRenderer.setDirections(response);
                             } else {
                                 console.error("Rota hesaplama hatası: " + status);
                                 alert("Rota hesaplanamadı: " + status);

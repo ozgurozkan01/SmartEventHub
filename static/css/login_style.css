@@ -95,24 +95,23 @@ button:hover {
 
 .forgot-password-link {
     display: inline-block;
-    color: #ff6f61; /* A visually striking color */
+    color: #ff6f61;
     font-size: 14px;
     font-weight: 500;
     text-decoration: none;
     transition: all 0.2s ease;
-    margin-top: 10px; /* Add some spacing from other elements */
+    margin-top: 10px;
 }
 
 .forgot-password-link:hover {
-    color: #e63946; /* Darker shade for hover effect */
+    color: #e63946;
     text-decoration: underline;
-    transform: scale(1.03); /* Slight zoom effect */
+    transform: scale(1.03);
 }
 
-/* Center align text in case the link feels isolated */
 .links {
     text-align: center;
-    margin-top: 15px; /* Add a bit more space above if needed */
+    margin-top: 15px;
 }
 
 .links a {
@@ -125,7 +124,6 @@ button:hover {
     text-decoration: underline;
 }
 
-/* Arka Plan Resmi */
 body::before {
     content: '';
     background-image: url('../images/events.jpg');

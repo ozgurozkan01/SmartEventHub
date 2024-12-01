@@ -173,62 +173,61 @@
         }
     }
 
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.getElementById('event-form');
-    form.addEventListener('submit', function (e) {
-        // Hata mesajı alanını kontrol edin veya oluşturun
-        let errorMessage = document.getElementById('error-message');
-        if (!errorMessage) {
-            errorMessage = document.createElement('div');
-            errorMessage.id = 'error-message';
-            errorMessage.style.color = 'red';
-            form.prepend(errorMessage);
-        }
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById('event-form');
+        form.addEventListener('submit', function (e) {
+            // Hata mesajı alanını kontrol edin veya oluşturun
+            let errorMessage = document.getElementById('error-message');
+            if (!errorMessage) {
+                errorMessage = document.createElement('div');
+                errorMessage.id = 'error-message';
+                errorMessage.style.color = 'red';
+                form.prepend(errorMessage);
+            }
 
-        errorMessage.textContent = ''; // Önceki hatayı temizle
+            errorMessage.textContent = ''; // Önceki hatayı temizle
 
-        // Form alanlarını al
-        const startDateValue = document.getElementById('event-start-date').value;
-        const finishDateValue = document.getElementById('event-finish-date').value;
-        const startTime = document.getElementById('event-start-time').value;
-        const finishTime = document.getElementById('event-finish-time').value;
+            // Form alanlarını al
+            const startDateValue = document.getElementById('event-start-date').value;
+            const finishDateValue = document.getElementById('event-finish-date').value;
+            const startTime = document.getElementById('event-start-time').value;
+            const finishTime = document.getElementById('event-finish-time').value;
 
-        // Alanların doluluğunu kontrol et
-        if (!startDateValue || !finishDateValue || !startTime || !finishTime) {
-            errorMessage.textContent = 'Tüm tarih ve saat alanlarını doldurmalısınız.';
-            e.preventDefault();
-            return;
-        }
+            // Alanların doluluğunu kontrol et
+            if (!startDateValue || !finishDateValue || !startTime || !finishTime) {
+                errorMessage.textContent = 'Tüm tarih ve saat alanlarını doldurmalısınız.';
+                e.preventDefault();
+                return;
+            }
 
-        const startDateTime = new Date(`${startDateValue}T${startTime}`);
-        const finishDateTime = new Date(`${finishDateValue}T${finishTime}`);
+            const startDateTime = new Date(`${startDateValue}T${startTime}`);
+            const finishDateTime = new Date(`${finishDateValue}T${finishTime}`);
 
-        const now = new Date();
-        now.setHours(0, 0, 0, 0);
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
 
-        const minStartDateTime = new Date(now);
-        minStartDateTime.setDate(minStartDateTime.getDate() + 7);
+            const minStartDateTime = new Date(now);
+            minStartDateTime.setDate(minStartDateTime.getDate() + 7);
 
-        if (startDateTime < now) {
-            errorMessage.textContent = 'Başlangıç tarihi geçmiş bir tarih olamaz.';
-            e.preventDefault();
-            return;
-        }
+            if (startDateTime < now) {
+                errorMessage.textContent = 'Başlangıç tarihi geçmiş bir tarih olamaz.';
+                e.preventDefault();
+                return;
+            }
 
-        if (startDateTime < minStartDateTime) {
-            errorMessage.textContent = 'Başlangıç tarihi bugünden en az 7 gün sonrası olmalıdır.';
-            e.preventDefault();
-            return;
-        }
+            if (startDateTime < minStartDateTime) {
+                errorMessage.textContent = 'Başlangıç tarihi bugünden en az 7 gün sonrası olmalıdır.';
+                e.preventDefault();
+                return;
+            }
 
-        if (finishDateTime <= startDateTime) {
-            errorMessage.textContent = 'Bitiş tarihi ve saati, başlangıç tarih ve saatinden sonra olmalıdır.';
-            e.preventDefault();
-            return;
-        }
+            if (finishDateTime <= startDateTime) {
+                errorMessage.textContent = 'Bitiş tarihi ve saati, başlangıç tarih ve saatinden sonra olmalıdır.';
+                e.preventDefault();
+                return;
+            }
+        });
     });
-});
-
 
 
 </script>

@@ -1,16 +1,15 @@
-/* Genel Stil Tanımları */
 html, body {
-    height: 100%; /* Tüm yüksekliği kaplar */
-    margin: 0; /* Varsayılan marginleri sıfırlar */
-    padding: 0; /* Varsayılan paddingleri sıfırlar */
-    box-sizing: border-box; /* Tüm öğelerde kutu modeli uygulanır */
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
     font-family: Arial, sans-serif;
     background-color: #f2f2f2;
-    background-attachment: fixed; /* Arka plan resmi sabit kalsın */
-    overflow-x: hidden; /* Yatay kaydırmayı önler */
+    background-attachment: fixed;
+    overflow-x: hidden;
     position: relative;
 }
 

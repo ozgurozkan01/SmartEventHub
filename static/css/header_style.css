@@ -9,8 +9,8 @@
 body, html {
     margin: 0;
     padding: 0;
-    width: 100%; /* Tam genişlik */
-    height: 100%; /* Yüksekliği de tam yap */
+    width: 100%;
+    height: 100%;
     color: #333;
     line-height: 1.6;
     font-size: 16px;
@@ -18,19 +18,19 @@ body, html {
 
 header {
     display: flex;
-    align-items: center; /* Dikey hizalamak için */
-    justify-content: space-between; /* Alanı eşit dağıtmak için */
-    background: linear-gradient(to right, #0036b3, #00Abff); /* Koyu mavi (#0056b3) dan açık mavi (#007bff) ye geçiş */
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to right, #0036b3, #00Abff);
     color: black;
     padding: 15px 0px;
-    width: 100%; /* Header'ın genişliğini %100 yap */
+    width: 100%;
 }
 
 h1 {
     font-size: 48px;
     color: white;
     text-align: left;
-    padding-left: 20px; /* Sol boşluk ekleyin */
+    padding-left: 20px;
     margin: 5px 0;
     font-weight: bold;
 }
